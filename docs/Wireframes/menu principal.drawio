@@ -14,10 +14,10 @@
           <mxGeometry height="60" width="380" x="480" y="40" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="380" width="110" x="120" y="40" as="geometry" />
+          <mxGeometry height="300" width="110" x="120" y="40" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Messagerie&amp;nbsp;" vertex="1">
-          <mxGeometry height="30" width="60" x="145" y="290" as="geometry" />
+          <mxGeometry height="30" width="60" x="145" y="270" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nom de l&#39;utilisateur" vertex="1">
           <mxGeometry height="60" width="180" x="1060" y="40" as="geometry" />
@@ -35,13 +35,10 @@
           <mxGeometry height="30" width="60" x="140" y="190" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Emploi du temps" vertex="1">
-          <mxGeometry height="30" width="100" x="125" y="240" as="geometry" />
-        </mxCell>
-        <mxCell id="vDZujnpy1uIsuuDbdIDl-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Paramètres" vertex="1">
-          <mxGeometry height="30" width="60" x="140" y="340" as="geometry" />
+          <mxGeometry height="30" width="100" x="125" y="230" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Déconnexion" vertex="1">
-          <mxGeometry height="30" width="60" x="140" y="380" as="geometry" />
+          <mxGeometry height="30" width="60" x="145" y="310" as="geometry" />
         </mxCell>
         <mxCell id="vDZujnpy1uIsuuDbdIDl-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Mes matières&amp;nbsp;" vertex="1">
           <mxGeometry height="60" width="120" x="410" y="180" as="geometry" />

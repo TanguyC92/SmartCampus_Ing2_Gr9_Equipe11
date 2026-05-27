@@ -1,1 +1,5 @@
-
+Partie code Alexandre tu peux mettre ce que t as commencer a faire la avec tes differentes parties et tout.
+Comme ca stv tu peux nous demander de faire des trucs genre la partie cours l emploi du temps et tout et on aura direct acces a ton code et on pourra ajouter le notre.
+Normalement avec Github Desktop c'est facile d exporter le code de GitHub sur ton pc et travailler direct dessus.
+En plus apres tu peux televerser ton code depuis ton ordi sur github sans que le code des autres soit detruit ou que ca fonctionne pas.
+Normalement tu peux pas push ton code sur github si ca empeche le bon fonctionnemnt du code.

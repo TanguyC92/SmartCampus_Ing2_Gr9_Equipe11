@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="Ai_bhnOY5Sj6dpsUVUax">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="560" width="840" x="320" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="840" x="320" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="LOGO" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="nom du site" vertex="1">
+          <mxGeometry height="60" width="720" x="440" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="connexion" vertex="1">
+          <mxGeometry height="30" width="110" x="677.5" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="155" x="655" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="155" x="655" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="etudiant" vertex="1">
+          <mxGeometry height="30" width="60" x="655" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-11" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="670" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="professeur" vertex="1">
+          <mxGeometry height="30" width="60" x="750" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="765" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="email" vertex="1">
+          <mxGeometry height="30" width="60" x="570" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="mot de passe" vertex="1">
+          <mxGeometry height="30" width="80" x="550" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="valider" vertex="1">
+          <mxGeometry height="30" width="90" x="687.5" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Pas encore de compte ?" vertex="1">
+          <mxGeometry height="30" width="150" x="490" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="r7teoVMM7ErBIcJuz6IB-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Créer un compte&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="240" x="620" y="580" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

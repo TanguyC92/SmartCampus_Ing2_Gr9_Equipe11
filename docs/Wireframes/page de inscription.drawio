@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="Qqw8P1R-_HQ66v_Ct1YI">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="600" width="720" x="320" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="inscription" vertex="1">
+          <mxGeometry height="60" width="120" x="620" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="..." vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Nom" vertex="1">
+          <mxGeometry height="30" width="60" x="490" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Prénom" vertex="1">
+          <mxGeometry height="30" width="60" x="490" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="email" vertex="1">
+          <mxGeometry height="30" width="60" x="490" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="mot de passe&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="60" x="490" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="confirmation du mot de passe" vertex="1">
+          <mxGeometry height="30" width="90" x="475" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="720" x="320" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="LOGO" vertex="1">
+          <mxGeometry height="60" width="120" x="320" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Y-NRhelYQVebqBP_V7RO-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="NOM" vertex="1">
+          <mxGeometry height="60" width="600" x="440" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Dcut9fNRdNC2Sx1CLY0B-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="soumettre" vertex="1">
+          <mxGeometry height="40" width="90" x="635" y="660" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

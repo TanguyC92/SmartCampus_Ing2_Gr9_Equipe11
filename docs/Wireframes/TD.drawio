@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="SCy8d5udtuwHOlbo8on_">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="640" width="1080" x="180" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="330" width="110" x="180" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Messagerie&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="60" x="205" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Accueil" vertex="1">
+          <mxGeometry height="30" width="60" x="205" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Cours" vertex="1">
+          <mxGeometry height="30" width="60" x="200" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MENU" vertex="1">
+          <mxGeometry height="60" width="110" x="180" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Notes" vertex="1">
+          <mxGeometry height="30" width="60" x="200" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Emploi du temps" vertex="1">
+          <mxGeometry height="30" width="100" x="185" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Déconnexion" vertex="1">
+          <mxGeometry height="30" width="60" x="205" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="LOGO" vertex="1">
+          <mxGeometry height="60" width="120" x="380" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nom du site&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="380" x="500" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nom de l&#39;utilisateur" vertex="1">
+          <mxGeometry height="60" width="180" x="1080" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Notifications" vertex="1">
+          <mxGeometry height="60" width="120" x="930" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nom du cours&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="370" x="380" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Contenu du cours" vertex="1">
+          <mxGeometry height="60" width="170" x="380" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="TD&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="170" x="550" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Assignments" vertex="1">
+          <mxGeometry height="60" width="170" x="720" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="TD" vertex="1">
+          <mxGeometry height="30" width="380" x="380" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="TD 1" vertex="1">
+          <mxGeometry height="60" width="380" x="380" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="TD 2" vertex="1">
+          <mxGeometry height="60" width="380" x="380" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="TD 3" vertex="1">
+          <mxGeometry height="60" width="380" x="380" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEqwI0AaJ5qXg9logZo-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="TD 4" vertex="1">
+          <mxGeometry height="60" width="380" x="380" y="640" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

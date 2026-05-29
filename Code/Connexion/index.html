@@ -170,11 +170,11 @@
                     
                     // REDIRECTION INTELLIGENTE
                     if (data.user.role === 'admin') {
-                        window.location.href = "admin-dashboard.html";
+                        window.location.href = "http://localhost:8888/Smart_Campus/Code/admin//html/admin-dashboard.html";
                     } else if (data.user.role === 'etudiant') {
-                        window.location.href = "dashboard.html";
+                        window.location.href = "http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html";
                     } else {
-                        window.location.href = "teacher_courses.html"; 
+                        window.location.href = "http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html"; 
                     }
                 } else {
                     messageDiv.textContent = data.message;

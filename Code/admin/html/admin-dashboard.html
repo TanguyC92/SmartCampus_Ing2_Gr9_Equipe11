@@ -231,7 +231,7 @@
         // Sécurité Session
         const userStr = localStorage.getItem('smartcampus_user');
         if (!userStr || JSON.parse(userStr).role !== 'admin') {
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         } else {
             document.getElementById('userNameDisplay').textContent = JSON.parse(userStr).prenom + " " + JSON.parse(userStr).nom + " (Admin)";
         }
@@ -244,7 +244,7 @@
         // Déconnexion
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('smartcampus_user');
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         });
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }

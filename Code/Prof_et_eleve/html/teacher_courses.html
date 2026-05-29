@@ -76,9 +76,9 @@
         <aside class="sidebar" id="sidebar">
             <nav>
                 <a href="#">Accueil</a>
-                <a href="teacher_courses.html" class="active">Mes Cours enseignés</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html" class="active">Mes Cours enseignés</a>
                 <a href="#">Saisie des Notes</a>
-                <a href="timetable.html">Emploi du temps</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
                 <a href="#">Messagerie</a>
                 <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
             </nav>
@@ -116,12 +116,12 @@
         // 1. VÉRIFICATION DE LA SESSION
         const userStr = localStorage.getItem('smartcampus_user');
         if (!userStr) {
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         } else {
             currentUser = JSON.parse(userStr);
             if (currentUser.role !== 'enseignant') {
                 alert("Accès réservé aux enseignants.");
-                window.location.href = "index.html";
+                window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
             }
             document.getElementById('userNameDisplay').textContent = currentUser.prenom + " " + currentUser.nom + " (Prof)";
         }
@@ -130,7 +130,7 @@
         document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('smartcampus_user');
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         });
 
         // Modales

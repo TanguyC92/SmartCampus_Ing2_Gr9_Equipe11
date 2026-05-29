@@ -88,10 +88,10 @@
     <div class="main-wrapper">
         <aside class="sidebar" id="sidebar">
             <nav>
-                <a href="dashboard.html">Accueil</a>
-                <a href="student_courses.html" class="active">Mes Cours</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html">Accueil</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html" class="active">Mes Cours</a>
                 <a href="#">Mes Notes</a>
-                <a href="timetable.html">Emploi du temps</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
                 <a href="#">Messagerie</a>
                 <a href="#">Paramètres</a>
                 <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
@@ -120,13 +120,13 @@
         // 1. SÉCURITÉ ET VÉRIFICATION DE LA SESSION
         const userStr = localStorage.getItem('smartcampus_user');
         if (!userStr) {
-            window.location.href = "index.html"; // Redirige si non connecté
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html"; // Redirige si non connecté
         } else {
             currentUser = JSON.parse(userStr);
             // Vérifie que c'est bien un étudiant
             if (currentUser.role !== 'etudiant') {
                 alert("Accès réservé aux étudiants.");
-                window.location.href = "index.html";
+                window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
             }
             document.getElementById('userNameDisplay').textContent = currentUser.prenom + " " + currentUser.nom;
         }
@@ -138,7 +138,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('smartcampus_user');
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         });
 
         // 3. CHARGEMENT DYNAMIQUE DES COURS DE L'ÉTUDIANT

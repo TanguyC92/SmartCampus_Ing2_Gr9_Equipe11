@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'config.php';
+require_once '../../Connexion/config.php';
 
 // On récupère l'ID de l'utilisateur connecté passé dans l'URL
 $id_user = isset($_GET['id_user']) ? (int)$_GET['id_user'] : 0;

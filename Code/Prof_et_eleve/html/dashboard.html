@@ -164,9 +164,9 @@
         <aside class="sidebar" id="sidebar">
             <nav>
                 <a href="#" class="active">Accueil</a>
-                <a href="student_courses.html">Mes Cours</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html">Mes Cours</a>
                 <a href="#">Mes Notes</a>
-                <a href="timetable.html">Emploi du temps</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
                 <a href="#">Messagerie</a>
                 <a href="#">Paramètres</a>
                 <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
@@ -214,7 +214,7 @@
         
         if (!userStr) {
             // Si personne n'est connecté, on renvoie vers la page de login
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         } else {
             // 2. Affichage des données de l'utilisateur
             const user = JSON.parse(userStr);
@@ -235,7 +235,7 @@
             // On vide la mémoire du navigateur
             localStorage.removeItem('smartcampus_user');
             // On redirige vers l'accueil
-            window.location.href = "index.html";
+            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
         });
     </script>
 

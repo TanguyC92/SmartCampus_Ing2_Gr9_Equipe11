@@ -1,6 +1,6 @@
 <?php
 // get_course_students.php
-require_once 'config.php';
+require_once '../../Connexion/config.php';
 
 $id_cours = isset($_GET['id_cours']) ? (int)$_GET['id_cours'] : 0;
 

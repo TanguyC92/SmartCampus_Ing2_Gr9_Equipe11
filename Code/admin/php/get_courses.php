@@ -1,6 +1,6 @@
 <?php
 // get_courses.php
-require_once 'config.php';
+require_once '../../Connexion/config.php';
 
 $sql = "SELECT C.*, U.nom AS prof_nom, U.prenom AS prof_prenom 
         FROM COURS C 

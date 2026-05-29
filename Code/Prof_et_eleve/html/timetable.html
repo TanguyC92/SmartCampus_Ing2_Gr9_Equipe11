@@ -78,7 +78,7 @@
 
     <script>
        const user = JSON.parse(localStorage.getItem('smartcampus_user'));
-        if(!user) window.location.href="index.html";
+        if(!user) window.location.href="http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
 
         const startHour = 8;
         const endHour = 20;
@@ -143,7 +143,7 @@
                 <small id="apiStatus" style="font-size:14px; font-weight:normal; display:block; margin-top:5px;">Recherche en cours...</small>
             `;
 
-            fetch(`http://localhost:8888/Smart_Campus/get_timetable.php?id_user=${user.id_user}&role=${user.role}&week_start=${formatDateSafe(monday)}&week_end=${formatDateSafe(saturday)}`)
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_timetable.php?id_user=${user.id_user}&role=${user.role}&week_start=${formatDateSafe(monday)}&week_end=${formatDateSafe(saturday)}`)
             .then(res => res.json())
             .then(data => {
                 const statusText = document.getElementById('apiStatus');
@@ -201,7 +201,7 @@
             .catch(err => console.error(err));
         }
 
-        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href="index.html"; });
+        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href="http://localhost:8888/Smart_Campus/Code/Connexion/index.html"; });
 
         loadTimetable();
     </script>

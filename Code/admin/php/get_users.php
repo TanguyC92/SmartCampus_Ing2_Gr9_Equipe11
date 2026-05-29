@@ -1,6 +1,6 @@
 <?php
 // get_users.php
-require_once 'config.php';
+require_once '../../Connexion/config.php';
 
 $role = $_GET['role'] ?? '';
 

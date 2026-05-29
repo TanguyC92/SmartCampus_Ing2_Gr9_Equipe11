@@ -160,8 +160,15 @@
                                     <p>📊 Crédits ECTS : ${cours.credits} | Coefficient : <strong>${cours.coefficient}</strong></p>
                                     <p>👥 Capacité : ${cours.capacite_max} places</p>
                                 </div>
-                                <div class="course-actions">
-                                    <button class="btn-action" onclick="triggerViewStudents(${cours.id_cours})">👀 Voir les élèves inscrits</button>
+                                <div class="course-actions" style="display:flex; gap:10px; flex-direction:column;">
+                                    <button class="btn-action"
+                                        onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/course_documents_teacher.html?id_cours=${cours.id_cours}&titre=${encodeURIComponent(cours.titre)}'"> 
+                                        📁 Ajouter des documents
+                                    </button>
+                                    <button class="btn-action"
+                                        onclick="triggerViewStudents(${cours.id_cours})">
+                                        👀 Voir les élèves inscrits
+                                    </button>
                                 </div>
                             `;
                             container.appendChild(card);

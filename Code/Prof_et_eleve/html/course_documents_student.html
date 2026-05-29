@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Ressources du cours</title>
+
+    <style>
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+
+        .site-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .user-info {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .notifications {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .badge {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            position: absolute;
+            top: -10px;
+            right: -15px;
+        }
+
+        /* LAYOUT */
+
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--secondary-color);
+            color: white;
+            transition: width 0.3s ease;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+        }
+
+        .sidebar nav {
+            flex: 1;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #34495e;
+            border-left-color: var(--primary-color);
+        }
+
+        /* CONTENT */
+
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 25px;
+            padding: 12px 18px;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .folder-title {
+            grid-column: 1/-1;
+            background: white;
+            padding: 18px 22px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+            color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
+        .document-card {
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .document-card h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            text-decoration: none;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* FOOTER */
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #ddd;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 768px) {
+
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .site-name {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-left">
+
+        <button class="menu-btn" id="menuToggle">
+            ☰
+        </button>
+
+        <div class="logo">
+            🎓 SmartCampus
+        </div>
+
+        <div class="site-name">
+            Espace Étudiant
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="notifications">
+            🔔 Notifications
+            <span class="badge">3</span>
+        </div>
+
+        <div class="user-info" id="userNameDisplay">Étudiant</div>
+        </div>
+
+    </div>
+
+</header>
+
+<div class="main-wrapper">
+
+    <aside class="sidebar" id="sidebar">
+
+        <nav>
+
+            <a href="dashboard.html">
+                Accueil
+            </a>
+
+            <a href="student_courses.html"
+               class="active">
+                Mes Cours
+            </a>
+
+            <a href="#">
+                Mes Notes
+            </a>
+
+            <a href="timetable.html">
+                Emploi du temps
+            </a>
+
+            <a href="#">
+                Messagerie
+            </a>
+
+            <a href="#">
+                Paramètres
+            </a>
+
+            <a href="#"
+               id="logoutBtn"
+               style="color:#e74c3c; font-weight:bold;">
+                Déconnexion
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="content">
+
+        <h2 class="page-title">
+            📚 Ressources du cours
+        </h2>
+
+        <a class="back-btn"
+           href="student_courses.html">
+            ← Retour aux cours
+        </a>
+
+        <div class="documents-grid"
+             id="documentsContainer">
+        </div>
+
+    </main>
+
+</div>
+
+<footer>
+
+    <div>
+        <strong>Support :</strong>
+        support@smartcampus.edu
+    </div>
+
+    <div>
+        <strong>Assistance :</strong>
+        +33 06 12 34 56 78
+    </div>
+
+</footer>
+
+<script>
+
+    // AUTH
+
+    const userStr =
+        localStorage.getItem('smartcampus_user');
+
+    if (!userStr) {
+
+        window.location.href =
+        "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+
+    } else {
+
+        const user = JSON.parse(userStr);
+
+        document.getElementById('userNameDisplay')
+        .textContent =
+            user.prenom + ' ' + user.nom;
+
+    }
+
+    // SIDEBAR
+
+    document.getElementById('menuToggle')
+
+    .addEventListener('click', function() {
+
+        document.getElementById('sidebar')
+        .classList.toggle('collapsed');
+
+    });
+
+    // LOGOUT
+
+    document.getElementById('logoutBtn')
+
+    .addEventListener('click', function(e) {
+
+        e.preventDefault();
+
+        localStorage.removeItem('smartcampus_user');
+
+        window.location.href =
+        "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+
+    });
+
+    // GET COURSE ID
+
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const idCours =
+        params.get('id_cours');
+
+    // LOAD DOCUMENTS
+
+    function loadDocuments(){
+
+        fetch(`../php/get_course_documents.php?id_cours=${idCours}`)
+
+        .then(res => res.json())
+
+        .then(data => {
+
+            const container =
+                document.getElementById('documentsContainer');
+
+            container.innerHTML = '';
+
+            // NO DOCUMENTS
+
+            if(data.documents.length === 0){
+
+                container.innerHTML = `
+                
+                    <div class="empty-state">
+
+                        <h3>
+                            📚 Aucun document disponible
+                        </h3>
+
+                        <p>
+                            Le professeur n'a pas encore ajouté
+                            de ressources pour ce cours.
+                        </p>
+
+                    </div>
+                
+                `;
+
+                return;
+            }
+
+            // GROUP BY FOLDER
+
+            let dossiers = {};
+
+            data.documents.forEach(doc => {
+
+                if(!dossiers[doc.dossier]){
+                    dossiers[doc.dossier] = [];
+                }
+
+                dossiers[doc.dossier].push(doc);
+
+            });
+
+            // DISPLAY FOLDERS
+
+            for(const dossier in dossiers){
+
+                container.innerHTML += `
+                
+                    <div class="folder-title">
+                        📁 ${dossier}
+                    </div>
+                
+                `;
+
+                dossiers[dossier].forEach(doc => {
+
+                    container.innerHTML += `
+                    
+                        <div class="document-card">
+
+                            <h3>${doc.titre}</h3>
+
+                            <p>
+                                <strong>Description :</strong><br>
+                                ${doc.description || 'Aucune description'}
+                            </p>
+
+                            <p>
+                                <strong>Note :</strong><br>
+                                ${doc.note_document || 'Aucune note'}
+                            </p>
+
+                            <p>
+                                📄 ${doc.nom_fichier}
+                            </p>
+
+                            <div class="card-actions">
+
+                                <a class="action-btn"
+                                   target="_blank"
+                                   href="../../${doc.chemin_fichier}">
+                                    👁️ Ouvrir
+                                </a>
+
+                                <a class="action-btn"
+                                   href="../../${doc.chemin_fichier}"
+                                   download>
+                                    ⬇️ Télécharger
+                                </a>
+
+                            </div>
+
+                        </div>
+                    
+                    `;
+
+                });
+
+            }
+
+        });
+
+    }
+
+    loadDocuments();
+
+</script>
+
+</body>
+</html>

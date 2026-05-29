@@ -168,7 +168,10 @@
                                     <p>📊 Crédits ECTS : ${cours.credits} | Coefficient : <strong>${cours.coefficient}</strong></p>
                                 </div>
                                 <div class="course-actions">
-                                    <button class="btn-action" onclick="alert('Ouverture de la page du cours : ${cours.titre}')">📚 Accéder au cours</button>
+                                    <button class="btn-action"
+                                        onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/course_documents_student.html?id_cours=${cours.id_cours}&titre=${encodeURIComponent(cours.titre)}'">
+                                        📚 Accéder au cours
+                                    </button>
                                 </div>
                             `;
                             container.appendChild(card);

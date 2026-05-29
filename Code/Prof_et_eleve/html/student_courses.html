@@ -144,7 +144,7 @@
         // 3. CHARGEMENT DYNAMIQUE DES COURS DE L'ÉTUDIANT
         function loadStudentCourses() {
             // On envoie l'ID de l'utilisateur à notre script PHP
-            fetch(`http://localhost:8888/Smart_Campus/get_student_courses.php?id_user=${currentUser.id_user}`)
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${currentUser.id_user}`)
             .then(res => res.json())
             .then(data => {
                 const container = document.getElementById('coursesContainer');

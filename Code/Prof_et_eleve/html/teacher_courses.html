@@ -139,7 +139,7 @@
 
         // 3. CHARGEMENT DES COURS DU PROFESSEUR
         function loadTeacherCourses() {
-            fetch(`http://localhost:8888/Smart_Campus/get_teacher_courses.php?id_user=${currentUser.id_user}`)
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_teacher_courses.php?id_user=${currentUser.id_user}`)
             .then(res => res.json())
             .then(data => {
                 const container = document.getElementById('coursesContainer');
@@ -184,7 +184,7 @@
             countDisplay.textContent = "";
 
             // On réutilise le script PHP qu'on a créé pour l'admin !
-            fetch(`http://localhost:8888/Smart_Campus/get_course_students.php?id_cours=${courseId}`)
+            fetch(`http://localhost:8888/Smart_Campus/Code/admin/php/get_course_students.php?id_cours=${courseId}`)
             .then(res => res.json())
             .then(data => {
                 list.innerHTML = "";

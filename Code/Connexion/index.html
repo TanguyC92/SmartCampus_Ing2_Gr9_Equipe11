@@ -154,7 +154,7 @@
             messageDiv.textContent = "Vérification...";
             messageDiv.className = "message";
 
-            fetch('http://localhost:8888/Smart_Campus/login.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/Connexion/login.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, password: password })
@@ -203,7 +203,7 @@
             messageDiv.textContent = "Création en cours...";
             messageDiv.className = "message";
 
-            fetch('http://localhost:8888/Smart_Campus/register.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/Connexion/register.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

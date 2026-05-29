@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Espace Étudiant</title>
+    <style>
+        /* === CSS DIRECTEMENT DANS LE HTML === */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .logo { font-weight: bold; font-size: 20px; color: var(--primary-color); }
+        .site-name { font-size: 18px; font-weight: 600; color: var(--secondary-color); }
+        
+        .user-info { font-weight: bold; color: var(--primary-color); }
+        .notifications { cursor: pointer; position: relative; }
+        .badge {
+            background: #e74c3c; color: white; border-radius: 50%;
+            padding: 2px 6px; font-size: 12px; position: absolute;
+            top: -10px; right: -15px;
+        }
+
+        /* --- LAYOUT PRINCIPAL --- */
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* --- BARRE LATÉRALE (MENU) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--secondary-color);
+            color: white;
+            transition: width 0.3s ease;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.collapsed { width: 0; } /* Rétractable */
+
+        .sidebar nav { flex: 1; padding-top: 20px; }
+        
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #34495e;
+            border-left-color: var(--primary-color);
+        }
+
+        /* --- CONTENU DU TABLEAU DE BORD --- */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .widget {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .widget h3 { margin-top: 0; color: var(--secondary-color); }
+        
+        .widget-full { grid-column: span 2; min-height: 200px; }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: white;
+            border-top: 1px solid #ddd;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* --- RESPONSIVE (Mobiles) --- */
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .widget-full { grid-column: span 1; }
+            .site-name { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="menu-btn" id="menuToggle">☰</button>
+            <div class="logo">🎓 LOGO</div>
+            <div class="site-name">SmartCampus</div>
+        </div>
+        <div class="header-right">
+            <div class="notifications">
+                🔔 Notifications <span class="badge">3</span>
+            </div>
+            <div class="user-info" id="userNameDisplay">Chargement...</div>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <nav>
+                <a href="#" class="active">Accueil</a>
+                <a href="student_courses.html">Mes Cours</a>
+                <a href="#">Mes Notes</a>
+                <a href="timetable.html">Emploi du temps</a>
+                <a href="#">Messagerie</a>
+                <a href="#">Paramètres</a>
+                <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <h2 style="margin-top:0; margin-bottom: 25px; color: var(--secondary-color);">Tableau de bord Étudiant</h2>
+            
+            <div class="dashboard-grid">
+                <div class="widget">
+                    <h3>📚 Mes matières</h3>
+                    <p>Consulter les cours et supports</p>
+                </div>
+                <div class="widget">
+                    <h3>📝 Dernières notes</h3>
+                    <p>Moyenne actuelle : --/20</p>
+                </div>
+                <div class="widget">
+                    <h3>⏱️ Prochain travail à rendre</h3>
+                    <p>Aucun devoir imminent</p>
+                </div>
+                <div class="widget">
+                    <h3>📅 Prochain cours</h3>
+                    <p>Algorithmique (Salle A202)</p>
+                </div>
+
+                <div class="widget widget-full">
+                    <h3>✉️ Derniers messages</h3>
+                    <p style="color: #7f8c8d;">Votre boîte de réception est vide pour le moment.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div><strong>Support :</strong> support@smartcampus.edu</div>
+        <div><strong>Assistance :</strong> +33 06 12 34 56 78</div>
+    </footer>
+
+    <script>
+        // 1. Vérification de la connexion
+        // On récupère les infos stockées lors du login
+        const userStr = localStorage.getItem('smartcampus_user');
+        
+        if (!userStr) {
+            // Si personne n'est connecté, on renvoie vers la page de login
+            window.location.href = "index.html";
+        } else {
+            // 2. Affichage des données de l'utilisateur
+            const user = JSON.parse(userStr);
+            document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom;
+            
+            // (Optionnel) Bloquer l'accès si ce n'est pas un étudiant
+            // if (user.role !== 'etudiant') { alert("Accès réservé aux étudiants !"); }
+        }
+
+        // 3. Gestion du Menu Déroulant / Rétractable
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+
+        // 4. Gestion de la Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // Empêche le lien de naviguer
+            // On vide la mémoire du navigateur
+            localStorage.removeItem('smartcampus_user');
+            // On redirige vers l'accueil
+            window.location.href = "index.html";
+        });
+    </script>
+
+</body>
+</html>

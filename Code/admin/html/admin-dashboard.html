@@ -260,7 +260,7 @@
             list.innerHTML = "<p>Chargement...</p>";
             countDisplay.textContent = "";
 
-            fetch(`http://localhost:8888/Smart_Campus/get_course_students.php?id_cours=${courseId}`)
+            fetch(`http://localhost:8888/Smart_Campus/Code/admin/php/get_course_students.php?id_cours=${courseId}`)
             .then(res => res.json())
             .then(data => {
                 list.innerHTML = "";
@@ -288,7 +288,7 @@
         function executeUnassignStudent(studentId) {
             if(!confirm("Êtes-vous sûr de vouloir retirer cet élève du cours ?")) return;
 
-            fetch('http://localhost:8888/Smart_Campus/assign_actions.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/assign_actions.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ action: 'unassign_student', id_cours: currentSelectedCourseId, id_etudiant: studentId })
@@ -320,7 +320,7 @@
                 salle: document.getElementById('sSalle').value
             };
 
-            fetch('http://localhost:8888/Smart_Campus/schedule_course.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/schedule_course.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(payload)
@@ -332,7 +332,7 @@
 
         // --- CHARGER LA LISTE DES COURS DEPUIS MYSQL (AFFICHAGE DU COEFFICIENT AJOUTÉ) ---
         function loadCourses() {
-            fetch('http://localhost:8888/Smart_Campus/get_courses.php')
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/get_courses.php')
             .then(res => res.json())
             .then(data => {
                 const container = document.getElementById('coursesContainer');
@@ -375,7 +375,7 @@
                 niveau: document.getElementById('cNiveau').value
             };
 
-            fetch('http://localhost:8888/Smart_Campus/add_course.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/add_course.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(payload)
@@ -397,7 +397,7 @@
             currentSelectedCourseId = courseId;
             openModal('teacherModal');
             
-            fetch('http://localhost:8888/Smart_Campus/get_users.php?role=enseignant')
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/get_users.php?role=enseignant')
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById('teachersListContainer');
@@ -413,7 +413,7 @@
         }
 
         function executeAssignTeacher(teacherId) {
-            fetch('http://localhost:8888/Smart_Campus/assign_actions.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/assign_actions.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ action: 'assign_teacher', id_cours: currentSelectedCourseId, id_enseignant: teacherId })
@@ -432,7 +432,7 @@
             document.getElementById('studentSearchInput').value = "";
             openModal('studentModal');
             
-            fetch('http://localhost:8888/Smart_Campus/get_users.php?role=etudiant')
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/get_users.php?role=etudiant')
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
@@ -464,7 +464,7 @@
         });
 
         function executeAssignStudent(studentId) {
-            fetch('http://localhost:8888/Smart_Campus/assign_actions.php', {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/assign_actions.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ action: 'assign_student', id_cours: currentSelectedCourseId, id_etudiant: studentId })

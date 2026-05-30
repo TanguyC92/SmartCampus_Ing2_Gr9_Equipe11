@@ -34,15 +34,15 @@ if (isset($data->id_cours, $data->date_cours, $data->heure_debut, $data->heure_f
                    ELSE 'personne'
                END as type_conflit
         FROM EMPLOI_DU_TEMPS EDT
-        JOIN COURS C ON EDT.id_cours = C.id_cours
+        JOIN `cours` C ON EDT.id_cours = C.id_cours
         WHERE EDT.date_cours = '$date_cours'
           AND (EDT.heure_debut < '$h_fin' AND EDT.heure_fin > '$h_debut')
           AND (
                EDT.salle = '$salle'  /* <-- LA SALLE EST-ELLE DÉJÀ PRISE ? */
-               OR (C.id_enseignant IS NOT NULL AND C.id_enseignant = (SELECT id_enseignant FROM COURS WHERE id_cours = $id_cours))
+               OR (C.id_enseignant IS NOT NULL AND C.id_enseignant = (SELECT id_enseignant FROM `cours` WHERE id_cours = $id_cours))
                OR C.id_cours IN (
-                   SELECT I2.id_cours FROM INSCRIPTION I1
-                   JOIN INSCRIPTION I2 ON I1.id_etudiant = I2.id_etudiant
+                   SELECT I2.id_cours FROM `inscription` I1
+                   JOIN `inscription` I2 ON I1.id_etudiant = I2.id_etudiant
                    WHERE I1.id_cours = $id_cours
                )
           ) LIMIT 1";

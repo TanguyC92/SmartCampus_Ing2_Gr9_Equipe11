@@ -16,11 +16,11 @@ if ($id_user === 0) {
 
 // Requête SQL avec des jointures pour lier l'Utilisateur -> Étudiant -> Inscription -> Cours -> Prof
 $sql = "SELECT C.*, U_prof.nom AS prof_nom, U_prof.prenom AS prof_prenom 
-        FROM COURS C 
-        JOIN INSCRIPTION I ON C.id_cours = I.id_cours 
-        JOIN ETUDIANT Et ON I.id_etudiant = Et.id_etudiant 
+        FROM `cours` C 
+        JOIN `inscription` I ON C.id_cours = I.id_cours 
+        JOIN `etudiant` Et ON I.id_etudiant = Et.id_etudiant 
         LEFT JOIN ENSEIGNANT E ON C.id_enseignant = E.id_enseignant 
-        LEFT JOIN USER U_prof ON E.id_user = U_prof.id_user 
+        LEFT JOIN `user` U_prof ON E.id_user = U_prof.id_user 
         WHERE Et.id_user = $id_user
         ORDER BY C.semestre ASC, C.titre ASC";
 

@@ -17,7 +17,7 @@ if ($action === 'assign_teacher') {
         JOIN EMPLOI_DU_TEMPS EDT2 ON EDT1.date_cours = EDT2.date_cours 
                                  AND EDT1.heure_debut < EDT2.heure_fin 
                                  AND EDT1.heure_fin > EDT2.heure_debut
-        JOIN COURS C2 ON EDT2.id_cours = C2.id_cours
+        JOIN `cours` C2 ON EDT2.id_cours = C2.id_cours
         WHERE EDT1.id_cours = $id_cours
           AND C2.id_enseignant = $id_prof
           AND EDT1.id_cours != EDT2.id_cours
@@ -43,7 +43,7 @@ if ($action === 'assign_teacher') {
     $id_eleve = (int)$data->id_etudiant;
 
     // 1. Est-il déjà inscrit ?
-    $check = mysqli_query($conn, "SELECT * FROM INSCRIPTION WHERE id_etudiant = $id_eleve AND id_cours = $id_cours");
+    $check = mysqli_query($conn, "SELECT * FROM `inscription` WHERE id_etudiant = $id_eleve AND id_cours = $id_cours");
     if (mysqli_num_rows($check) > 0) {
         echo json_encode(["success" => false, "message" => "Cet élève est déjà inscrit à ce cours."]);
         exit;
@@ -56,8 +56,8 @@ if ($action === 'assign_teacher') {
         JOIN EMPLOI_DU_TEMPS EDT2 ON EDT1.date_cours = EDT2.date_cours 
                                  AND EDT1.heure_debut < EDT2.heure_fin 
                                  AND EDT1.heure_fin > EDT2.heure_debut
-        JOIN COURS C2 ON EDT2.id_cours = C2.id_cours
-        JOIN INSCRIPTION I ON I.id_cours = C2.id_cours
+        JOIN `cours` C2 ON EDT2.id_cours = C2.id_cours
+        JOIN `inscription` I ON I.id_cours = C2.id_cours
         WHERE EDT1.id_cours = $id_cours
           AND I.id_etudiant = $id_eleve
           AND EDT1.id_cours != EDT2.id_cours
@@ -83,7 +83,7 @@ if ($action === 'assign_teacher') {
     $id_cours = (int)$data->id_cours;
     $id_eleve = (int)$data->id_etudiant;
 
-    $sql = "DELETE FROM INSCRIPTION WHERE id_etudiant = $id_eleve AND id_cours = $id_cours";
+    $sql = "DELETE FROM `inscription` WHERE id_etudiant = $id_eleve AND id_cours = $id_cours";
     if (mysqli_query($conn, $sql)) {
         echo json_encode(["success" => true, "message" => "Élève retiré du cours !"]);
     } else {

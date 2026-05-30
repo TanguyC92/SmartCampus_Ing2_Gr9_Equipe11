@@ -14,7 +14,7 @@ if ($id_user === 0) {
 }
 
 // On fait la jointure pour trouver les cours liés à cet enseignant précis
-$sql = "SELECT C.* FROM COURS C 
+$sql = "SELECT C.* FROM `cours` C 
         JOIN ENSEIGNANT E ON C.id_enseignant = E.id_enseignant 
         WHERE E.id_user = $id_user
         ORDER BY C.semestre ASC, C.titre ASC";

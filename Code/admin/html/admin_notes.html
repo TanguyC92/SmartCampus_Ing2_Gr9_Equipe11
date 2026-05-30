@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Gestion des Notes</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --sidebar-width: 250px;
+            --card-border: #bdc3c7;
+            --purple: #9b59b6;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--secondary-color); }
+        .logo { font-weight: bold; font-size: 20px; color: var(--primary-color); }
+        .site-name { font-size: 18px; font-weight: 600; color: var(--secondary-color); }
+        .user-info { font-weight: bold; color: #e67e22; }
+        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+
+        /* Sidebar */
+        .sidebar { width: var(--sidebar-width); background-color: var(--secondary-color); color: white; transition: width 0.3s ease; overflow: hidden; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar.collapsed { width: 0; }
+        .sidebar-inner { width: var(--sidebar-width); display: flex; flex-direction: column; height: 100%; }
+        .sidebar nav { padding-top: 10px; }
+        .sidebar a { display: block; padding: 13px 20px; color: white; text-decoration: none; border-left: 4px solid transparent; font-size: 14px; }
+        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left-color: var(--primary-color); }
+        .sidebar-section-title { padding: 12px 20px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7f8c8d; }
+        .sidebar-cours-list { overflow-y: auto; max-height: calc(100vh - 280px); }
+        .sidebar-cours-item { display: block; padding: 10px 20px 10px 28px; color: #bdc3c7; text-decoration: none; border-left: 4px solid transparent; font-size: 13px; cursor: pointer; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-cours-item:hover { background-color: #34495e; color: white; border-left-color: var(--purple); }
+        .sidebar-cours-item.active { background-color: #34495e; color: white; border-left-color: var(--purple); }
+
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
+        footer { background-color: white; border-top: 1px solid #ddd; padding: 15px 30px; display: flex; justify-content: space-between; font-size: 14px; color: #7f8c8d; }
+
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--secondary-color); color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; margin-bottom: 20px; }
+        .back-btn:hover { background: #34495e; }
+
+        /* Banner */
+        .course-info-banner { background: white; border-left: 5px solid var(--purple); border-radius: 8px; padding: 15px 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .course-info-banner h2 { margin: 0 0 5px 0; color: var(--secondary-color); }
+        .course-info-banner p { margin: 0; color: #7f8c8d; font-size: 14px; }
+
+        /* Config section */
+        .config-section { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .config-section h3 { margin-top: 0; color: var(--secondary-color); border-bottom: 2px solid var(--bg-color); padding-bottom: 10px; margin-bottom: 20px; }
+
+        .nb-categories-row { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
+        .nb-categories-row label { font-weight: bold; color: var(--secondary-color); }
+        .nb-categories-row select { padding: 8px 14px; border: 1px solid var(--card-border); border-radius: 5px; font-size: 15px; }
+
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
+
+        /* Carte catégorie */
+        .category-card { border: 2px solid var(--card-border); border-radius: 8px; padding: 18px; background: #fafafa; }
+        .category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .category-header h4 { margin: 0; font-size: 15px; }
+        .cat-select { padding: 5px 10px; border: 1px solid var(--card-border); border-radius: 4px; font-size: 13px; font-weight: 600; }
+
+        .form-row { margin-bottom: 12px; }
+        .form-row label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #555; }
+        .form-row input { width: 100%; padding: 7px 10px; border: 1px solid var(--card-border); border-radius: 4px; font-size: 14px; }
+
+        .notes-sub { margin-top: 10px; background: #f0f4f8; border-radius: 5px; padding: 10px; }
+        .notes-sub-title { font-size: 12px; font-weight: bold; color: #555; margin-bottom: 8px; }
+        .note-pct-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+        .note-pct-row label { min-width: 55px; color: #555; }
+        .note-pct-row input { flex: 1; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .pct-sum { font-size: 12px; margin-top: 6px; font-weight: bold; }
+        .pct-sum.ok { color: #27ae60; }
+        .pct-sum.error { color: #e74c3c; }
+
+        .save-btn { display: block; width: 100%; padding: 12px; background: var(--purple); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 5px; transition: 0.2s; }
+        .save-btn:hover { background: #8e44ad; }
+
+        .success-msg { background: #d4edda; color: #155724; padding: 12px 18px; border-radius: 6px; margin-bottom: 20px; display: none; font-weight: bold; }
+        .error-msg { background: #f8d7da; color: #721c24; padding: 12px 18px; border-radius: 6px; margin-bottom: 20px; display: none; font-weight: bold; }
+
+        .no-course-selected { text-align: center; padding: 60px 20px; color: #7f8c8d; }
+        .no-course-selected .icon { font-size: 48px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <div class="logo">🎓 SmartCampus</div>
+        <div class="site-name">Administration — Gestion des Notes</div>
+    </div>
+    <div class="header-right">
+        <div class="user-info" id="userNameDisplay">Admin</div>
+    </div>
+</header>
+
+<div class="main-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <nav>
+                <a href="http://localhost:8888/Smart_Campus/Code/admin/html/admin-dashboard.html">← Gestion des Cours</a>
+                <a href="http://localhost:8888/Smart_Campus/Code/admin/html/admin_notes.html" class="active">📊 Gestion des Notes</a>
+                <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold; margin-top:10px;">Déconnexion</a>
+            </nav>
+            <div class="sidebar-section-title">Choisir une matière</div>
+            <div class="sidebar-cours-list" id="sidebarCoursList">
+                <div style="padding: 15px; color:#7f8c8d; font-size:13px;">Chargement...</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="content">
+        <a href="http://localhost:8888/Smart_Campus/Code/admin/html/admin-dashboard.html" class="back-btn">← Retour aux cours</a>
+
+        <div id="noCourseMsg" class="no-course-selected">
+            <div class="icon">📊</div>
+            <h3>Sélectionnez une matière</h3>
+            <p>Choisissez une matière dans le panneau de gauche pour configurer ses évaluations.</p>
+        </div>
+
+        <div id="courseContent" style="display:none;">
+            <div class="course-info-banner">
+                <h2 id="courseTitre">—</h2>
+                <p id="courseCoeff">—</p>
+            </div>
+
+            <div class="success-msg" id="successMsg">✅ Configuration sauvegardée avec succès !</div>
+            <div class="error-msg" id="errorMsg"></div>
+
+            <div class="config-section">
+                <h3>📊 Configuration des évaluations</h3>
+
+                <div class="nb-categories-row">
+                    <label for="nbCategories">Nombre de catégories :</label>
+                    <select id="nbCategories">
+                        <option value="1">1 catégorie</option>
+                        <option value="2">2 catégories</option>
+                        <option value="3">3 catégories</option>
+                    </select>
+                </div>
+
+                <div class="categories-grid" id="categoriesGrid"></div>
+                <button class="save-btn" id="saveBtn" onclick="saveConfig()">💾 Enregistrer la configuration</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <div><strong>Support :</strong> support@smartcampus.edu</div>
+    <div><strong>Assistance :</strong> +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+    const CATEGORIES_OPTIONS = [
+        { key: 'controle_continu', label: '📝 Contrôle Continu' },
+        { key: 'examen',           label: '📋 Examen' },
+        { key: 'projet',           label: '🛠️ Projet' }
+    ];
+    const CAT_COLORS = { controle_continu: '#3498db', examen: '#e67e22', projet: '#27ae60' };
+
+    let currentUser = null;
+    let currentCours = null;
+    let existingConfig = [];
+    let allCourses = [];
+
+    // Sécurité
+    const userStr = localStorage.getItem('smartcampus_user');
+    if (!userStr || JSON.parse(userStr).role !== 'admin') {
+        window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+    } else {
+        currentUser = JSON.parse(userStr);
+        document.getElementById('userNameDisplay').textContent = currentUser.prenom + " " + currentUser.nom + " (Admin)";
+    }
+
+    document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('smartcampus_user');
+        window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+    });
+
+    // Charger la liste des cours dans la sidebar
+    function loadSidebarCours() {
+        fetch('http://localhost:8888/Smart_Campus/Code/admin/php/get_courses.php')
+        .then(r => r.json())
+        .then(data => {
+            const list = document.getElementById('sidebarCoursList');
+            list.innerHTML = '';
+            if (!data.success || data.courses.length === 0) {
+                list.innerHTML = '<div style="padding:15px; color:#7f8c8d; font-size:13px;">Aucun cours trouvé.</div>';
+                return;
+            }
+            allCourses = data.courses;
+            data.courses.forEach(cours => {
+                const a = document.createElement('a');
+                a.className = 'sidebar-cours-item';
+                a.textContent = cours.code_cours + ' — ' + cours.titre;
+                a.title = cours.titre;
+                a.href = '#';
+                a.onclick = (e) => { e.preventDefault(); selectCours(cours); };
+                a.id = 'sidebar_cours_' + cours.id_cours;
+                list.appendChild(a);
+            });
+
+            // Si URL contient id_cours, sélectionner automatiquement
+            const params = new URLSearchParams(window.location.search);
+            const idFromUrl = params.get('id_cours');
+            if (idFromUrl) {
+                const found = data.courses.find(c => c.id_cours == idFromUrl);
+                if (found) selectCours(found);
+            }
+        });
+    }
+
+    function selectCours(cours) {
+        currentCours = cours;
+
+        // Mettre à jour sidebar
+        document.querySelectorAll('.sidebar-cours-item').forEach(el => el.classList.remove('active'));
+        const item = document.getElementById('sidebar_cours_' + cours.id_cours);
+        if (item) item.classList.add('active');
+
+        // Afficher le contenu
+        document.getElementById('noCourseMsg').style.display = 'none';
+        document.getElementById('courseContent').style.display = 'block';
+        document.getElementById('courseTitre').textContent = '📊 ' + cours.code_cours + ' — ' + cours.titre;
+        document.getElementById('courseCoeff').textContent = 'Coefficient matière : ' + cours.coefficient;
+        document.getElementById('successMsg').style.display = 'none';
+        document.getElementById('errorMsg').style.display = 'none';
+
+        // Charger la config existante
+        loadExistingConfig(cours.id_cours);
+    }
+
+    function loadExistingConfig(idCours) {
+        fetch(`http://localhost:8888/Smart_Campus/Code/admin/php/get_eval_config.php?id_cours=${idCours}`)
+        .then(r => r.json())
+        .then(data => {
+            existingConfig = [];
+            if (data.success && data.configs.length > 0) {
+                existingConfig = data.configs.map(c => ({
+                    ...c,
+                    pourcentages: (typeof c.pourcentages === 'string') ? JSON.parse(c.pourcentages || '[]') : (c.pourcentages || [])
+                }));
+                document.getElementById('nbCategories').value = existingConfig.length;
+            } else {
+                document.getElementById('nbCategories').value = 1;
+            }
+            renderCategories();
+        })
+        .catch(err => {
+            console.error('Erreur chargement config:', err);
+            renderCategories();
+        });
+    }
+
+    function getUsedCategories(excludeIndex) {
+        const grid = document.getElementById('categoriesGrid');
+        const selects = grid.querySelectorAll('.cat-select');
+        const used = [];
+        selects.forEach((sel, idx) => { if (idx !== excludeIndex) used.push(sel.value); });
+        return used;
+    }
+
+    function buildCategoryCard(index, existing) {
+        const e = existing || {};
+        const catKey = e.categorie || CATEGORIES_OPTIONS[index].key;
+        const coeffVal = e.coefficient_categorie || 1;
+        const nbNotes = parseInt(e.nombre_notes) || 1;
+        const pcts = e.pourcentages || [];
+
+        // Construire les options du select catégorie
+        let optionsHtml = CATEGORIES_OPTIONS.map(opt =>
+            `<option value="${opt.key}" ${opt.key === catKey ? 'selected' : ''}>${opt.label}</option>`
+        ).join('');
+
+        // Construire les lignes de pourcentage
+        let notesHtml = '';
+        for (let i = 1; i <= nbNotes; i++) {
+            const pctVal = pcts[i-1] !== undefined ? pcts[i-1] : Math.round(100 / nbNotes);
+            notesHtml += `
+            <div class="note-pct-row">
+                <label>Note ${i} :</label>
+                <input type="number" min="0" max="100" step="1" class="pct-input" data-index="${i}" value="${pctVal}" oninput="updatePctSum(${index})">
+                <span>%</span>
+            </div>`;
+        }
+
+        return `
+        <div class="category-card" id="catCard_${index}">
+            <div class="category-header">
+                <h4 style="color: var(--secondary-color);">Catégorie ${index + 1}</h4>
+                <select class="cat-select" id="catSelect_${index}" onchange="onCatSelectChange(${index})">
+                    ${optionsHtml}
+                </select>
+            </div>
+            <div class="form-row">
+                <label>Coefficient de la catégorie</label>
+                <input type="number" min="0.1" max="10" step="0.1" id="coeff_${index}" value="${coeffVal}">
+            </div>
+            <div class="form-row">
+                <label>Nombre de notes</label>
+                <input type="number" min="1" max="20" id="nb_${index}" value="${nbNotes}" oninput="updateNotePcts(${index})">
+            </div>
+            <div class="notes-sub" id="notesSub_${index}">
+                <div class="notes-sub-title">Pourcentage par note :</div>
+                <div id="notesRows_${index}">${notesHtml}</div>
+                <div class="pct-sum" id="pctSum_${index}">Total : ${pcts.reduce ? pcts.slice(0,nbNotes).reduce((a,b)=>a+parseFloat(b||0),0) : 0}%</div>
+            </div>
+        </div>`;
+    }
+
+    function onCatSelectChange(index) {
+        // Vérifier les doublons
+        const val = document.getElementById('catSelect_' + index).value;
+        const grid = document.getElementById('categoriesGrid');
+        const selects = grid.querySelectorAll('.cat-select');
+        let duplicate = false;
+        selects.forEach((sel, idx) => {
+            if (idx !== index && sel.value === val) duplicate = true;
+        });
+        if (duplicate) {
+            showError('⚠️ Vous ne pouvez pas sélectionner deux fois la même catégorie. Veuillez choisir une catégorie différente.');
+            // Remettre à l'ancienne valeur (prendre la première non utilisée)
+            const used = getUsedCategories(index);
+            const available = CATEGORIES_OPTIONS.find(o => !used.includes(o.key));
+            if (available) document.getElementById('catSelect_' + index).value = available.key;
+        } else {
+            hideMessages();
+        }
+    }
+
+    function updateNotePcts(index) {
+        const nb = parseInt(document.getElementById('nb_' + index).value) || 1;
+        const pct = Math.round(100 / nb);
+        const remainder = 100 - pct * (nb - 1);
+        let html = '';
+        for (let i = 1; i <= nb; i++) {
+            const val = i === nb ? remainder : pct;
+            html += `
+            <div class="note-pct-row">
+                <label>Note ${i} :</label>
+                <input type="number" min="0" max="100" step="1" class="pct-input" data-index="${i}" value="${val}" oninput="updatePctSum(${index})">
+                <span>%</span>
+            </div>`;
+        }
+        document.getElementById('notesRows_' + index).innerHTML = html;
+        updatePctSum(index);
+    }
+
+    function updatePctSum(index) {
+        const inputs = document.querySelectorAll(`#notesRows_${index} .pct-input`);
+        let total = 0;
+        inputs.forEach(inp => total += parseFloat(inp.value) || 0);
+        const el = document.getElementById('pctSum_' + index);
+        el.textContent = 'Total : ' + Math.round(total) + '%';
+        el.className = 'pct-sum ' + (Math.abs(total - 100) <= 1 ? 'ok' : 'error');
+    }
+
+    function renderCategories() {
+        const nb = parseInt(document.getElementById('nbCategories').value);
+        const grid = document.getElementById('categoriesGrid');
+        grid.innerHTML = '';
+
+        // S'assurer qu'on a exactement nb catégories, sans doublon
+        const usedKeys = [];
+        const configsToUse = [];
+        for (let i = 0; i < nb; i++) {
+            if (existingConfig[i] && !usedKeys.includes(existingConfig[i].categorie)) {
+                configsToUse.push(existingConfig[i]);
+                usedKeys.push(existingConfig[i].categorie);
+            } else {
+                // Trouver une catégorie non utilisée
+                const available = CATEGORIES_OPTIONS.find(o => !usedKeys.includes(o.key));
+                if (available) {
+                    configsToUse.push({ categorie: available.key });
+                    usedKeys.push(available.key);
+                }
+            }
+        }
+
+        for (let i = 0; i < nb; i++) {
+            grid.innerHTML += buildCategoryCard(i, configsToUse[i]);
+        }
+
+        // Calculer les sommes initiales
+        for (let i = 0; i < nb; i++) updatePctSum(i);
+    }
+
+    document.getElementById('nbCategories').addEventListener('change', () => {
+        // Récupérer les valeurs actuellement saisies avant de re-render
+        const nb = parseInt(document.getElementById('nbCategories').value);
+        const grid = document.getElementById('categoriesGrid');
+        const currentSelects = grid.querySelectorAll('.cat-select');
+        // Mettre à jour existingConfig avec les sélections actuelles
+        currentSelects.forEach((sel, idx) => {
+            if (!existingConfig[idx]) existingConfig[idx] = {};
+            existingConfig[idx].categorie = sel.value;
+            const coeffEl = document.getElementById('coeff_' + idx);
+            if (coeffEl) existingConfig[idx].coefficient_categorie = parseFloat(coeffEl.value);
+            const nbEl = document.getElementById('nb_' + idx);
+            if (nbEl) existingConfig[idx].nombre_notes = parseInt(nbEl.value);
+            const pctInputs = document.querySelectorAll(`#notesRows_${idx} .pct-input`);
+            existingConfig[idx].pourcentages = Array.from(pctInputs).map(i => parseFloat(i.value) || 0);
+        });
+        renderCategories();
+    });
+
+    function showError(msg) {
+        const el = document.getElementById('errorMsg');
+        el.textContent = msg;
+        el.style.display = 'block';
+        document.getElementById('successMsg').style.display = 'none';
+    }
+    function hideMessages() {
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'none';
+    }
+
+    function saveConfig() {
+        if (!currentCours) { showError('Aucune matière sélectionnée.'); return; }
+
+        const nb = parseInt(document.getElementById('nbCategories').value);
+        const categories = [];
+        const usedCats = [];
+
+        for (let i = 0; i < nb; i++) {
+            const catKey = document.getElementById('catSelect_' + i).value;
+            if (usedCats.includes(catKey)) {
+                showError(`⚠️ La catégorie "${catKey}" est sélectionnée plusieurs fois. Chaque catégorie doit être unique.`);
+                return;
+            }
+            usedCats.push(catKey);
+
+            const coeff = parseFloat(document.getElementById('coeff_' + i).value);
+            const nbNotes = parseInt(document.getElementById('nb_' + i).value);
+            const pctInputs = document.querySelectorAll(`#notesRows_${i} .pct-input`);
+            const pcts = Array.from(pctInputs).map(inp => parseFloat(inp.value) || 0);
+            const totalPct = pcts.reduce((a, b) => a + b, 0);
+
+            const LABELS_FR = { controle_continu: 'Contrôle Continu', examen: 'Examen', projet: 'Projet' };
+            if (Math.abs(totalPct - 100) > 1) {
+                showError(`⚠️ La somme des pourcentages pour "${LABELS_FR[catKey]}" doit être 100% (actuellement ${totalPct.toFixed(0)}%).`);
+                return;
+            }
+
+            if (isNaN(coeff) || coeff <= 0) {
+                showError(`⚠️ Le coefficient pour "${LABELS_FR[catKey]}" doit être un nombre positif.`);
+                return;
+            }
+
+            categories.push({ categorie: catKey, coefficient_categorie: coeff, nombre_notes: nbNotes, pourcentages: pcts });
+        }
+
+        const btn = document.getElementById('saveBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ Enregistrement...';
+
+        fetch('http://localhost:8888/Smart_Campus/Code/admin/php/save_eval_config.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_cours: currentCours.id_cours, categories })
+        })
+        .then(r => r.text())  // d'abord text pour déboguer
+        .then(text => {
+            btn.disabled = false;
+            btn.textContent = '💾 Enregistrer la configuration';
+            let data;
+            try { data = JSON.parse(text); } catch(e) {
+                showError('Erreur serveur : ' + text);
+                return;
+            }
+            if (data.success) {
+                document.getElementById('successMsg').style.display = 'block';
+                document.getElementById('errorMsg').style.display = 'none';
+                setTimeout(() => document.getElementById('successMsg').style.display = 'none', 4000);
+                loadExistingConfig(currentCours.id_cours);
+            } else {
+                showError('Erreur : ' + data.message);
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.textContent = '💾 Enregistrer la configuration';
+            showError('Erreur réseau : ' + err.message);
+        });
+    }
+
+    loadSidebarCours();
+</script>
+</body>
+</html>

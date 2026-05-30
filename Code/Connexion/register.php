@@ -18,14 +18,14 @@ if (isset($data->nom) && isset($data->prenom) && isset($data->email) && isset($d
     $hashed_password = password_hash($data->password, PASSWORD_DEFAULT);
 
     // 1. Vérifier si l'email existe déjà dans la base
-    $check_email = "SELECT id_user FROM USER WHERE email = '$email'";
+    $check_email = "SELECT id_user FROM `user` WHERE email = '$email'";
     $result = mysqli_query($conn, $check_email);
 
     if (mysqli_num_rows($result) > 0) {
         echo json_encode(["success" => false, "message" => "Cet email est déjà utilisé."]);
     } else {
         // 2. Insérer le nouvel utilisateur dans la table USER
-        $sql = "INSERT INTO USER (nom, prenom, email, password, role) 
+        $sql = "INSERT INTO `user` (nom, prenom, email, password, role) 
                 VALUES ('$nom', '$prenom', '$email', '$hashed_password', '$role')";
 
         if (mysqli_query($conn, $sql)) {

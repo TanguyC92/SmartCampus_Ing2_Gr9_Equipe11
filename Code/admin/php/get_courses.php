@@ -3,9 +3,9 @@
 require_once '../../Connexion/config.php';
 
 $sql = "SELECT C.*, U.nom AS prof_nom, U.prenom AS prof_prenom 
-        FROM COURS C 
+        FROM `cours` C 
         LEFT JOIN ENSEIGNANT E ON C.id_enseignant = E.id_enseignant 
-        LEFT JOIN USER U ON E.id_user = U.id_user 
+        LEFT JOIN `user` U ON E.id_user = U.id_user 
         ORDER BY C.id_cours DESC";
 
 $result = mysqli_query($conn, $sql);

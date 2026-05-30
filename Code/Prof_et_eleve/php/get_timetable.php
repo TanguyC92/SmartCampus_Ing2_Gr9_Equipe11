@@ -15,7 +15,7 @@ $debug = "Analyse en cours...";
 
 if ($role === 'etudiant' || $role === 'étudiant') {
     // 1. Cherche si l'user est bien dans la table ETUDIANT
-    $q1 = mysqli_query($conn, "SELECT id_etudiant FROM ETUDIANT WHERE id_user = $id_user");
+    $q1 = mysqli_query($conn, "SELECT id_etudiant FROM `etudiant` WHERE id_user = $id_user");
     if (mysqli_num_rows($q1) == 0) {
         $debug = "Erreur : Ce compte n'a pas de profil dans la table ETUDIANT.";
     } else {
@@ -23,7 +23,7 @@ if ($role === 'etudiant' || $role === 'étudiant') {
         $id_etu = $etu['id_etudiant'];
         
         // 2. Cherche si l'étudiant est inscrit à des cours
-        $q2 = mysqli_query($conn, "SELECT id_cours FROM INSCRIPTION WHERE id_etudiant = $id_etu");
+        $q2 = mysqli_query($conn, "SELECT id_cours FROM `inscription` WHERE id_etudiant = $id_etu");
         if (mysqli_num_rows($q2) == 0) {
             $debug = "L'élève (ID: $id_etu) n'est inscrit à AUCUN cours. Va dans l'admin et inscris-le !";
         } else {
@@ -39,9 +39,9 @@ if ($role === 'etudiant' || $role === 'étudiant') {
                 // 4. Si tout est bon, on cherche pour la bonne semaine !
                 $sql_final = "SELECT EDT.*, C.titre, U.nom AS prof_nom 
                               FROM EMPLOI_DU_TEMPS EDT
-                              JOIN COURS C ON EDT.id_cours = C.id_cours
+                              JOIN `cours` C ON EDT.id_cours = C.id_cours
                               LEFT JOIN ENSEIGNANT E ON C.id_enseignant = E.id_enseignant
-                              LEFT JOIN USER U ON E.id_user = U.id_user
+                              LEFT JOIN `user` U ON E.id_user = U.id_user
                               WHERE EDT.id_cours IN ($in_clause)
                               AND EDT.date_cours >= '$week_start' AND EDT.date_cours <= '$week_end'";
                 $q_final = mysqli_query($conn, $sql_final);
@@ -58,9 +58,9 @@ if ($role === 'etudiant' || $role === 'étudiant') {
     // Si c'est un enseignant
     $sql_prof = "SELECT EDT.*, C.titre, U.nom AS prof_nom 
                   FROM EMPLOI_DU_TEMPS EDT
-                  JOIN COURS C ON EDT.id_cours = C.id_cours
+                  JOIN `cours` C ON EDT.id_cours = C.id_cours
                   JOIN ENSEIGNANT E ON C.id_enseignant = E.id_enseignant
-                  JOIN USER U ON E.id_user = U.id_user
+                  JOIN `user` U ON E.id_user = U.id_user
                   WHERE E.id_user = $id_user
                   AND EDT.date_cours >= '$week_start' AND EDT.date_cours <= '$week_end'";
     $res = mysqli_query($conn, $sql_prof);

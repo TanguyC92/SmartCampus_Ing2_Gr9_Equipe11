@@ -14,7 +14,7 @@ if (isset($data->email) && isset($data->password)) {
     $email = mysqli_real_escape_string($conn, $data->email);
     $password = $data->password;
 
-    $sql = "SELECT id_user, nom, prenom, role, password, statut_compte FROM USER WHERE email = '$email'";
+    $sql = "SELECT id_user, nom, prenom, role, password, statut_compte FROM `user` WHERE email = '$email'";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {

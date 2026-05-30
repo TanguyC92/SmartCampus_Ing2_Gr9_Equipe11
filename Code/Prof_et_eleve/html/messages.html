@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Messagerie</title>
+    <style>
+        /* BASE (Identique aux autres pages) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f7f6; color: #333; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background: #2c3e50; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar a { padding: 15px 20px; color: white; text-decoration: none; display:block; }
+        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left: 4px solid #5b5fc7; } /* Violet Teams */
+        
+        /* LAYOUT MESSAGERIE (Style Teams) */
+        .content { flex: 1; display: flex; background: white; overflow: hidden; }
+        
+        /* PANNEAU DE GAUCHE : CONTACTS */
+        .contacts-pane { width: 320px; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; background: #faf9f8; flex-shrink: 0; }
+        .contacts-header { padding: 15px; border-bottom: 1px solid #e0e0e0; }
+        .contacts-header h2 { margin: 0 0 10px 0; font-size: 20px; }
+        .search-bar { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; outline: none; }
+        
+        .contacts-list { flex: 1; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
+        .contact-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f3f2f1; transition: background 0.2s; }
+        .contact-item:hover { background: #edebe9; }
+        .contact-item.active { background: #e0e0ea; border-left: 3px solid #5b5fc7; }
+        
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #5b5fc7; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink:0; }
+        .contact-name { font-weight: 600; font-size: 14px; }
+        
+        /* PANNEAU DE DROITE : CHAT */
+        .chat-pane { flex: 1; display: flex; flex-direction: column; background: #fff; }
+        
+        .chat-header { padding: 15px 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .chat-header h3 { margin: 0; font-size: 18px; color: #252423; }
+        
+        .chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #f3f2f1; }
+        .empty-chat { margin: auto; color: #7f8c8d; text-align: center; }
+        
+        /* BULLES DE MESSAGE */
+        .message { max-width: 65%; padding: 10px 15px; border-radius: 8px; font-size: 14px; line-height: 1.4; position: relative; }
+        .msg-received { background: white; align-self: flex-start; border: 1px solid #e0e0e0; border-bottom-left-radius: 2px; }
+        .msg-sent { background: #e8ebfa; border: 1px solid #d1d5f8; align-self: flex-end; border-bottom-right-radius: 2px; color: #242424; }
+        .msg-time { font-size: 10px; color: #888; margin-top: 5px; text-align: right; }
+
+        /* ZONE DE SAISIE */
+        .chat-input-area { padding: 15px 20px; border-top: 1px solid #e0e0e0; display: flex; gap: 10px; background: white; }
+        .chat-input { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 4px; resize: none; font-family: inherit; outline: none; }
+        .chat-input:focus { border-color: #5b5fc7; }
+        .btn-send { background: #5b5fc7; color: white; border: none; padding: 0 20px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-send:hover { background: #464eb8; }
+        .btn-send:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Notif*/
+        .unread-badge { background: #e74c3c; color: white; border-radius: 50%; padding: 2px 8px; font-size: 11px; font-weight: bold; margin-left: auto; }
+        .msg-status { font-size: 10px; color: #5b5fc7; text-align: right; margin-top: 2px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div style="padding: 20px; font-weight: bold; font-size: 18px; text-align:center;">🎓 SmartCampus</div>
+        <nav>
+            <a href="javascript:history.back()">🔙 Retour</a>
+            <a href="#" class="active">💬 Messagerie</a>
+            <a href="#" id="logoutBtn" style="color: #e74c3c;">Déconnexion</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="contacts-pane">
+            <div class="contacts-header">
+                <h2>Conversations</h2>
+                <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher une personne...">
+            </div>
+            <ul class="contacts-list" id="contactsList">
+                <div style="padding:20px; color:#888; text-align:center;">Chargement des contacts...</div>
+            </ul>
+        </div>
+
+        <div class="chat-pane" id="chatPane" style="display:none;">
+            <div class="chat-header">
+                <div class="avatar" id="currentChatAvatar"></div>
+                <h3 id="currentChatName">Nom du contact</h3>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <textarea class="chat-input" id="messageInput" rows="2" placeholder="Tapez un nouveau message..."></textarea>
+                <button type="submit" class="btn-send" id="sendBtn">Envoyer</button>
+            </form>
+        </div>
+        
+        <div class="chat-pane" id="emptyPane" style="justify-content:center; align-items:center; background:#f3f2f1;">
+            <div class="empty-chat">
+                <h2 style="color:#5b5fc7; margin-bottom:5px;">Vos discussions</h2>
+                <p>Sélectionnez un contact dans la liste pour démarrer.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('smartcampus_user'));
+        if(!user) window.location.href= "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+
+        let contactsCache = [];
+        let currentContactId = null;
+
+        // --- 1. CHARGER LES CONTACTS (AVEC LES NON-LUS) ---
+        function loadContacts() {
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/chat_api.php?action=get_contacts&id_user=${user.id_user}&role=${user.role}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    contactsCache = data.data;
+                    renderContacts(contactsCache);
+                }
+            });
+        }
+
+        function renderContacts(contactsArray) {
+            const list = document.getElementById('contactsList');
+            list.innerHTML = "";
+            if(contactsArray.length === 0) {
+                list.innerHTML = `<div style="padding:20px; color:#888; text-align:center; font-size:14px;">Aucun contact trouvé.</div>`;
+                return;
+            }
+
+            contactsArray.forEach(c => {
+                const li = document.createElement('li');
+                li.className = `contact-item ${currentContactId === c.id_user ? 'active' : ''}`;
+                
+                const initials = (c.prenom.charAt(0) + c.nom.charAt(0)).toUpperCase();
+                
+                // Si on a des messages non lus, on crée la petite bulle rouge
+                const unreadBadge = parseInt(c.unread_count) > 0 ? `<div class="unread-badge">${c.unread_count}</div>` : '';
+                // S'il y a un message plus récent, le nom est mis en gras
+                const fontWeight = parseInt(c.unread_count) > 0 ? '800' : '600';
+
+                li.innerHTML = `
+                    <div class="avatar">${initials}</div>
+                    <div class="contact-name" style="font-weight:${fontWeight}">${c.prenom} ${c.nom}</div>
+                    ${unreadBadge}
+                `;
+                
+                li.onclick = () => openChat(c.id_user, `${c.prenom} ${c.nom}`, initials);
+                list.appendChild(li);
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const filtered = contactsCache.filter(c => c.nom.toLowerCase().includes(term) || c.prenom.toLowerCase().includes(term));
+            renderContacts(filtered);
+        });
+
+        // --- 2. OUVRIR ET RAFRAÎCHIR LA DISCUSSION ---
+        function openChat(targetId, targetName, targetInitials) {
+            currentContactId = targetId;
+            document.getElementById('emptyPane').style.display = 'none';
+            document.getElementById('chatPane').style.display = 'flex';
+            document.getElementById('currentChatName').textContent = targetName;
+            document.getElementById('currentChatAvatar').textContent = targetInitials;
+            
+            // On recharge les contacts immédiatement pour faire disparaitre le badge non-lu
+            loadContacts();
+            loadMessages(true); // true = forcer le scroll en bas
+        }
+
+        function formatTime(dateString) {
+            const d = new Date(dateString);
+            return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+        }
+
+        function loadMessages(forceScroll = false) {
+            if(!currentContactId) return;
+            const history = document.getElementById('chatHistory');
+
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/chat_api.php?action=get_messages&me=${user.id_user}&other=${currentContactId}`)
+            .then(res => res.json())
+            .then(data => {
+                // On vérifie si l'utilisateur était déjà tout en bas pour ne pas le gêner s'il lisait plus haut
+                const isAtBottom = history.scrollHeight - history.scrollTop <= history.clientHeight + 50;
+
+                history.innerHTML = "";
+                if(data.success) {
+                    if(data.data.length === 0) {
+                        history.innerHTML = "<div class='empty-chat'>Dites bonjour ! 👋</div>";
+                    } else {
+                        data.data.forEach(msg => {
+                            const isMe = parseInt(msg.id_expediteur) === parseInt(user.id_user);
+                            const div = document.createElement('div');
+                            div.className = `message ${isMe ? 'msg-sent' : 'msg-received'}`;
+                            
+                            const timeStr = formatTime(msg.date_envoi);
+                            
+                            // ACCUSÉ DE RÉCEPTION (Uniquement pour les messages que MOI j'ai envoyé)
+                            let readReceipt = '';
+                            if (isMe && parseInt(msg.lu) === 1 && msg.date_lecture) {
+                                readReceipt = `<div class="msg-status">👁️ Lu à ${formatTime(msg.date_lecture)}</div>`;
+                            }
+
+                            div.innerHTML = `
+                                <div>${msg.contenu.replace(/\n/g, '<br>')}</div>
+                                <div class="msg-time">${timeStr}</div>
+                                ${readReceipt}
+                            `;
+                            history.appendChild(div);
+                        });
+
+                        // On scroll en bas seulement si on vient d'ouvrir le chat, OU si on était déjà en bas
+                        if(forceScroll || isAtBottom) {
+                            history.scrollTop = history.scrollHeight;
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 3. ENVOYER UN MESSAGE ---
+        document.getElementById('chatForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('messageInput');
+            const contenu = input.value.trim();
+            
+            if(!contenu || !currentContactId) return;
+
+            document.getElementById('sendBtn').disabled = true;
+
+            fetch('http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/chat_api.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ me: user.id_user, other: currentContactId, contenu: contenu })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('sendBtn').disabled = false;
+                if(data.success) {
+                    input.value = "";
+                    loadMessages(true); // On force le scroll pour voir le message qu'on vient d'envoyer
+                    loadContacts(); // Fait remonter le contact en haut de la liste !
+                }
+            });
+        });
+
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href= "http://localhost:8888/Smart_Campus/Code/Connexion/index.html"; });
+
+        // --- 4. ACTUALISATION EN TEMPS RÉEL (Toutes les 3 secondes) ---
+        setInterval(() => {
+            loadContacts();
+            if(currentContactId) loadMessages(false);
+        }, 3000);
+
+        // Démarrage initial
+        loadContacts();
+    </script>
+</body>
+</html>

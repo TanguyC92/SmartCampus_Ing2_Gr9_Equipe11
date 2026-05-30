@@ -3,192 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCampus - Mes Cours</title>
+    <title>SmartCampus — Mes Cours</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* MÊME DESIGN QUE L'ADMINISTRATEUR */
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --sidebar-width: 250px;
-            --card-border: #bdc3c7;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,.1);
         }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; background-color: var(--bg-color); color: var(--text-color);
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #10b981); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 20px; }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
 
-        header {
-            background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10;
-        }
-        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
-        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--secondary-color); }
-        .logo { font-weight: bold; font-size: 20px; color: var(--primary-color); }
-        .site-name { font-size: 18px; font-weight: 600; color: var(--secondary-color); }
-        .user-info { font-weight: bold; color: var(--primary-color); }
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
 
-        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(16,185,129,.15); color: #34d399; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
 
-        .sidebar {
-            width: var(--sidebar-width); background-color: var(--secondary-color); color: white;
-            transition: width 0.3s ease; overflow-y: auto; display: flex; flex-direction: column;
-        }
-        .sidebar.collapsed { width: 0; }
-        .sidebar nav { flex: 1; padding-top: 20px; }
-        .sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-left: 4px solid transparent; }
-        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left-color: var(--primary-color); }
+        /* Cours dropdown */
+        .sidebar-courses-toggle { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; cursor: pointer; transition: all .15s; user-select: none; }
+        .sidebar-courses-toggle:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar-courses-toggle .arrow { margin-left: auto; transition: transform .2s; font-size: 12px; }
+        .sidebar-courses-toggle.open .arrow { transform: rotate(90deg); }
+        .sidebar-courses-toggle.active-section { background: rgba(16,185,129,.1); color: #34d399; }
+        .sidebar-courses-list { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+        .sidebar-courses-list.open { max-height: 500px; }
+        .sidebar-courses-list a { padding: 8px 16px 8px 46px; font-size: 13px; }
+        .sidebar-courses-list .loading-item { padding: 8px 16px 8px 46px; color: #475569; font-size: 13px; font-style: italic; }
 
-        .content { flex: 1; padding: 30px; overflow-y: auto; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .page-header h2 { margin: 0; color: var(--secondary-color); }
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 28px; transition: margin-left .3s; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
 
-        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .page-header { margin-bottom: 24px; }
+        .page-header h2 { font-size: 20px; font-weight: 700; }
+        .page-header p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
 
-        .course-card {
-            background: white; border: 1px solid var(--card-border); border-radius: 8px;
-            overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-        .course-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        
-        .course-title { background-color: var(--primary-color); color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 16px; }
-        .course-info-block { padding: 15px; border-bottom: 1px solid var(--card-border); flex: 1; font-size: 14px; line-height: 1.6; }
-        .course-actions { display: flex; padding: 10px; background-color: #f9f9f9; }
-        
-        .btn-action {
-            flex: 1; padding: 10px; border: none; background-color: var(--primary-color);
-            border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; color: white;
-            transition: 0.2s;
-        }
-        .btn-action:hover { background-color: #2980b9; }
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .course-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: .2s; border: 1px solid var(--border); }
+        .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .course-title { background: var(--secondary); color: #fff; padding: 16px 20px; font-size: 15px; font-weight: 700; }
+        .course-info-block { padding: 18px; flex: 1; color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+        .course-actions { padding: 16px; border-top: 1px solid var(--border); background: var(--surface-2); }
+        .btn-action { display: block; width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-weight: 600; cursor: pointer; transition: .2s; text-align: center; font-family: inherit; font-size: 14px; }
+        .btn-action:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .empty-message { text-align: center; grid-column: 1 / -1; color: #7f8c8d; font-style: italic; padding: 40px; }
+        .empty-message { text-align: center; color: var(--text-muted); font-style: italic; padding: 60px; grid-column: 1/-1; }
 
-        footer { background-color: white; border-top: 1px solid #ddd; padding: 15px 30px; display: flex; justify-content: space-between; font-size: 14px; color: #7f8c8d; }
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <button class="menu-btn" id="menuToggle">☰</button>
-            <div class="logo">🎓 SmartCampus</div>
-            <div class="site-name">Espace Étudiant</div>
-        </div>
-        <div class="header-right">
-            <div>🔔 Notifications</div>
-            <div class="user-info" id="userNameDisplay">Étudiant</div>
-        </div>
-    </header>
-
-    <div class="main-wrapper">
-        <aside class="sidebar" id="sidebar">
-            <nav>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html">Accueil</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html" class="active">Mes Cours</a>
-                <a href="#">Mes Notes</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
-                <a href="#">Messagerie</a>
-                <a href="#">Paramètres</a>
-                <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
-            </nav>
-        </aside>
-
-        <main class="content">
-            <div class="page-header">
-                <h2>Mes Cours Inscrits</h2>
-            </div>
-            
-            <div class="courses-grid" id="coursesContainer">
-                <div class="empty-message">Chargement de vos cours...</div>
-            </div>
-        </main>
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Étudiant</span>
     </div>
+    <div class="header-right">
+        <button class="notif-btn">🔔</button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">E</div>
+            <span id="userNameDisplay">Étudiant</span>
+        </div>
+    </div>
+</header>
 
-    <footer>
-        <div><strong>Support :</strong> support@smartcampus.edu</div>
-        <div><strong>Assistance :</strong> +33 06 12 34 56 78</div>
-    </footer>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="dashboard.html">
+            <span class="nav-icon">🏠</span> Accueil
+        </a>
+        <a href="student_courses.html" class="active">
+            <span class="nav-icon">📚</span> Mes Cours
+        </a>
 
-    <script>
-        let currentUser = null;
+        <!-- Accès rapide à un cours -->
+        <div class="sidebar-courses-toggle active-section open" id="coursesToggle">
+            <span class="nav-icon">📖</span> Accès rapide cours
+            <span class="arrow">▶</span>
+        </div>
+        <div class="sidebar-courses-list open" id="coursesList">
+            <div class="loading-item">Chargement...</div>
+        </div>
 
-        // 1. SÉCURITÉ ET VÉRIFICATION DE LA SESSION
-        const userStr = localStorage.getItem('smartcampus_user');
-        if (!userStr) {
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html"; // Redirige si non connecté
-        } else {
-            currentUser = JSON.parse(userStr);
-            // Vérifie que c'est bien un étudiant
-            if (currentUser.role !== 'etudiant') {
-                alert("Accès réservé aux étudiants.");
-                window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
-            }
-            document.getElementById('userNameDisplay').textContent = currentUser.prenom + " " + currentUser.nom;
+        <a href="student_grades.html">
+            <span class="nav-icon">📊</span> Mes Notes
+        </a>
+        <a href="timetable.html">
+            <span class="nav-icon">📅</span> Emploi du temps
+        </a>
+        <a href="#">
+            <span class="nav-icon">✉️</span> Messagerie
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger">
+            <span class="nav-icon">🚪</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h2>Mes Cours Inscrits</h2>
+            <p>Sélectionnez un cours pour accéder aux documents et ressources.</p>
+        </div>
+        <div class="courses-grid" id="coursesContainer">
+            <div class="empty-message">Chargement de vos cours...</div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+const user = JSON.parse(userStr);
+if (user.role !== 'etudiant') { alert('Accès réservé aux étudiants.'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; }
+
+document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
+document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
+
+const toggle = document.getElementById('coursesToggle');
+const list = document.getElementById('coursesList');
+toggle.addEventListener('click', () => { toggle.classList.toggle('open'); list.classList.toggle('open'); });
+
+function loadCourses() {
+    fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${user.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        const container = document.getElementById('coursesContainer');
+        container.innerHTML = '';
+        list.innerHTML = '';
+
+        if (!data.success) { container.innerHTML = `<div class="empty-message" style="color:red">Erreur: ${data.message}</div>`; return; }
+        if (data.courses.length === 0) {
+            container.innerHTML = `<div class="empty-message">Vous n'êtes inscrit à aucun cours.</div>`;
+            list.innerHTML = '<div class="loading-item">Aucun cours</div>';
+            return;
         }
 
-        // 2. GESTION DU MENU ET DÉCONNEXION
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('collapsed');
+        data.courses.forEach(c => {
+            const prof = c.prof_nom ? `${c.prof_prenom ?? ''} ${c.prof_nom}` : 'Non assigné';
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.innerHTML = `
+                <div class="course-title">${c.code_cours} — ${c.titre}</div>
+                <div class="course-info-block">
+                    <p>👨‍🏫 Enseignant : <strong>${prof}</strong></p>
+                    <p>📅 Semestre : ${c.semestre}</p>
+                    <p>📊 Crédits ECTS : ${c.credits} | Coefficient : <strong>${c.coefficient}</strong></p>
+                </div>
+                <div class="course-actions">
+                    <button class="btn-action"
+                        onclick="window.location.href='course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}'">
+                        📁 Accéder aux documents
+                    </button>
+                </div>`;
+            container.appendChild(card);
+
+            // Sidebar shortcut
+            const a = document.createElement('a');
+            a.href = `course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}`;
+            a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre}`;
+            list.appendChild(a);
         });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('smartcampus_user');
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
-        });
-
-        // 3. CHARGEMENT DYNAMIQUE DES COURS DE L'ÉTUDIANT
-        function loadStudentCourses() {
-            // On envoie l'ID de l'utilisateur à notre script PHP
-            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${currentUser.id_user}`)
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('coursesContainer');
-                container.innerHTML = ""; // On vide le conteneur
-
-                if(data.success) {
-                    if (data.courses.length === 0) {
-                        container.innerHTML = "<div class='empty-message'>Vous n'êtes inscrit à aucun cours pour le moment.</div>";
-                    } else {
-                        // On génère une carte pour chaque cours
-                        data.courses.forEach(cours => {
-                            const prof = cours.prof_nom ? `${cours.prof_prenom ?? ''} ${cours.prof_nom}` : "Professeur non assigné";
-                            const card = document.createElement('div');
-                            card.className = 'course-card';
-                            
-                            card.innerHTML = `
-                                <div class="course-title">${cours.code_cours} - ${cours.titre}</div>
-                                <div class="course-info-block">
-                                    <p>👨‍🏫 Enseignant : <strong>${prof}</strong></p>
-                                    <p>📅 Semestre : ${cours.semestre}</p>
-                                    <p>📊 Crédits ECTS : ${cours.credits} | Coefficient : <strong>${cours.coefficient}</strong></p>
-                                </div>
-                                <div class="course-actions">
-                                    <button class="btn-action"
-                                        onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/course_documents_student.html?id_cours=${cours.id_cours}&titre=${encodeURIComponent(cours.titre)}'">
-                                        📚 Accéder au cours
-                                    </button>
-                                </div>
-                            `;
-                            container.appendChild(card);
-                        });
-                    }
-                } else {
-                    container.innerHTML = `<div class='empty-message' style="color:red;">Erreur: ${data.message}</div>`;
-                }
-            })
-            .catch(err => {
-                document.getElementById('coursesContainer').innerHTML = "<div class='empty-message' style='color:red;'>Erreur de communication avec le serveur.</div>";
-                console.error(err);
-            });
-        }
-
-        // Lancer le chargement au démarrage de la page
-        loadStudentCourses();
-    </script>
+    })
+    .catch(() => { document.getElementById('coursesContainer').innerHTML = `<div class="empty-message" style="color:red">Erreur serveur.</div>`; });
+}
+loadCourses();
+</script>
 </body>
 </html>

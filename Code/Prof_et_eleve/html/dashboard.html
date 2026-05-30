@@ -3,130 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCampus - Espace Étudiant</title>
+    <title>SmartCampus — Tableau de bord Étudiant</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --sidebar-width: 250px;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,.1);
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
-        header { background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .header-right { display: flex; align-items: center; gap: 20px; }
-        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--secondary-color); }
-        .logo { font-weight: bold; font-size: 20px; color: var(--primary-color); }
-        .site-name { font-size: 18px; font-weight: 600; color: var(--secondary-color); }
-        .user-info { font-weight: bold; color: var(--primary-color); }
-        .notifications { cursor: pointer; position: relative; }
-        .badge { background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -10px; right: -15px; }
-        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: var(--sidebar-width); background-color: var(--secondary-color); color: white; transition: width 0.3s ease; overflow-y: auto; display: flex; flex-direction: column; }
-        .sidebar.collapsed { width: 0; }
-        .sidebar nav { flex: 1; padding-top: 20px; }
-        .sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; transition: background 0.2s; border-left: 4px solid transparent; }
-        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left-color: var(--primary-color); }
-        .content { flex: 1; padding: 30px; overflow-y: auto; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .widget { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-top: 4px solid var(--primary-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .widget:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .widget h3 { margin-top: 0; color: var(--secondary-color); }
-        .widget-full { grid-column: span 2; min-height: 200px; }
-        .avg-display { font-size: 32px; font-weight: bold; color: var(--primary-color); }
-        footer { background-color: white; border-top: 1px solid #ddd; padding: 15px 30px; display: flex; justify-content: space-between; font-size: 14px; color: #7f8c8d; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .widget-full { grid-column: span 1; } .site-name { display: none; } }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
+
+        /* ─── HEADER ──────────────────────────────── */
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #10b981); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 20px; }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .notif-btn:hover { background: var(--border); }
+        .notif-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid white; position: absolute; top: 6px; right: 6px; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
+
+        /* ─── LAYOUT ──────────────────────────────── */
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
+
+        /* ─── SIDEBAR ─────────────────────────────── */
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(16,185,129,.15); color: #34d399; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+        /* Cours dropdown in sidebar */
+        .sidebar-courses-toggle {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 16px; color: #94a3b8;
+            font-size: 14px; font-weight: 500;
+            border-radius: 8px; margin: 2px 8px;
+            cursor: pointer; transition: all .15s;
+            user-select: none;
+        }
+        .sidebar-courses-toggle:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar-courses-toggle .arrow { margin-left: auto; transition: transform .2s; font-size: 12px; }
+        .sidebar-courses-toggle.open .arrow { transform: rotate(90deg); }
+        .sidebar-courses-list { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+        .sidebar-courses-list.open { max-height: 500px; }
+        .sidebar-courses-list a { padding: 8px 16px 8px 46px; font-size: 13px; }
+        .sidebar-courses-list .loading-item { padding: 8px 16px 8px 46px; color: #475569; font-size: 13px; font-style: italic; }
+
+        /* ─── CONTENT ─────────────────────────────── */
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 28px; transition: margin-left .3s; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
+
+        .welcome-banner { background: linear-gradient(135deg, #10b981, #3b82f6); color: white; border-radius: var(--radius); padding: 28px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .welcome-banner h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .welcome-banner p { font-size: 14px; opacity: .85; }
+        .welcome-banner .banner-icon { font-size: 48px; opacity: .7; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+        .stat-card .stat-icon { font-size: 26px; margin-bottom: 8px; }
+        .stat-card .stat-val { font-size: 26px; font-weight: 700; }
+        .stat-card .stat-label { font-size: 13px; color: var(--text-muted); }
+
+        .widgets-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .widget-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); cursor: pointer; transition: .2s; display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: inherit; }
+        .widget-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .widget-card .w-icon { font-size: 32px; }
+        .widget-card .w-title { font-size: 16px; font-weight: 700; }
+        .widget-card .w-desc { font-size: 13px; color: var(--text-muted); }
+        .widget-card .w-arrow { margin-top: auto; color: var(--primary); font-size: 13px; font-weight: 600; }
+        .widget-card .w-highlight { font-size: 28px; font-weight: 700; color: var(--primary); }
+
+        /* ─── FOOTER ──────────────────────────────── */
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <button class="menu-btn" id="menuToggle">☰</button>
-            <div class="logo">🎓 SmartCampus</div>
-            <div class="site-name">Espace Étudiant</div>
-        </div>
-        <div class="header-right">
-            <div class="notifications">🔔 Notifications <span class="badge">3</span></div>
-            <div class="user-info" id="userNameDisplay">Chargement...</div>
-        </div>
-    </header>
-
-    <div class="main-wrapper">
-        <aside class="sidebar" id="sidebar">
-            <nav>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html" class="active">Accueil</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html">Mes Cours</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_grades.html">Mes Notes</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
-                <a href="#">Messagerie</a>
-                <a href="#">Paramètres</a>
-                <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
-            </nav>
-        </aside>
-
-        <main class="content">
-            <h2 style="margin-top:0; margin-bottom: 25px; color: var(--secondary-color);">Tableau de bord Étudiant</h2>
-            <div class="dashboard-grid">
-                <div class="widget" onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html'">
-                    <h3>📚 Mes matières</h3>
-                    <p>Consulter les cours et supports</p>
-                </div>
-                <div class="widget" onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_grades.html'">
-                    <h3>📝 Mes Notes</h3>
-                    <div class="avg-display" id="avgDisplay">--/20</div>
-                    <p style="margin:0; font-size:13px; color:#7f8c8d;">Moyenne actuelle</p>
-                </div>
-                <div class="widget">
-                    <h3>⏱️ Prochain travail à rendre</h3>
-                    <p>Aucun devoir imminent</p>
-                </div>
-                <div class="widget" onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html'">
-                    <h3>📅 Emploi du temps</h3>
-                    <p>Voir mon planning</p>
-                </div>
-                <div class="widget widget-full">
-                    <h3>✉️ Derniers messages</h3>
-                    <p style="color: #7f8c8d;">Votre boîte de réception est vide pour le moment.</p>
-                </div>
-            </div>
-        </main>
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Étudiant</span>
     </div>
+    <div class="header-right">
+        <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">E</div>
+            <span id="userNameDisplay">Étudiant</span>
+        </div>
+    </div>
+</header>
 
-    <footer>
-        <div><strong>Support :</strong> support@smartcampus.edu</div>
-        <div><strong>Assistance :</strong> +33 06 12 34 56 78</div>
-    </footer>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="dashboard.html" class="active">
+            <span class="nav-icon">🏠</span> Accueil
+        </a>
+        <a href="student_courses.html">
+            <span class="nav-icon">📚</span> Mes Cours
+        </a>
 
-    <script>
-        const userStr = localStorage.getItem('smartcampus_user');
-        if (!userStr) {
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+        <!-- Cours dropdown -->
+        <div class="sidebar-courses-toggle" id="coursesToggle">
+            <span class="nav-icon">📖</span> Cours rapide
+            <span class="arrow">▶</span>
+        </div>
+        <div class="sidebar-courses-list" id="coursesList">
+            <div class="loading-item">Chargement...</div>
+        </div>
+
+        <a href="student_grades.html">
+            <span class="nav-icon">📊</span> Mes Notes
+        </a>
+        <a href="timetable.html">
+            <span class="nav-icon">📅</span> Emploi du temps
+        </a>
+        <a href="messages.html">
+            <span class="nav-icon">✉️</span> Messagerie
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger">
+            <span class="nav-icon">🚪</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="content">
+
+        <div class="welcome-banner">
+            <div>
+                <h2 id="welcomeMsg">Bonjour 👋</h2>
+                <p>Bienvenue dans votre espace étudiant SmartCampus.</p>
+            </div>
+            <div class="banner-icon">📚</div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-val" id="statCours">–</div>
+                <div class="stat-label">Cours inscrits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-val" id="statMoyenne">–/20</div>
+                <div class="stat-label">Moyenne générale</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-val">–</div>
+                <div class="stat-label">Prochain cours</div>
+            </div>
+        </div>
+
+        <div class="widgets-row">
+            <a href="student_courses.html" class="widget-card">
+                <div class="w-icon">📚</div>
+                <div class="w-title">Mes Matières</div>
+                <div class="w-desc">Accédez aux documents, supports de cours et ressources pédagogiques.</div>
+                <div class="w-arrow">Voir mes cours →</div>
+            </a>
+            <a href="student_grades.html" class="widget-card">
+                <div class="w-icon">📊</div>
+                <div class="w-title">Mes Notes</div>
+                <div class="w-highlight" id="avgWidget">–/20</div>
+                <div class="w-desc">Consultez vos notes par matière et votre moyenne générale.</div>
+                <div class="w-arrow">Voir mes notes →</div>
+            </a>
+            <a href="timetable.html" class="widget-card">
+                <div class="w-icon">📅</div>
+                <div class="w-title">Emploi du temps</div>
+                <div class="w-desc">Consultez votre planning hebdomadaire et les horaires de cours.</div>
+                <div class="w-arrow">Voir le planning →</div>
+            </a>
+            <a href="#" class="widget-card">
+                <div class="w-icon">✉️</div>
+                <div class="w-title">Messagerie</div>
+                <div class="w-desc">Communiquez avec vos enseignants et l'administration.</div>
+                <div class="w-arrow">Ouvrir la messagerie →</div>
+            </a>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+const user = JSON.parse(userStr);
+if (user.role !== 'etudiant') {
+    alert('Accès réservé aux étudiants.');
+    window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+}
+
+document.getElementById('welcomeMsg').textContent = `Bonjour, ${user.prenom} 👋`;
+document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
+document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
+
+// Cours dropdown
+const toggle = document.getElementById('coursesToggle');
+const list = document.getElementById('coursesList');
+toggle.addEventListener('click', () => {
+    toggle.classList.toggle('open');
+    list.classList.toggle('open');
+});
+
+// Load courses for dropdown
+fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${user.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('statCours').textContent = data.success ? data.courses.length : '–';
+        list.innerHTML = '';
+        if (data.success && data.courses.length > 0) {
+            data.courses.forEach(c => {
+                const a = document.createElement('a');
+                a.href = `course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}`;
+                a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre}`;
+                list.appendChild(a);
+            });
         } else {
-            const user = JSON.parse(userStr);
-            document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom;
-
-            // Chargement de la moyenne en temps réel
-            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${user.id_user}`)
-            .then(r => r.json())
-            .then(data => {
-                if (data.success && data.moyenne_generale !== null) {
-                    document.getElementById('avgDisplay').textContent = parseFloat(data.moyenne_generale).toFixed(2) + '/20';
-                }
-            })
-            .catch(() => {});
+            list.innerHTML = '<div class="loading-item">Aucun cours inscrit</div>';
         }
+    }).catch(() => { list.innerHTML = '<div class="loading-item">Erreur de chargement</div>'; });
 
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('smartcampus_user');
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
-        });
-    </script>
+// Load average
+fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${user.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        if (data.success && data.moyenne_generale !== null) {
+            const m = parseFloat(data.moyenne_generale).toFixed(2) + '/20';
+            document.getElementById('statMoyenne').textContent = m;
+            document.getElementById('avgWidget').textContent = m;
+        }
+    }).catch(() => {});
+</script>
 </body>
 </html>

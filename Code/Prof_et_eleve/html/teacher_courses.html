@@ -273,7 +273,7 @@
     <div class="header-left">
         <button class="menu-btn" id="menuToggle">☰</button>
 
-        <a href="#" class="logo">
+        <a href="teacher_dashboard.html" class="logo">
             <div class="logo-icon">🎓</div>
             <span class="logo-name">SmartCampus</span>
         </a>
@@ -296,19 +296,19 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-section">Navigation</div>
 
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html">
+        <a href="teacher_dashboard.html">
             <span class="nav-icon">🏠</span> Accueil
         </a>
 
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html" class="active">
+        <a href="teacher_courses.html" class="active">
             <span class="nav-icon">📚</span> Mes Cours
         </a>
 
-        <a href="#">
+        <a href="teacher_grades.html">
             <span class="nav-icon">📝</span> Saisie des Notes
         </a>
 
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">
+        <a href="timetable.html">
             <span class="nav-icon">📅</span> Emploi du temps
         </a>
 
@@ -421,7 +421,7 @@ function loadTeacherCourses(){
                 <div class="course-actions">
 
                     <button class="btn-action"
-                        onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/course_documents_teacher.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}'">
+                        onclick="window.location.href='course_documents_teacher.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}'">
                         📁 Documents
                     </button>
 
@@ -432,7 +432,7 @@ function loadTeacherCourses(){
 
                     <button class="btn-action"
                         style="background:#8b5cf6;color:white;border-color:#8b5cf6"
-                        onclick="window.location.href='http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_grades.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}&coeff=${c.coefficient}'">
+                        onclick="window.location.href='teacher_grades.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}&coeff=${c.coefficient}'">
                         📝 Notes
                     </button>
 

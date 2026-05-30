@@ -528,7 +528,7 @@
 <header>
     <div class="header-left">
         <button class="menu-btn" id="menuToggle">☰</button>
-        <a href="#" class="logo">
+        <a href="teacher_dashboard.html" class="logo">
             <div class="logo-icon">🎓</div>
             <span class="logo-name">SmartCampus</span>
         </a>
@@ -549,16 +549,16 @@
     <!-- ─── SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-section">Navigation</div>
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html">
+        <a href="teacher_dashboard.html">
             <span class="nav-icon">🏠</span> Accueil
         </a>
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html">
+        <a href="teacher_courses.html">
             <span class="nav-icon">📚</span> Mes Cours
         </a>
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_grades.html" class="active">
+        <a href="teacher_grades.html" class="active">
             <span class="nav-icon">📝</span> Saisie des Notes
         </a>
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">
+        <a href="timetable.html">
             <span class="nav-icon">📅</span> Emploi du temps
         </a>
         <a href="#">
@@ -573,7 +573,7 @@
     <!-- ─── MAIN CONTENT -->
     <main class="content" id="mainContent_wrapper">
 
-        <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html" class="back-btn">
+        <a href="teacher_courses.html" class="back-btn">
             ← Retour à mes cours
         </a>
 
@@ -676,12 +676,8 @@
     /* ═══ INIT ════════════════════════════════════════════════════ */
     function init() {
         if (!idCours) {
-            document.getElementById('mainContent').innerHTML = `
-                <div class="no-config">
-                    <div class="icon">⚠️</div>
-                    <h3>Aucun cours sélectionné</h3>
-                    <p>Passez par <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/teacher_courses.html" style="color:var(--primary)">Mes cours</a> et cliquez sur « 📝 Saisie des notes ».</p>
-                </div>`;
+            // Pas de cours sélectionné → afficher la liste des cours du prof
+            renderCourseSelector();
             return;
         }
 

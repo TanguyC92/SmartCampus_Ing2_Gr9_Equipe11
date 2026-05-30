@@ -3,253 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCampus - Mes Notes</title>
+    <title>SmartCampus — Mes Notes</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --sidebar-width: 250px;
-            --card-border: #bdc3c7;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,.1);
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
-        header { background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
-        .menu-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--secondary-color); }
-        .logo { font-weight: bold; font-size: 20px; color: var(--primary-color); }
-        .site-name { font-size: 18px; font-weight: 600; color: var(--secondary-color); }
-        .user-info { font-weight: bold; color: var(--primary-color); }
-        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: var(--sidebar-width); background-color: var(--secondary-color); color: white; transition: width 0.3s ease; overflow-y: auto; display: flex; flex-direction: column; }
-        .sidebar.collapsed { width: 0; }
-        .sidebar nav { flex: 1; padding-top: 20px; }
-        .sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-left: 4px solid transparent; }
-        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left-color: var(--primary-color); }
-        .content { flex: 1; padding: 30px; overflow-y: auto; }
-        footer { background-color: white; border-top: 1px solid #ddd; padding: 15px 30px; display: flex; justify-content: space-between; font-size: 14px; color: #7f8c8d; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
 
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--secondary-color); color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; margin-bottom: 20px; }
-        .back-btn:hover { background: #34495e; }
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #10b981); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 20px; }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
 
-        /* Moyenne générale */
-        .general-avg-card { background: linear-gradient(135deg, var(--primary-color), #2980b9); color: white; border-radius: 12px; padding: 20px 30px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(52,152,219,0.3); position: relative; }
+        /* Course selector in header */
+        .course-select-wrap { display: flex; align-items: center; gap: 8px; }
+        .course-select-label { font-size: 13px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+        .course-select {
+            padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+            background: var(--surface-2); font-family: inherit; font-size: 13px;
+            color: var(--text); cursor: pointer; max-width: 220px;
+        }
+        .course-select:focus { outline: none; border-color: var(--primary); }
+
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
+
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(16,185,129,.15); color: #34d399; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+        /* Cours dropdown */
+        .sidebar-courses-toggle { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; cursor: pointer; transition: all .15s; user-select: none; }
+        .sidebar-courses-toggle:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar-courses-toggle .arrow { margin-left: auto; transition: transform .2s; font-size: 12px; }
+        .sidebar-courses-toggle.open .arrow { transform: rotate(90deg); }
+        .sidebar-courses-list { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+        .sidebar-courses-list.open { max-height: 500px; }
+        .sidebar-courses-list a { padding: 8px 16px 8px 46px; font-size: 13px; }
+        .sidebar-courses-list .loading-item { padding: 8px 16px 8px 46px; color: #475569; font-size: 13px; font-style: italic; }
+
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 28px; transition: margin-left .3s; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
+
+        /* Breadcrumb / back */
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--primary); }
+        .breadcrumb .sep { opacity: .4; }
+        .breadcrumb .current { color: var(--text); font-weight: 600; }
+
+        /* General avg card */
+        .general-avg-card { background: linear-gradient(135deg, #3b82f6, #10b981); color: white; border-radius: var(--radius); padding: 20px 30px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(59,130,246,.3); }
         .general-avg-card h2 { margin: 0; font-size: 18px; }
         .general-avg-card .avg-val { font-size: 42px; font-weight: bold; }
-        .general-avg-card .avg-sub { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+        .general-avg-card .avg-sub { font-size: 13px; opacity: .85; margin-top: 4px; }
 
         /* Tooltip */
         .tooltip-wrapper { position: relative; display: inline-block; cursor: pointer; }
-        .tooltip-box {
-            display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-            background: rgba(44,62,80,0.97); color: white; padding: 10px 14px; border-radius: 8px;
-            font-size: 12px; white-space: nowrap; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            pointer-events: none;
-        }
-        .tooltip-box::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: rgba(44,62,80,0.97); }
+        .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(15,23,42,.97); color: white; padding: 10px 14px; border-radius: 8px; font-size: 12px; white-space: nowrap; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,.3); pointer-events: none; }
+        .tooltip-box::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: rgba(15,23,42,.97); }
         .tooltip-wrapper:hover .tooltip-box { display: block; }
         .tooltip-box .tt-row { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 3px; }
-        .tooltip-box .tt-label { opacity: 0.75; }
+        .tooltip-box .tt-label { opacity: .75; }
         .tooltip-box .tt-val { font-weight: bold; }
 
         /* Cours cards */
         .cours-list { display: flex; flex-direction: column; gap: 20px; }
-        .cours-card { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
-        .cours-card-header { background: var(--secondary-color); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .cours-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
+        .cours-card-header { background: var(--secondary); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
         .cours-card-header .cours-title { font-weight: bold; font-size: 16px; }
-        .cours-card-header .cours-coeff { font-size: 13px; opacity: 0.8; }
+        .cours-card-header .cours-coeff { font-size: 13px; opacity: .8; }
         .cours-card-body { padding: 18px 20px; }
 
         .moyenne-cours-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 10px 14px; background: #f0f7ff; border-radius: 8px; }
         .moyenne-cours-row .moy-label { font-size: 14px; color: #555; }
-        .moyenne-cours-row .moy-val { font-size: 20px; font-weight: bold; color: var(--primary-color); margin-left: auto; }
+        .moyenne-cours-row .moy-val { font-size: 20px; font-weight: bold; color: var(--primary); margin-left: auto; }
 
-        /* Catégories */
         .cat-section { margin-bottom: 12px; }
-        .cat-title { font-size: 13px; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #eee; }
+        .cat-title { font-size: 13px; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #eee; }
         .notes-row { display: flex; flex-wrap: wrap; gap: 10px; }
-
-        .note-chip {
-            padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: bold;
-            background: #ecf0f1; color: var(--secondary-color); cursor: default;
-        }
+        .note-chip { padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; background: #ecf0f1; color: var(--secondary); cursor: default; }
         .note-chip.has-note { background: #d4efdf; color: #1a7a3a; }
         .note-chip.no-note { background: #f2f3f4; color: #aaa; font-style: italic; }
 
-        .no-notes { text-align: center; padding: 40px; color: #7f8c8d; font-style: italic; }
+        .no-notes { text-align: center; padding: 60px; color: var(--text-muted); font-style: italic; }
+
+        /* Course filter tabs */
+        .filter-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-tab { padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); font-size: 13px; font-weight: 500; cursor: pointer; transition: .15s; color: var(--text-muted); }
+        .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <button class="menu-btn" id="menuToggle">☰</button>
-            <div class="logo">🎓 SmartCampus</div>
-            <div class="site-name">Espace Étudiant</div>
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Étudiant</span>
+    </div>
+    <div class="header-right">
+        <!-- Course selector in header -->
+        <div class="course-select-wrap">
+            <span class="course-select-label">📖 Matière :</span>
+            <select class="course-select" id="courseSelector">
+                <option value="all">Toutes les matières</option>
+            </select>
         </div>
-        <div class="header-right">
-            <div class="notifications">🔔 Notifications</div>
-            <div class="user-info" id="userNameDisplay">Étudiant</div>
+        <button class="notif-btn">🔔</button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">E</div>
+            <span id="userNameDisplay">Étudiant</span>
         </div>
-    </header>
+    </div>
+</header>
 
-    <div class="main-wrapper">
-        <aside class="sidebar" id="sidebar">
-            <nav>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html">Accueil</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_courses.html">Mes Cours</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/student_grades.html" class="active">Mes Notes</a>
-                <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/timetable.html">Emploi du temps</a>
-                <a href="#">Messagerie</a>
-                <a href="#">Paramètres</a>
-                <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
-            </nav>
-        </aside>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="dashboard.html">
+            <span class="nav-icon">🏠</span> Accueil
+        </a>
+        <a href="student_courses.html">
+            <span class="nav-icon">📚</span> Mes Cours
+        </a>
 
-        <main class="content">
-            <a href="http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/html/dashboard.html" class="back-btn">← Retour au tableau de bord</a>
+        <!-- Cours dropdown -->
+        <div class="sidebar-courses-toggle" id="coursesToggle">
+            <span class="nav-icon">📖</span> Aller au cours
+            <span class="arrow">▶</span>
+        </div>
+        <div class="sidebar-courses-list" id="coursesList">
+            <div class="loading-item">Chargement...</div>
+        </div>
 
-            <div id="generalAvgCard" class="general-avg-card" style="display:none">
-                <div>
-                    <h2>📊 Mes Notes</h2>
-                    <div class="avg-sub" id="avgSubtitle">Moyenne pondérée de toutes les matières</div>
-                </div>
-                <div style="text-align:right">
-                    <div class="tooltip-wrapper">
-                        <div class="avg-val" id="moyenneGenerale">--/20</div>
-                        <div class="tooltip-box" id="tooltipGeneral">
-                            <div class="tt-row"><span class="tt-label">Moyenne générale</span><span class="tt-val" id="tt_moy_gen">--</span></div>
-                        </div>
+        <a href="student_grades.html" class="active">
+            <span class="nav-icon">📊</span> Mes Notes
+        </a>
+        <a href="timetable.html">
+            <span class="nav-icon">📅</span> Emploi du temps
+        </a>
+        <a href="#">
+            <span class="nav-icon">✉️</span> Messagerie
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger">
+            <span class="nav-icon">🚪</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="content">
+
+        <div class="breadcrumb">
+            <a href="dashboard.html">🏠 Accueil</a>
+            <span class="sep">›</span>
+            <span class="current">Mes Notes</span>
+        </div>
+
+        <div id="generalAvgCard" class="general-avg-card" style="display:none">
+            <div>
+                <h2>📊 Mes Notes</h2>
+                <div class="avg-sub" id="avgSubtitle">Moyenne pondérée de toutes les matières</div>
+            </div>
+            <div style="text-align:right">
+                <div class="tooltip-wrapper">
+                    <div class="avg-val" id="moyenneGenerale">--/20</div>
+                    <div class="tooltip-box" id="tooltipGeneral">
+                        <div class="tt-row"><span class="tt-label">Moyenne générale</span><span class="tt-val" id="tt_moy_gen">--</span></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="cours-list" id="coursList">
-                <div class="no-notes">Chargement de vos notes...</div>
+        <div class="filter-bar" id="filterBar" style="display:none">
+            <span style="font-size:13px; font-weight:600; color:var(--text-muted)">Filtrer :</span>
+            <!-- tabs injected by JS -->
+        </div>
+
+        <div class="cours-list" id="coursList">
+            <div class="no-notes">Chargement de vos notes...</div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+const LABELS = { controle_continu: 'Contrôle Continu', examen: 'Examen', projet: 'Projet' };
+let allCours = [];
+let currentUser = null;
+
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+currentUser = JSON.parse(userStr);
+if (currentUser.role !== 'etudiant') { alert('Accès réservé aux étudiants.'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; }
+
+document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom}`;
+document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
+
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
+
+// Sidebar cours dropdown
+const toggle = document.getElementById('coursesToggle');
+const sideList = document.getElementById('coursesList');
+toggle.addEventListener('click', () => { toggle.classList.toggle('open'); sideList.classList.toggle('open'); });
+
+function fmt(val) {
+    if (val === null || val === undefined || val === '') return '--';
+    return parseFloat(val).toFixed(2);
+}
+
+function renderCours(cours) {
+    const moyCoursStr = cours.moyenne_cours !== null ? fmt(cours.moyenne_cours) + '/20' : '--/20';
+    const statsClasseMoy = cours.stats_moyennes_cours;
+    const ttMoyCours = `
+        <div class="tt-row"><span class="tt-label">Ta moyenne</span><span class="tt-val">${moyCoursStr}</span></div>
+        <div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(statsClasseMoy.moy_classe)}/20</span></div>
+        <div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(statsClasseMoy.moy_max)}/20</span></div>
+        <div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(statsClasseMoy.moy_min)}/20</span></div>
+    `;
+    let catsHtml = '';
+    if (cours.configs.length === 0) {
+        catsHtml = '<p style="color:#aaa; font-style:italic; font-size:13px;">Aucune configuration d\'évaluation définie.</p>';
+    } else {
+        cours.configs.forEach(cfg => {
+            const catKey = cfg.categorie;
+            let notesHtml = '';
+            for (let i = 1; i <= cfg.nombre_notes; i++) {
+                const typeEval = `${catKey}_${i}`;
+                const noteObj = cours.notes.find(n => n.type_evaluation === typeEval);
+                const noteVal = noteObj ? noteObj.note : null;
+                const stats = cours.stats[typeEval] || {};
+                if (noteVal !== null) {
+                    const tt = `<div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div><div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div><div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div><div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>`;
+                    notesHtml += `<span class="tooltip-wrapper"><span class="note-chip has-note">Note ${i} : ${fmt(noteVal)}/20</span><div class="tooltip-box">${tt}</div></span>`;
+                } else {
+                    notesHtml += `<span class="note-chip no-note">Note ${i} : --</span>`;
+                }
+            }
+            catsHtml += `<div class="cat-section"><div class="cat-title">${LABELS[catKey] || catKey} (coeff ${cfg.coefficient_categorie})</div><div class="notes-row">${notesHtml}</div></div>`;
+        });
+    }
+    const card = document.createElement('div');
+    card.className = 'cours-card';
+    card.dataset.id = cours.id_cours;
+    card.innerHTML = `
+        <div class="cours-card-header">
+            <div class="cours-title">${cours.code_cours} — ${cours.titre}</div>
+            <div class="cours-coeff">Coeff. : ${cours.coeff_cours}</div>
+        </div>
+        <div class="cours-card-body">
+            <div class="moyenne-cours-row">
+                <span class="moy-label">📈 Moyenne dans cette matière</span>
+                <span class="tooltip-wrapper">
+                    <span class="moy-val">${moyCoursStr}</span>
+                    <div class="tooltip-box">${ttMoyCours}</div>
+                </span>
             </div>
-        </main>
-    </div>
+            ${catsHtml}
+        </div>`;
+    return card;
+}
 
-    <footer>
-        <div><strong>Support :</strong> support@smartcampus.edu</div>
-        <div><strong>Assistance :</strong> +33 06 12 34 56 78</div>
-    </footer>
+function filterBy(idCours) {
+    const list = document.getElementById('coursList');
+    list.innerHTML = '';
+    const toShow = idCours === 'all' ? allCours : allCours.filter(c => String(c.id_cours) === String(idCours));
+    if (toShow.length === 0) { list.innerHTML = '<div class="no-notes">Aucune note pour cette matière.</div>'; return; }
+    toShow.forEach(c => list.appendChild(renderCours(c)));
 
-    <script>
-        const LABELS = { controle_continu: 'Contrôle Continu', examen: 'Examen', projet: 'Projet' };
-        let currentUser = null;
+    // Update filter tabs
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.id === idCours));
+}
 
-        const userStr = localStorage.getItem('smartcampus_user');
-        if (!userStr) {
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
-        } else {
-            currentUser = JSON.parse(userStr);
-            document.getElementById('userNameDisplay').textContent = currentUser.prenom + ' ' + currentUser.nom;
+function loadNotes() {
+    fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${currentUser.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Erreur lors du chargement.</div>'; return; }
+
+        const moyGen = data.moyenne_generale;
+        if (moyGen !== null) {
+            document.getElementById('generalAvgCard').style.display = 'flex';
+            document.getElementById('moyenneGenerale').textContent = fmt(moyGen) + '/20';
+            document.getElementById('tt_moy_gen').textContent = fmt(moyGen) + '/20';
         }
 
-        document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('smartcampus_user');
-            window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+        allCours = data.cours;
+
+        if (allCours.length === 0) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Vous n\'êtes inscrit à aucun cours.</div>'; return; }
+
+        // Populate header course selector
+        const sel = document.getElementById('courseSelector');
+        sel.innerHTML = '<option value="all">Toutes les matières</option>';
+        allCours.forEach(c => { const opt = document.createElement('option'); opt.value = c.id_cours; opt.textContent = `${c.code_cours} — ${c.titre}`; sel.appendChild(opt); });
+        sel.addEventListener('change', () => filterBy(sel.value));
+
+        // Build filter tabs
+        const filterBar = document.getElementById('filterBar');
+        filterBar.style.display = 'flex';
+        filterBar.innerHTML = '<span style="font-size:13px; font-weight:600; color:var(--text-muted)">Filtrer :</span>';
+        const allTab = document.createElement('button');
+        allTab.className = 'filter-tab active'; allTab.dataset.id = 'all'; allTab.textContent = 'Toutes les matières';
+        allTab.addEventListener('click', () => { sel.value = 'all'; filterBy('all'); });
+        filterBar.appendChild(allTab);
+        allCours.forEach(c => {
+            const tab = document.createElement('button');
+            tab.className = 'filter-tab'; tab.dataset.id = c.id_cours; tab.textContent = c.titre;
+            tab.addEventListener('click', () => { sel.value = c.id_cours; filterBy(c.id_cours); });
+            filterBar.appendChild(tab);
         });
 
-        function fmt(val) {
-            if (val === null || val === undefined || val === '') return '--';
-            return parseFloat(val).toFixed(2);
-        }
+        // Sidebar shortcuts
+        sideList.innerHTML = '';
+        allCours.forEach(c => {
+            const a = document.createElement('a');
+            a.href = '#'; a.dataset.id = c.id_cours;
+            a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre}`;
+            a.addEventListener('click', e => { e.preventDefault(); filterBy(c.id_cours); sel.value = c.id_cours; window.scrollTo(0, 0); });
+            sideList.appendChild(a);
+        });
 
-        function loadNotes() {
-            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${currentUser.id_user}`)
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Erreur lors du chargement.</div>'; return; }
+        filterBy('all');
+    });
+}
 
-                const list = document.getElementById('coursList');
-                list.innerHTML = '';
+// Pre-select a course if coming from URL param
+const urlParams = new URLSearchParams(window.location.search);
+const preselect = urlParams.get('id_cours');
 
-                // Moyenne générale
-                const moyGen = data.moyenne_generale;
-                if (moyGen !== null) {
-                    document.getElementById('generalAvgCard').style.display = 'flex';
-                    document.getElementById('moyenneGenerale').textContent = fmt(moyGen) + '/20';
-                    document.getElementById('tt_moy_gen').textContent = fmt(moyGen) + '/20';
-                }
+loadNotes().then ? loadNotes() : loadNotes();
 
-                if (data.cours.length === 0) {
-                    list.innerHTML = '<div class="no-notes">Vous n\'êtes inscrit à aucun cours.</div>';
-                    return;
-                }
-
-                data.cours.forEach(cours => {
-                    const card = document.createElement('div');
-                    card.className = 'cours-card';
-
-                    const moyCoursStr = cours.moyenne_cours !== null ? fmt(cours.moyenne_cours) + '/20' : '--/20';
-                    const statsClasseMoy = cours.stats_moyennes_cours;
-
-                    // Tooltip moyenne cours
-                    const ttMoyCours = `
-                        <div class="tt-row"><span class="tt-label">Ta moyenne</span><span class="tt-val">${moyCoursStr}</span></div>
-                        <div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(statsClasseMoy.moy_classe)}/20</span></div>
-                        <div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(statsClasseMoy.moy_max)}/20</span></div>
-                        <div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(statsClasseMoy.moy_min)}/20</span></div>
-                    `;
-
-                    let catsHtml = '';
-                    if (cours.configs.length === 0) {
-                        catsHtml = '<p style="color:#aaa; font-style:italic; font-size:13px;">Aucune configuration d\'évaluation définie.</p>';
-                    } else {
-                        cours.configs.forEach(cfg => {
-                            const catKey = cfg.categorie;
-                            let notesHtml = '';
-                            for (let i = 1; i <= cfg.nombre_notes; i++) {
-                                const typeEval = `${catKey}_${i}`;
-                                const noteObj = cours.notes.find(n => n.type_evaluation === typeEval);
-                                const noteVal = noteObj ? noteObj.note : null;
-                                const stats = cours.stats[typeEval] || {};
-
-                                if (noteVal !== null) {
-                                    const tt = `
-                                        <div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div>
-                                        <div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div>
-                                        <div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div>
-                                        <div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>
-                                    `;
-                                    notesHtml += `<span class="tooltip-wrapper"><span class="note-chip has-note">Note ${i} : ${fmt(noteVal)}/20</span><div class="tooltip-box">${tt}</div></span>`;
-                                } else {
-                                    notesHtml += `<span class="note-chip no-note">Note ${i} : --</span>`;
-                                }
-                            }
-                            catsHtml += `
-                                <div class="cat-section">
-                                    <div class="cat-title">${LABELS[catKey] || catKey} (coeff ${cfg.coefficient_categorie})</div>
-                                    <div class="notes-row">${notesHtml}</div>
-                                </div>`;
-                        });
-                    }
-
-                    card.innerHTML = `
-                        <div class="cours-card-header">
-                            <div class="cours-title">${cours.code_cours} — ${cours.titre}</div>
-                            <div class="cours-coeff">Coeff. matière : ${cours.coeff_cours}</div>
-                        </div>
-                        <div class="cours-card-body">
-                            <div class="moyenne-cours-row">
-                                <span class="moy-label">📈 Moyenne dans cette matière</span>
-                                <span class="tooltip-wrapper">
-                                    <span class="moy-val">${moyCoursStr}</span>
-                                    <div class="tooltip-box">${ttMoyCours}</div>
-                                </span>
-                            </div>
-                            ${catsHtml}
-                        </div>
-                    `;
-                    list.appendChild(card);
-                });
-            });
-        }
-
-        loadNotes();
-    </script>
+// After load, if preselect
+document.addEventListener('DOMContentLoaded', () => {
+    if (preselect) {
+        setTimeout(() => {
+            document.getElementById('courseSelector').value = preselect;
+            filterBy(preselect);
+        }, 800);
+    }
+});
+</script>
 </body>
 </html>

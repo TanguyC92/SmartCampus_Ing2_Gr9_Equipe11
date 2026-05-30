@@ -295,7 +295,7 @@
                 Mes Cours
             </a>
 
-            <a href="#">
+            <a href="student_grades.html">
                 Mes Notes
             </a>
 
@@ -323,14 +323,21 @@
 
     <main class="content">
 
-        <h2 class="page-title">
+        <h2 class="page-title" id="pageTitle">
             📚 Ressources du cours
         </h2>
 
-        <a class="back-btn"
-           href="student_courses.html">
-            ← Retour aux cours
-        </a>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:20px;">
+            <a class="back-btn"
+               href="student_courses.html">
+                ← Retour aux cours
+            </a>
+            <a class="back-btn" id="notesLink"
+               href="student_grades.html"
+               style="background:#3b82f6;">
+                📊 Mes notes pour ce cours
+            </a>
+        </div>
 
         <div class="documents-grid"
              id="documentsContainer">
@@ -409,6 +416,10 @@
 
     const idCours =
         params.get('id_cours');
+
+    const titreCours = params.get('titre') || 'Cours';
+    document.getElementById('pageTitle').textContent = '📚 ' + decodeURIComponent(titreCours) + ' — Ressources';
+    document.getElementById('notesLink').href = `student_grades.html?id_cours=${idCours}`;
 
     // LOAD DOCUMENTS
 

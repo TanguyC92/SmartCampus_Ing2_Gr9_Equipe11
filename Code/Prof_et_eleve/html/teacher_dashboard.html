@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus — Tableau de bord Enseignant</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,.1);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ─── HEADER ──────────────────────────────────────── */
+        header {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 100;
+            box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04);
+        }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn {
+            width: 36px; height: 36px; border: none; background: var(--surface-2);
+            border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge {
+            font-size: 11px; font-weight: 600;
+            background: var(--surface-2); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 2px 8px; border-radius: 20px;
+        }
+        .notif-btn {
+            width: 36px; height: 36px; border: none; background: var(--surface-2);
+            border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .notif-btn:hover { background: var(--border); }
+        .notif-dot {
+            width: 8px; height: 8px; background: var(--danger);
+            border-radius: 50%; border: 2px solid white;
+            position: absolute; top: 6px; right: 6px;
+        }
+        .user-chip {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: 24px; padding: 4px 12px 4px 4px;
+            font-size: 13px; font-weight: 500;
+        }
+        .user-avatar {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: white; font-weight: 700;
+        }
+
+        /* ─── LAYOUT ──────────────────────────────────────── */
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
+
+        /* ─── SIDEBAR ─────────────────────────────────────── */
+        .sidebar {
+            position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h);
+            width: var(--sidebar-w); background: var(--secondary);
+            overflow-y: auto; transition: transform .3s ease; z-index: 50;
+        }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section {
+            padding: 20px 16px 8px; font-size: 10px; font-weight: 700;
+            letter-spacing: 1.2px; text-transform: uppercase; color: #475569;
+        }
+        .sidebar a {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 16px; color: #94a3b8;
+            text-decoration: none; font-size: 14px; font-weight: 500;
+            border-radius: 8px; margin: 2px 8px; transition: all .15s;
+        }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(59,130,246,.15); color: #60a5fa; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+        /* ─── CONTENT ─────────────────────────────────────── */
+        .content {
+            flex: 1; margin-left: var(--sidebar-w); padding: 28px;
+            transition: margin-left .3s;
+        }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
+
+        /* ─── DASHBOARD WIDGETS ───────────────────────────── */
+        .page-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+        .page-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px;
+            box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+        }
+        .stat-card .stat-icon { font-size: 28px; }
+        .stat-card .stat-val { font-size: 28px; font-weight: 700; color: var(--text); }
+        .stat-card .stat-label { font-size: 13px; color: var(--text-muted); }
+
+        .widgets-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .widget-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px;
+            box-shadow: var(--shadow); cursor: pointer;
+            transition: .2s; display: flex; flex-direction: column; gap: 12px;
+            text-decoration: none; color: inherit;
+        }
+        .widget-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .widget-card .w-icon { font-size: 32px; }
+        .widget-card .w-title { font-size: 16px; font-weight: 700; }
+        .widget-card .w-desc { font-size: 13px; color: var(--text-muted); }
+        .widget-card .w-arrow { margin-top: auto; color: var(--primary); font-size: 13px; font-weight: 600; }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white; border-radius: var(--radius); padding: 28px;
+            margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .welcome-banner h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .welcome-banner p { font-size: 14px; opacity: .85; }
+        .welcome-banner .banner-icon { font-size: 48px; opacity: .7; }
+
+        /* ─── FOOTER ──────────────────────────────────────── */
+        footer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: var(--footer-h); background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="teacher_dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Enseignant</span>
+    </div>
+    <div class="header-right">
+        <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">P</div>
+            <span id="userNameDisplay">Enseignant</span>
+        </div>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="teacher_dashboard.html" class="active">
+            <span class="nav-icon">🏠</span> Accueil
+        </a>
+        <a href="teacher_courses.html">
+            <span class="nav-icon">📚</span> Mes Cours
+        </a>
+        <a href="teacher_grades.html">
+            <span class="nav-icon">📝</span> Saisie des Notes
+        </a>
+        <a href="timetable.html">
+            <span class="nav-icon">📅</span> Emploi du temps
+        </a>
+        <a href="messages.html">
+            <span class="nav-icon">✉️</span> Messagerie
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger">
+            <span class="nav-icon">🚪</span> Déconnexion
+        </a>
+    </aside>
+
+    <main class="content" id="mainContent">
+
+        <div class="welcome-banner">
+            <div>
+                <h2 id="welcomeMsg">Bonjour, Enseignant 👋</h2>
+                <p>Bienvenue dans votre espace pédagogique SmartCampus.</p>
+            </div>
+            <div class="banner-icon">🎓</div>
+        </div>
+
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-val" id="statCours">–</div>
+                <div class="stat-label">Cours assignés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-val" id="statEtudiants">–</div>
+                <div class="stat-label">Étudiants total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-val" id="statNotes">–</div>
+                <div class="stat-label">Notes saisies</div>
+            </div>
+        </div>
+
+        <div class="widgets-row">
+            <a href="teacher_courses.html" class="widget-card">
+                <div class="w-icon">📚</div>
+                <div class="w-title">Mes Cours</div>
+                <div class="w-desc">Consultez vos cours assignés, gérez les documents et accédez aux listes d'élèves.</div>
+                <div class="w-arrow">Voir mes cours →</div>
+            </a>
+            <a href="teacher_grades.html" class="widget-card">
+                <div class="w-icon">📝</div>
+                <div class="w-title">Saisie des Notes</div>
+                <div class="w-desc">Saisir et modifier les notes de contrôle continu, examens et projets.</div>
+                <div class="w-arrow">Accéder à la saisie →</div>
+            </a>
+            <a href="timetable.html" class="widget-card">
+                <div class="w-icon">📅</div>
+                <div class="w-title">Emploi du temps</div>
+                <div class="w-desc">Consultez votre planning hebdomadaire et les créneaux de cours.</div>
+                <div class="w-arrow">Voir le planning →</div>
+            </a>
+            <a href="#" class="widget-card">
+                <div class="w-icon">✉️</div>
+                <div class="w-title">Messagerie</div>
+                <div class="w-desc">Communiquez avec vos étudiants et l'administration.</div>
+                <div class="w-arrow">Ouvrir la messagerie →</div>
+            </a>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) {
+    window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+}
+const currentUser = JSON.parse(userStr);
+if (currentUser.role !== 'enseignant') {
+    alert('Accès réservé aux enseignants.');
+    window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+}
+
+document.getElementById('welcomeMsg').textContent = `Bonjour, ${currentUser.prenom} 👋`;
+document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom} (Prof)`;
+document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
+
+document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
+document.getElementById('logoutBtn').addEventListener('click', e => {
+    e.preventDefault();
+    localStorage.removeItem('smartcampus_user');
+    window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+});
+
+// Load stats
+fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_teacher_courses.php?id_user=${currentUser.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('statCours').textContent = data.courses.length;
+        }
+    }).catch(() => {});
+</script>
+</body>
+</html>

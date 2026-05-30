@@ -54,7 +54,7 @@
     <aside class="sidebar">
         <div style="padding: 20px; font-weight: bold; font-size: 18px; text-align:center;">🎓 SmartCampus</div>
         <nav>
-            <a href="javascript:history.back()">🔙 Retour</a>
+            <a href="#" id="homeLink">🏠 Accueil</a>
             <a href="#" class="active">📅 Emploi du temps</a>
             <a href="#" id="logoutBtn" style="color: #e74c3c;">Déconnexion</a>
         </nav>
@@ -79,6 +79,11 @@
     <script>
        const user = JSON.parse(localStorage.getItem('smartcampus_user'));
         if(!user) window.location.href="http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+
+        // Role-aware home link
+        const homeLink = document.getElementById('homeLink');
+        if (user.role === 'enseignant') homeLink.href = 'teacher_dashboard.html';
+        else homeLink.href = 'dashboard.html';
 
         const startHour = 8;
         const endHour = 20;

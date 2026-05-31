@@ -1,672 +1,607 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCampus - Documents du cours</title>
-
+    <title>SmartCampus — Documents du cours</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --sidebar-width: 250px;
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --purple-light: #f5f3ff;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,.1);
         }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        /* ─── HEADER ──────────────────────────────────────── */
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 20px; }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .notif-btn:hover { background: var(--border); }
+        .notif-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid white; position: absolute; top: 6px; right: 6px; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
+
+        /* ─── LAYOUT ──────────────────────────────────────── */
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
+
+        /* ─── SIDEBAR ─────────────────────────────────────── */
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(59,130,246,.15); color: #60a5fa; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+        /* ─── CONTENT ─────────────────────────────────────── */
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 32px; transition: margin-left .3s; overflow-y: auto; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
+
+        /* ─── PAGE HEADER ─────────────────────────────────── */
+        .page-header {
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* HEADER */
-
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 0 20px;
-            height: 60px;
-            display: flex;
+            align-items: flex-start;
             justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .menu-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--secondary-color);
-        }
-
-        .logo {
-            font-weight: bold;
-            font-size: 20px;
-            color: var(--primary-color);
-        }
-
-        .site-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--secondary-color);
-        }
-
-        .user-info {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .notifications {
-            cursor: pointer;
-            position: relative;
-        }
-
-        .badge {
-            background: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 12px;
-            position: absolute;
-            top: -10px;
-            right: -15px;
-        }
-
-        /* LAYOUT */
-
-        .main-wrapper {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--secondary-color);
-            color: white;
-            transition: width 0.3s ease;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar.collapsed {
-            width: 0;
-        }
-
-        .sidebar nav {
-            flex: 1;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 15px 20px;
-            color: white;
-            text-decoration: none;
-            transition: background 0.2s;
-            border-left: 4px solid transparent;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #34495e;
-            border-left-color: var(--primary-color);
-        }
-
-        /* CONTENT */
-
-        .content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .page-title {
-            margin-top: 0;
-            margin-bottom: 25px;
-            color: var(--secondary-color);
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 25px;
-            padding: 12px 18px;
-            background: var(--secondary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .upload-box {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--primary-color);
-            margin-bottom: 30px;
-        }
-
-        .upload-box h3 {
-            margin-top: 0;
-            color: var(--secondary-color);
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            border: none;
-            background: var(--primary-color);
-            color: white;
-            padding: 14px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .folder-title {
-            background: white;
-            padding: 18px;
-            border-radius: 10px;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            color: var(--secondary-color);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .documents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
-
-        .document-card {
-            background: white;
-            padding: 24px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .document-card h3 {
-            margin-top: 0;
-            color: var(--secondary-color);
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            margin-bottom: 28px;
+            gap: 16px;
             flex-wrap: wrap;
         }
-
-        .action-btn {
-            text-decoration: none;
-            background: var(--primary-color);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-        }
-
-        .delete-btn {
-            background: #e74c3c;
-        }
-
-        .empty-state {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        /* FOOTER */
-
-        footer {
-            background-color: white;
-            border-top: 1px solid #ddd;
-            padding: 15px 30px;
+        .page-header-left { display: flex; flex-direction: column; gap: 8px; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--primary); }
+        .breadcrumb-sep { color: var(--border); }
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-title-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .page-subtitle { font-size: 14px; color: var(--text-muted); }
+
+        /* ─── UPLOAD SECTION ──────────────────────────────── */
+        .upload-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+        .upload-section-header {
+            display: flex;
+            align-items: center;
             justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 2px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            gap: 12px;
+        }
+        .upload-section-header:hover { background: var(--surface-2); }
+        .upload-section-header-left { display: flex; align-items: center; gap: 12px; }
+        .upload-section-icon {
+            width: 36px; height: 36px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .upload-section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+        .upload-section-subtitle { font-size: 13px; color: var(--text-muted); }
+        .upload-toggle-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: transform .3s ease;
+            line-height: 1;
+        }
+        .upload-toggle-icon.open { transform: rotate(180deg); }
+        .upload-body {
+            padding: 24px;
+            display: none;
+        }
+        .upload-body.open { display: block; }
+
+        /* Form grid */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+        .form-label span { font-weight: 400; color: var(--text-muted); }
+        .form-input, .form-textarea, .form-select {
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
             font-size: 14px;
-            color: #7f8c8d;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface-2);
+            transition: border-color .15s, background .15s;
+            width: 100%;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+        }
+        .form-textarea { min-height: 90px; resize: vertical; }
+
+        .file-drop-zone {
+            border: 2.5px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            background: var(--surface-2);
+            position: relative;
+        }
+        .file-drop-zone:hover, .file-drop-zone.drag-over {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .file-drop-zone input[type=file] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+        }
+        .file-drop-icon { font-size: 32px; margin-bottom: 8px; }
+        .file-drop-text { font-size: 14px; font-weight: 600; color: var(--text); }
+        .file-drop-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .file-selected-name { font-size: 13px; color: var(--primary); font-weight: 600; margin-top: 8px; display: none; }
+
+        .form-footer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border); }
+        .btn-reset { padding: 10px 20px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: transparent; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .15s; }
+        .btn-reset:hover { background: var(--surface-2); border-color: var(--text-muted); }
+        .btn-submit {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex; align-items: center; gap: 8px;
+            transition: opacity .15s, transform .15s;
+            box-shadow: 0 2px 8px rgba(59,130,246,.3);
+        }
+        .btn-submit:hover { opacity: .9; transform: translateY(-1px); }
+
+        /* ─── LIBRARY SECTION ─────────────────────────────── */
+        .library-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px;
+        }
+        .library-title { font-size: 18px; font-weight: 700; color: var(--text); }
+        .library-count {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
         }
 
+        /* ─── FOLDER BLOCK ────────────────────────────────── */
+        .folder-block { margin-bottom: 24px; }
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            background: var(--secondary);
+            border-radius: var(--radius) var(--radius) 0 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        .folder-header:hover { background: #1a2540; }
+        .folder-icon-wrap {
+            width: 34px; height: 34px;
+            background: rgba(59,130,246,.2);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .folder-name { font-size: 15px; font-weight: 700; color: white; flex: 1; }
+        .folder-doc-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: #60a5fa;
+            background: rgba(59,130,246,.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        .folder-chevron { color: #60a5fa; font-size: 14px; transition: transform .2s; }
+        .folder-chevron.open { transform: rotate(90deg); }
+        .folder-content {
+            background: var(--surface);
+            border-radius: 0 0 var(--radius) var(--radius);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2px;
+            background-color: var(--border);
+            border: 2px solid var(--border);
+            border-top: none;
+            overflow: hidden;
+        }
+        .folder-content.collapsed { display: none; }
+
+        /* ─── DOCUMENT CARD (Teacher) ─────────────────────── */
+        .doc-card-teacher {
+            background: var(--surface);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: background .15s;
+            border-bottom: 2px solid transparent;
+        }
+        .doc-card-teacher:hover { background: var(--surface-2); border-bottom-color: var(--primary); }
+        .doc-card-top { display: flex; align-items: flex-start; gap: 12px; }
+        .doc-file-icon {
+            width: 40px; height: 40px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .doc-info { flex: 1; min-width: 0; }
+        .doc-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .doc-filename { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .doc-meta { display: flex; flex-direction: column; gap: 6px; }
+        .doc-meta-row { display: flex; gap: 6px; align-items: flex-start; }
+        .doc-meta-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; min-width: 70px; padding-top: 1px; }
+        .doc-meta-value { font-size: 13px; color: var(--text); line-height: 1.4; }
+        .doc-actions { display: flex; gap: 8px; margin-top: 4px; }
+        .doc-btn {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 600;
+            text-decoration: none;
+            border: 2px solid transparent; cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
+        }
+        .doc-btn-view { background: var(--primary-light); color: var(--primary); border-color: #bfdbfe; }
+        .doc-btn-view:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .doc-btn-delete { background: #fef2f2; color: var(--danger); border-color: #fecaca; }
+        .doc-btn-delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+        /* ─── EMPTY STATE ─────────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: .5; }
+        .empty-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .empty-text { font-size: 14px; color: var(--text-muted); }
+
+        /* ─── FOOTER ──────────────────────────────────────── */
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
+
+        /* ─── ANIMATIONS ──────────────────────────────────── */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .folder-block { animation: fadeIn .3s ease both; }
+        .folder-block:nth-child(1) { animation-delay: .05s; }
+        .folder-block:nth-child(2) { animation-delay: .1s; }
+        .folder-block:nth-child(3) { animation-delay: .15s; }
     </style>
-
 </head>
-
 <body>
 
 <header>
-
     <div class="header-left">
-
-        <button class="menu-btn" id="menuToggle">
-            ☰
-        </button>
-
-        <div class="logo">
-            🎓 SmartCampus
-        </div>
-
-        <div class="site-name">
-            Espace Enseignant
-        </div>
-
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="teacher_dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Enseignant</span>
     </div>
-
     <div class="header-right">
-
-        <div class="notifications">
-            🔔 Notifications
-            <span class="badge">3</span>
+        <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">P</div>
+            <span id="userNameDisplay">Enseignant</span>
         </div>
-
-        <div class="user-info" id="userNameDisplay">Enseignant</div>
-        </div>
-
     </div>
-
 </header>
 
-<div class="main-wrapper">
-
+<div class="layout">
     <aside class="sidebar" id="sidebar">
-
-        <nav>
-
-            <a href="teacher_dashboard.html">
-                Accueil
-            </a>
-
-            <a href="teacher_courses.html" class="active">
-                Mes Cours
-            </a>
-
-            <a href="teacher_grades.html">
-                📝 Saisie des Notes
-            </a>
-
-            <a href="#">
-                Messagerie
-            </a>
-
-            <a href="#">
-                Messagerie
-            </a>
-
-            <a href="#">
-                Paramètres
-            </a>
-
-            <a href="#" id="logoutBtn"
-               style="color:#e74c3c; font-weight:bold;">
-                Déconnexion
-            </a>
-
-        </nav>
-
+        <div class="sidebar-section">Navigation</div>
+        <a href="teacher_dashboard.html"><span class="nav-icon">🏠</span> Accueil</a>
+        <a href="teacher_courses.html" class="active"><span class="nav-icon">📚</span> Mes Cours</a>
+        <a href="teacher_grades.html"><span class="nav-icon">📝</span> Saisie des Notes</a>
+        <a href="timetable.html"><span class="nav-icon">📅</span> Emploi du temps</a>
+        <a href="messages.html"><span class="nav-icon">✉️</span> Messagerie</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger"><span class="nav-icon">🚪</span> Déconnexion</a>
     </aside>
 
     <main class="content">
 
-        <h2 class="page-title">
-            📁 Gestion des documents
-        </h2>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-left">
+                <div class="breadcrumb">
+                    <a href="teacher_courses.html">Mes Cours</a>
+                    <span class="breadcrumb-sep">›</span>
+                    <span id="courseNameBreadcrumb">Chargement...</span>
+                </div>
+                <div class="page-title">
+                    <div class="page-title-icon">📁</div>
+                    <div>
+                        <div id="courseTitle">Gestion des documents</div>
+                        <div class="page-subtitle">Ajoutez et organisez les ressources pédagogiques</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <a class="back-btn"
-           href="teacher_courses.html">
-            ← Retour aux cours
-        </a>
+        <!-- Upload Section (collapsible) -->
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-section-header" id="uploadToggle">
+                <div class="upload-section-header-left">
+                    <div class="upload-section-icon">📤</div>
+                    <div>
+                        <div class="upload-section-title">Ajouter un document</div>
+                        <div class="upload-section-subtitle">Déposez un nouveau fichier dans le cours</div>
+                    </div>
+                </div>
+                <div class="upload-toggle-icon open" id="uploadToggleIcon">▾</div>
+            </div>
+            <div class="upload-body open" id="uploadBody">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Titre du document <span>*</span></label>
+                            <input type="text" name="titre" class="form-input" placeholder="Ex: Cours 1 — Introduction" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dossier <span>*</span></label>
+                            <input type="text" name="dossier" class="form-input" placeholder="Ex: Cours, TD, Examens..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description <span>facultatif</span></label>
+                            <textarea name="description" class="form-textarea" placeholder="Décrivez brièvement ce document..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Note associée <span>facultatif</span></label>
+                            <textarea name="note_document" class="form-textarea" placeholder="Consignes ou remarques pour les étudiants..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ordre d'affichage</label>
+                            <input type="number" name="ordre_affichage" class="form-input" placeholder="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fichier <span>*</span></label>
+                            <div class="file-drop-zone" id="fileDropZone">
+                                <input type="file" name="document" required id="fileInput">
+                                <div class="file-drop-icon">📂</div>
+                                <div class="file-drop-text">Glissez un fichier ici</div>
+                                <div class="file-drop-hint">ou cliquez pour parcourir</div>
+                                <div class="file-selected-name" id="fileSelectedName"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <button type="reset" class="btn-reset">Réinitialiser</button>
+                        <button type="submit" class="btn-submit">📤 Publier le document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <div class="upload-box">
-
-            <h3 id="courseTitle">
-                Chargement du cours...
-            </h3>
-
-            <form id="uploadForm"
-                  enctype="multipart/form-data">
-
-                <input type="text"
-                       name="titre"
-                       placeholder="Titre du document"
-                       required>
-
-                <textarea name="description"
-                          placeholder="Description du document"></textarea>
-
-                <textarea name="note_document"
-                          placeholder="Note associée"></textarea>
-
-                <input type="text"
-                       name="dossier"
-                       placeholder="Nom du dossier (Cours, TD, Examens...)"
-                       required>
-
-                <input type="number"
-                       name="ordre_affichage"
-                       placeholder="Ordre d'affichage"
-                       value="0">
-
-                <input type="file"
-                       name="document"
-                       required>
-
-                <button class="submit-btn"
-                        type="submit">
-                    📤 Ajouter le document
-                </button>
-
-            </form>
-
+        <!-- Documents Library -->
+        <div class="library-header">
+            <div class="library-title">Bibliothèque du cours</div>
+            <div class="library-count" id="totalCount">— documents</div>
         </div>
 
         <div id="documentsContainer"></div>
 
     </main>
-
 </div>
 
 <footer>
-
-    <div>
-        <strong>Support :</strong>
-        support@smartcampus.edu
-    </div>
-
-    <div>
-        <strong>Assistance :</strong>
-        +33 06 12 34 56 78
-    </div>
-
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
 </footer>
 
 <script>
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+const user = JSON.parse(userStr);
+document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom + ' (Prof)';
+document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
 
-const userStr =
-    localStorage.getItem('smartcampus_user');
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.removeItem('smartcampus_user');
+    window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+});
 
-if (!userStr) {
+const params = new URLSearchParams(window.location.search);
+const idCours = params.get('id_cours');
+const titreCours = decodeURIComponent(params.get('titre') || 'Cours');
+document.getElementById('courseTitle').textContent = titreCours;
+document.getElementById('courseNameBreadcrumb').textContent = titreCours;
 
-    window.location.href =
-    "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+// Upload toggle
+const uploadToggle = document.getElementById('uploadToggle');
+const uploadBody = document.getElementById('uploadBody');
+const uploadToggleIcon = document.getElementById('uploadToggleIcon');
+uploadToggle.addEventListener('click', () => {
+    const isOpen = uploadBody.classList.toggle('open');
+    uploadToggleIcon.classList.toggle('open', isOpen);
+});
 
-} else {
+// File input label
+document.getElementById('fileInput').addEventListener('change', function() {
+    const label = document.getElementById('fileSelectedName');
+    if (this.files[0]) {
+        label.textContent = '✓ ' + this.files[0].name;
+        label.style.display = 'block';
+        document.querySelector('.file-drop-text').textContent = 'Fichier sélectionné';
+    }
+});
 
-    const user = JSON.parse(userStr);
+// Drag over
+const dropZone = document.getElementById('fileDropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); });
 
-    document.getElementById('userNameDisplay')
-    .textContent =
-        user.prenom + ' ' + user.nom;
+function getFileIcon(filename) {
+    if (!filename) return '📄';
+    const ext = filename.split('.').pop().toLowerCase();
+    const icons = { pdf: '📕', doc: '📝', docx: '📝', xls: '📊', xlsx: '📊', ppt: '📋', pptx: '📋', zip: '🗜️', rar: '🗜️', jpg: '🖼️', jpeg: '🖼️', png: '🖼️', mp4: '🎬', mp3: '🎵' };
+    return icons[ext] || '📄';
 }
 
-document.getElementById('menuToggle')
-
-.addEventListener('click', function() {
-
-    document.getElementById('sidebar')
-    .classList.toggle('collapsed');
-
-});
-
-document.getElementById('logoutBtn')
-
-.addEventListener('click', function(e) {
-
-    e.preventDefault();
-
-    localStorage.removeItem('smartcampus_user');
-
-    window.location.href =
-    "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
-
-});
-
-const params =
-    new URLSearchParams(window.location.search);
-
-const idCours =
-    params.get('id_cours');
-
-const titreCours =
-    params.get('titre');
-
-document.getElementById('courseTitle')
-.textContent =
-    decodeURIComponent(titreCours);
-
-const currentUser =
-    JSON.parse(localStorage.getItem('smartcampus_user'));
-
-function loadDocuments(){
-
+function loadDocuments() {
     fetch(`../php/get_course_documents.php?id_cours=${idCours}`)
-
     .then(res => res.json())
-
     .then(data => {
-
-        const container =
-            document.getElementById('documentsContainer');
-
+        const container = document.getElementById('documentsContainer');
         container.innerHTML = '';
-
-        if(data.documents.length === 0){
-
-            container.innerHTML = `
-            
-                <div class="empty-state">
-
-                    <h3>
-                        📂 Aucun document disponible
-                    </h3>
-
-                    <p>
-                        Aucun fichier n'a encore été ajouté.
-                    </p>
-
-                </div>
-            
-            `;
-
+        if (data.documents.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><div class="empty-title">Aucun document pour l'instant</div><div class="empty-text">Utilisez le formulaire ci-dessus pour ajouter votre premier document.</div></div>`;
+            document.getElementById('totalCount').textContent = '0 document';
             return;
         }
+        document.getElementById('totalCount').textContent = data.documents.length + ' document' + (data.documents.length > 1 ? 's' : '');
 
         let dossiers = {};
-
         data.documents.forEach(doc => {
-
-            if(!dossiers[doc.dossier]){
-                dossiers[doc.dossier] = [];
-            }
-
+            if (!dossiers[doc.dossier]) dossiers[doc.dossier] = [];
             dossiers[doc.dossier].push(doc);
-
         });
 
-        for(const dossier in dossiers){
-
-            container.innerHTML += `
-            
-                <h2 class="folder-title">
-                    📁 ${dossier}
-                </h2>
-
-                <div class="documents-grid"
-                     id="folder-${dossier}">
+        for (const dossier in dossiers) {
+            const docs = dossiers[dossier];
+            const safeDossier = dossier.replace(/[^a-zA-Z0-9]/g, '_');
+            const block = document.createElement('div');
+            block.className = 'folder-block';
+            block.innerHTML = `
+                <div class="folder-header" onclick="toggleFolder('${safeDossier}')">
+                    <div class="folder-icon-wrap">📁</div>
+                    <div class="folder-name">${dossier}</div>
+                    <div class="folder-doc-count">${docs.length} fichier${docs.length > 1 ? 's' : ''}</div>
+                    <div class="folder-chevron open" id="chev-${safeDossier}">›</div>
                 </div>
-            
+                <div class="folder-content" id="fold-${safeDossier}"></div>
             `;
-
-            const folderContainer =
-                document.getElementById(`folder-${dossier}`);
-
-            dossiers[dossier].forEach(doc => {
-
-                folderContainer.innerHTML += `
-                
-                    <div class="document-card">
-
-                        <h3>${doc.titre}</h3>
-
-                        <p>
-                            <strong>Description :</strong><br>
-                            ${doc.description || 'Aucune description'}
-                        </p>
-
-                        <p>
-                            <strong>Note :</strong><br>
-                            ${doc.note_document || 'Aucune note'}
-                        </p>
-
-                        <p>
-                            📄 ${doc.nom_fichier}
-                        </p>
-
-                        <div class="card-actions">
-
-                            <a class="action-btn"
-                               target="_blank"
-                               href="../../${doc.chemin_fichier}">
-                                👁️ Ouvrir
-                            </a>
-
-                            <button class="action-btn delete-btn"
-                                    onclick="deleteDocument(${doc.id_document})">
-                                🗑️ Supprimer
-                            </button>
-
+            container.appendChild(block);
+            const grid = document.getElementById(`fold-${safeDossier}`);
+            docs.forEach(doc => {
+                const card = document.createElement('div');
+                card.className = 'doc-card-teacher';
+                card.innerHTML = `
+                    <div class="doc-card-top">
+                        <div class="doc-file-icon">${getFileIcon(doc.nom_fichier)}</div>
+                        <div class="doc-info">
+                            <div class="doc-title">${doc.titre}</div>
+                            <div class="doc-filename">${doc.nom_fichier}</div>
                         </div>
-
                     </div>
-                
+                    <div class="doc-meta">
+                        ${doc.description ? `<div class="doc-meta-row"><span class="doc-meta-label">Desc.</span><span class="doc-meta-value">${doc.description}</span></div>` : ''}
+                        ${doc.note_document ? `<div class="doc-meta-row"><span class="doc-meta-label">Note</span><span class="doc-meta-value">${doc.note_document}</span></div>` : ''}
+                    </div>
+                    <div class="doc-actions">
+                        <a class="doc-btn doc-btn-view" target="_blank" href="../../${doc.chemin_fichier}">👁️ Ouvrir</a>
+                        <button class="doc-btn doc-btn-delete" onclick="deleteDocument(${doc.id_document})">🗑️ Supprimer</button>
+                    </div>
                 `;
-
+                grid.appendChild(card);
             });
-
         }
-
     });
-
 }
 
-function deleteDocument(idDocument){
+function toggleFolder(id) {
+    const fold = document.getElementById(`fold-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    fold.classList.toggle('collapsed');
+    chev.classList.toggle('open');
+}
 
-    if(!confirm('Supprimer ce document ?')){
-        return;
-    }
-
+function deleteDocument(idDocument) {
+    if (!confirm('Supprimer ce document ?')) return;
     fetch('../php/delete_course_document.php', {
-
-        method:'POST',
-
-        headers:{
-            'Content-Type':'application/json'
-        },
-
-        body:JSON.stringify({
-            id_document:idDocument
-        })
-
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ id_document: idDocument })
+    }).then(res => res.json()).then(data => {
         alert(data.message);
-
-        if(data.success){
-            loadDocuments();
-        }
-
+        if (data.success) loadDocuments();
     });
-
 }
 
-document.getElementById('uploadForm')
-
-.addEventListener('submit', function(e){
-
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
     e.preventDefault();
-
     const formData = new FormData(this);
-
     formData.append('id_cours', idCours);
-    formData.append('id_professeur', currentUser.id_user);
-
-    fetch('../php/upload_course_document.php', {
-
-        method:'POST',
-        body:formData
-
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
+    formData.append('id_professeur', user.id_user);
+    fetch('../php/upload_course_document.php', { method: 'POST', body: formData })
+    .then(res => res.json()).then(data => {
         alert(data.message);
-
-        if(data.success){
-
-            document.getElementById('uploadForm').reset();
-
-            loadDocuments();
-
-        }
-
+        if (data.success) { this.reset(); document.getElementById('fileSelectedName').style.display = 'none'; document.querySelector('.file-drop-text').textContent = 'Glissez un fichier ici'; loadDocuments(); }
     });
-
 });
 
 loadDocuments();
-
 </script>
-
 </body>
 </html>

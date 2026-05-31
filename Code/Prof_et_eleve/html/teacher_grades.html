@@ -7,524 +7,190 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary: #1e293b;
-            --accent-cc: #3b82f6;
-            --accent-exam: #f59e0b;
-            --accent-projet: #10b981;
-            --accent-purple: #8b5cf6;
-            --bg: #f1f5f9;
-            --surface: #ffffff;
-            --surface-2: #f8fafc;
-            --border: #e2e8f0;
-            --border-focus: #3b82f6;
-            --text: #0f172a;
-            --text-muted: #64748b;
-            --text-light: #94a3b8;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --sidebar-w: 260px;
-            --header-h: 64px;
-            --footer-h: 56px;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 20px rgba(0,0,0,0.1);
+            /* Teacher palette — indigo/violet */
+            --accent:       #6366f1;
+            --accent-2:     #8b5cf6;
+            --accent-light: rgba(99,102,241,.1);
+            --accent-mid:   rgba(99,102,241,.2);
+
+            --cc-color:     #3b82f6;
+            --exam-color:   #f59e0b;
+            --proj-color:   #10b981;
+
+            --secondary:    #1e293b;
+            --bg:           #f1f5f9;
+            --surface:      #ffffff;
+            --surface-2:    #f8fafc;
+            --border:       #e2e8f0;
+            --border-strong:#cbd5e1;
+            --text:         #0f172a;
+            --text-muted:   #64748b;
+            --text-light:   #94a3b8;
+            --danger:       #ef4444;
+            --success:      #10b981;
+            --warning:      #f59e0b;
+
+            --sidebar-w:    260px;
+            --header-h:     64px;
+            --footer-h:     56px;
+            --radius:       12px;
+            --radius-sm:    8px;
+            --shadow:       0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md:    0 4px 20px rgba(0,0,0,.1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            line-height: 1.5;
-        }
-
-        /* ─── HEADER ─────────────────────────────────────────── */
-        header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: var(--header-h);
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 100;
-            box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,0.04);
-        }
+        /* ─── HEADER ──────────────────────────────────────────── */
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.07); }
         .header-left { display: flex; align-items: center; gap: 16px; }
-        .menu-btn {
-            width: 36px; height: 36px;
-            border: none; background: var(--surface-2);
-            border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--secondary);
-            transition: background .15s;
-        }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background .15s; }
         .menu-btn:hover { background: var(--border); }
         .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .logo-icon {
-            width: 34px; height: 34px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 9px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-        }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
-        .logo-badge {
-            font-size: 11px; font-weight: 600;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 2px 8px; border-radius: 20px;
-        }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--accent-light); border: 1px solid var(--accent-mid); color: var(--accent); padding: 2px 8px; border-radius: 20px; }
         .header-right { display: flex; align-items: center; gap: 12px; }
-        .notif-btn {
-            width: 36px; height: 36px;
-            border: none; background: var(--surface-2);
-            border-radius: 8px; cursor: pointer;
-            font-size: 16px;
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-            transition: background .15s;
-        }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; position: relative; transition: background .15s; }
         .notif-btn:hover { background: var(--border); }
-        .notif-dot {
-            width: 8px; height: 8px;
-            background: var(--danger);
-            border-radius: 50%;
-            border: 2px solid white;
-            position: absolute; top: 6px; right: 6px;
-        }
-        .user-chip {
-            display: flex; align-items: center; gap: 8px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 4px 12px 4px 4px;
-            font-size: 13px; font-weight: 500;
-            color: var(--text);
-        }
-        .user-avatar {
-            width: 28px; height: 28px;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: white; font-weight: 700;
-        }
+        .notif-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid white; position: absolute; top: 6px; right: 6px; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
 
         /* ─── LAYOUT ──────────────────────────────────────────── */
-        .layout {
-            display: flex;
-            flex: 1;
-            margin-top: var(--header-h);
-            margin-bottom: var(--footer-h);
-        }
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
 
         /* ─── SIDEBAR ─────────────────────────────────────────── */
-        .sidebar {
-            position: fixed;
-            top: var(--header-h);
-            left: 0;
-            bottom: var(--footer-h);
-            width: var(--sidebar-w);
-            background: var(--secondary);
-            overflow-y: auto;
-            transition: transform .3s ease;
-            z-index: 50;
-        }
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
         .sidebar.collapsed { transform: translateX(-100%); }
-        .sidebar-section {
-            padding: 20px 16px 8px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: #475569;
-        }
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            margin: 2px 8px;
-            transition: all .15s;
-        }
-        .sidebar a:hover { background: rgba(255,255,255,0.06); color: white; }
-        .sidebar a.active {
-            background: rgba(59,130,246,0.15);
-            color: #60a5fa;
-        }
-        .sidebar a.active .nav-icon { color: #3b82f6; }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(99,102,241,.15); color: #a5b4fc; }
         .nav-icon { font-size: 16px; width: 20px; text-align: center; }
-        .sidebar-divider {
-            height: 1px;
-            background: rgba(255,255,255,0.06);
-            margin: 12px 16px;
-        }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
         .sidebar a.danger { color: #f87171; }
-        .sidebar a.danger:hover { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
 
         /* ─── CONTENT ─────────────────────────────────────────── */
-        .content {
-            flex: 1;
-            margin-left: var(--sidebar-w);
-            padding: 28px 28px 28px;
-            transition: margin-left .3s;
-            max-width: 100%;
-        }
-        .sidebar.collapsed ~ .content,
-        body.sidebar-collapsed .content { margin-left: 0; }
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 28px; transition: margin-left .3s; max-width: 100%; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
 
         /* ─── BACK BTN ────────────────────────────────────────── */
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 13px; font-weight: 600;
-            color: var(--text-muted);
-            text-decoration: none;
-            padding: 6px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--surface);
-            margin-bottom: 20px;
-            transition: all .15s;
-        }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none; padding: 6px 12px; border: 1.5px solid var(--border-strong); border-radius: 8px; background: var(--surface); margin-bottom: 20px; transition: all .15s; }
         .back-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
 
         /* ─── COURSE BANNER ───────────────────────────────────── */
-        .course-banner {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            border-top: 4px solid var(--accent-purple);
-        }
-        .course-banner-text h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
+        .course-banner { background: var(--surface); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 20px; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; gap: 16px; border-left: 5px solid var(--accent); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .course-banner-text h1 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
         .course-banner-text p { font-size: 13px; color: var(--text-muted); }
-        .course-coeff {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(139,92,246,0.08);
-            border: 1px solid rgba(139,92,246,0.2);
-            color: var(--accent-purple);
-            font-weight: 700;
-            font-size: 14px;
-            padding: 8px 16px;
-            border-radius: 24px;
-            white-space: nowrap;
-        }
+        .course-coeff { display: flex; align-items: center; gap: 6px; background: var(--accent-light); border: 1.5px solid var(--accent-mid); color: var(--accent); font-weight: 700; font-size: 14px; padding: 8px 18px; border-radius: 24px; white-space: nowrap; }
 
         /* ─── EVAL TABS ───────────────────────────────────────── */
-        .eval-selector {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-        .eval-selector-header {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 13px; font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
+        .eval-selector { background: var(--surface); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .eval-selector-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
         .eval-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-        .eval-tab {
-            padding: 8px 16px;
-            border: 2px solid var(--border);
-            border-radius: 24px;
-            background: var(--surface-2);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all .2s;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .eval-tab:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(139,92,246,0.05); }
-        .eval-tab.active.controle_continu { background: var(--accent-cc); border-color: var(--accent-cc); color: white; }
-        .eval-tab.active.examen { background: var(--accent-exam); border-color: var(--accent-exam); color: white; }
-        .eval-tab.active.projet { background: var(--accent-projet); border-color: var(--accent-projet); color: white; }
+        .eval-tab { padding: 7px 16px; border: 2px solid var(--border-strong); border-radius: 24px; background: var(--surface-2); font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; }
+        .eval-tab:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+        .eval-tab.active.controle_continu { background: var(--cc-color); border-color: var(--cc-color); color: white; }
+        .eval-tab.active.examen { background: var(--exam-color); border-color: var(--exam-color); color: white; }
+        .eval-tab.active.projet { background: var(--proj-color); border-color: var(--proj-color); color: white; }
 
         /* ─── STATS ───────────────────────────────────────────── */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .stat-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--text-light);
-        }
-        .stat-val {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text);
-            font-family: 'DM Mono', monospace;
-        }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--surface); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+        .stat-label { font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-light); }
+        .stat-val { font-size: 22px; font-weight: 700; color: var(--text); font-family: 'DM Mono', monospace; }
         .stat-val.good { color: var(--success); }
         .stat-val.warn { color: var(--warning); }
-        .stat-val.info { color: var(--primary); }
+        .stat-val.info { color: var(--accent); }
 
         /* ─── NOTES SECTION ───────────────────────────────────── */
-        .notes-section {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-        }
-        .notes-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
+        .notes-section { background: var(--surface); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .notes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
         .notes-header-left { display: flex; flex-direction: column; gap: 4px; }
-        .notes-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-        }
+        .notes-title { font-size: 16px; font-weight: 700; color: var(--text); }
         .notes-subtitle { font-size: 13px; color: var(--text-muted); }
-        .eval-name-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            margin-bottom: 20px;
-        }
-        .eval-name-row label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-        .eval-name-input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            outline: none;
-        }
+
+        .eval-name-row { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border: 1.5px solid var(--border-strong); border-radius: var(--radius-sm); padding: 10px 16px; margin-bottom: 20px; }
+        .eval-name-row label { font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+        .eval-name-input { flex: 1; border: none; background: transparent; font-size: 14px; font-weight: 500; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; }
         .eval-name-input::placeholder { color: var(--text-light); font-weight: 400; }
 
         /* TABLE */
-        .table-wrapper { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .table-wrapper { overflow-x: auto; border-radius: var(--radius-sm); border: 2px solid var(--border-strong); }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        thead th {
-            background: var(--secondary);
-            color: rgba(255,255,255,0.7);
-            padding: 11px 16px;
-            text-align: left;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
+        thead th { background: var(--secondary); color: rgba(255,255,255,.75); padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
         thead th:last-child { text-align: center; }
-        tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+        tbody tr { border-bottom: 1.5px solid var(--border); transition: background .1s; }
         tbody tr:last-child { border-bottom: none; }
-        tbody tr:hover { background: var(--surface-2); }
-        td { padding: 12px 16px; }
+        tbody tr:hover { background: #f5f3ff; }
+        td { padding: 12px 16px; vertical-align: middle; }
         .student-name { font-weight: 600; color: var(--text); }
-        .student-matricule {
-            font-family: 'DM Mono', monospace;
-            font-size: 12px;
-            color: var(--text-light);
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            padding: 2px 8px;
-            border-radius: 6px;
-            display: inline-block;
-        }
+        .student-matricule { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-light); background: var(--surface-2); border: 1px solid var(--border-strong); padding: 2px 8px; border-radius: 6px; display: inline-block; }
+
         .note-cell { text-align: center; }
-        .note-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .note-input {
-            width: 80px;
-            padding: 7px 10px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            font-family: 'DM Mono', monospace;
-            text-align: center;
-            background: var(--surface);
-            color: var(--text);
-            transition: border-color .2s, background .2s, box-shadow .2s;
-            outline: none;
-        }
-        .note-input:focus { border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(139,92,246,0.12); }
+        .note-wrapper { display: inline-flex; align-items: center; gap: 6px; }
+        .note-input { width: 80px; padding: 7px 10px; border: 2px solid var(--border-strong); border-radius: 8px; font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; text-align: center; background: var(--surface); color: var(--text); transition: border-color .2s, background .2s, box-shadow .2s; outline: none; }
+        .note-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
         .note-input.modified { border-color: var(--warning); background: #fffbeb; }
         .note-input.saved { border-color: var(--success); background: #f0fdf4; }
         .note-input.invalid { border-color: var(--danger); background: #fef2f2; }
         .max-label { font-size: 11px; color: var(--text-light); font-weight: 500; }
 
-        /* PROGRESS BAR in table */
-        .note-bar { width: 80px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .note-bar { width: 80px; height: 5px; background: var(--border); border-radius: 4px; overflow: hidden; }
         .note-bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
 
         /* ACTIONS */
-        .btn-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-        .btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 20px;
-            border: none; border-radius: var(--radius-sm);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px; font-weight: 600;
-            cursor: pointer;
-            transition: all .2s;
-        }
-        .btn-save {
-            background: var(--success);
-            color: white;
-        }
-        .btn-save:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
-        .btn-save:active { transform: translateY(0); }
+        .btn-actions { display: flex; align-items: center; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1.5px solid var(--border); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; }
+        .btn-save { background: var(--success); color: white; }
+        .btn-save:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,.3); }
         .btn-save:disabled { background: var(--text-light); cursor: not-allowed; transform: none; box-shadow: none; }
-        .btn-cancel {
-            background: var(--surface-2);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
+        .btn-cancel { background: var(--surface-2); color: var(--text-muted); border: 1.5px solid var(--border-strong); }
         .btn-cancel:hover { background: var(--border); color: var(--text); }
-        .progress-text { margin-left: auto; font-size: 13px; color: var(--text-muted); }
+        .progress-text { margin-left: auto; font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
         /* STATES */
-        .no-config, .empty-eval {
-            text-align: center;
-            padding: 60px 40px;
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            color: var(--text-muted);
-        }
+        .no-config, .empty-eval { text-align: center; padding: 60px 40px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); color: var(--text-muted); }
         .no-config .icon, .empty-eval .icon { font-size: 40px; margin-bottom: 12px; }
         .no-config h3, .empty-eval h3 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
-        .no-config p, .empty-eval p { font-size: 14px; }
-        .loading-pulse {
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px; padding: 40px;
-            color: var(--text-muted); font-size: 14px;
-        }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: pulse 1.4s ease-in-out infinite; }
-        .dot:nth-child(2) { animation-delay: .2s; background: var(--accent-purple); }
+        .loading-pulse { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 40px; color: var(--text-muted); font-size: 14px; }
+        @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.4 } }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+        .dot:nth-child(2) { animation-delay: .2s; background: var(--accent-2); }
         .dot:nth-child(3) { animation-delay: .4s; background: var(--success); }
 
         /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 76px; right: 24px;
-            padding: 14px 20px;
-            background: var(--secondary);
-            color: white;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            display: flex; align-items: center; gap: 8px;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: all .3s ease;
-            z-index: 999;
-            pointer-events: none;
-        }
+        .toast { position: fixed; bottom: 76px; right: 24px; padding: 14px 20px; background: var(--secondary); color: white; border-radius: 12px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 30px rgba(0,0,0,.2); display: flex; align-items: center; gap: 8px; transform: translateY(20px); opacity: 0; transition: all .3s ease; z-index: 999; pointer-events: none; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
         .toast.warning { background: var(--warning); color: var(--text); }
 
         /* FOOTER */
-        footer {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: var(--footer-h);
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            font-size: 12px;
-            color: var(--text-light);
-            z-index: 100;
-        }
-        footer a { color: var(--primary); text-decoration: none; }
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 12px; color: var(--text-light); z-index: 100; }
 
-        /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .content { margin-left: 0 !important; }
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
-            .course-coeff { display: none; }
-        }
+        /* Course selector cards */
+        .csc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .course-selector-card { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1.5px solid var(--border-strong); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); text-decoration: none; color: inherit; transition: .2s; cursor: pointer; }
+        .course-selector-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+        .csc-icon { font-size: 30px; flex-shrink: 0; }
+        .csc-body { flex: 1; min-width: 0; }
+        .csc-code { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-light); border-radius: 5px; padding: 1px 7px; display: inline-block; margin-bottom: 3px; }
+        .csc-title { font-size: 14px; font-weight: 700; color: var(--text); }
+        .csc-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+        .csc-arrow { font-size: 18px; color: var(--accent); opacity: .5; flex-shrink: 0; transition: .2s; }
+        .course-selector-card:hover .csc-arrow { opacity: 1; transform: translateX(4px); }
+
+        @media (max-width: 1024px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .content { margin-left: 0 !important; } .course-coeff { display: none; } }
     </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════ HEADER -->
 <header>
     <div class="header-left">
         <button class="menu-btn" id="menuToggle">☰</button>
@@ -543,41 +209,21 @@
     </div>
 </header>
 
-<!-- ═══════════════════════════════════════ LAYOUT -->
 <div class="layout">
-
-    <!-- ─── SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-section">Navigation</div>
-        <a href="teacher_dashboard.html">
-            <span class="nav-icon">🏠</span> Accueil
-        </a>
-        <a href="teacher_courses.html">
-            <span class="nav-icon">📚</span> Mes Cours
-        </a>
-        <a href="teacher_grades.html" class="active">
-            <span class="nav-icon">📝</span> Saisie des Notes
-        </a>
-        <a href="timetable.html">
-            <span class="nav-icon">📅</span> Emploi du temps
-        </a>
-        <a href="#">
-            <span class="nav-icon">✉️</span> Messagerie
-        </a>
+        <a href="teacher_dashboard.html"><span class="nav-icon">🏠</span> Accueil</a>
+        <a href="teacher_courses.html"><span class="nav-icon">📚</span> Mes Cours</a>
+        <a href="teacher_grades.html" class="active"><span class="nav-icon">📝</span> Saisie des Notes</a>
+        <a href="timetable.html"><span class="nav-icon">📅</span> Emploi du temps</a>
+        <a href="messages.html"><span class="nav-icon">✉️</span> Messagerie</a>
         <div class="sidebar-divider"></div>
-        <a href="#" id="logoutBtn" class="danger">
-            <span class="nav-icon">🚪</span> Déconnexion
-        </a>
+        <a href="#" id="logoutBtn" class="danger"><span class="nav-icon">🚪</span> Déconnexion</a>
     </aside>
 
-    <!-- ─── MAIN CONTENT -->
     <main class="content" id="mainContent_wrapper">
+        <a href="teacher_courses.html" class="back-btn">← Retour à mes cours</a>
 
-        <a href="teacher_courses.html" class="back-btn">
-            ← Retour à mes cours
-        </a>
-
-        <!-- Course Banner -->
         <div class="course-banner">
             <div class="course-banner-text">
                 <h1 id="courseTitre">📝 Saisie des Notes</h1>
@@ -588,62 +234,45 @@
             </div>
         </div>
 
-        <!-- Dynamic content zone -->
         <div id="mainContent">
-            <div class="loading-pulse">
-                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                Chargement...
-            </div>
+            <div class="loading-pulse"><div class="dot"></div><div class="dot"></div><div class="dot"></div> Chargement...</div>
         </div>
-
     </main>
 </div>
 
-<!-- ═══════════════════════════════════════ TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════ FOOTER -->
 <footer>
-    <div>📧 <a href="mailto:support@smartcampus.edu">support@smartcampus.edu</a></div>
+    <div>📧 <a href="mailto:support@smartcampus.edu" style="color:var(--accent);text-decoration:none;">support@smartcampus.edu</a></div>
     <div>📞 +33 06 12 34 56 78</div>
 </footer>
 
 <script>
-    /* ═══ PARAMS & STATE ══════════════════════════════════════════ */
     const params     = new URLSearchParams(window.location.search);
     const idCours    = params.get('id_cours');
     const titreCours = decodeURIComponent(params.get('titre') || '');
     const coeffCours = params.get('coeff') || '1';
 
-    let currentUser      = null;
-    let evalConfig       = [];
-    let students         = [];       // {id_inscription, nom, prenom, matricule}
-    let currentCatKey    = null;
-    let currentNoteIndex = null;
-    let existingNotes    = {};       // id_inscription → valeur
-    let originalNotes    = {};
-    let currentNomEval   = '';
-    let originalNomEval  = '';
-    let isSaving         = false;
+    let currentUser = null, evalConfig = [], students = [];
+    let currentCatKey = null, currentNoteIndex = null;
+    let existingNotes = {}, originalNotes = {};
+    let currentNomEval = '', originalNomEval = '';
+    let isSaving = false;
 
     const LABELS       = { controle_continu: '📝 Contrôle Continu', examen: '📋 Examen', projet: '🛠️ Projet' };
     const LABELS_SHORT = { controle_continu: 'CC', examen: 'Exam', projet: 'Projet' };
     const COLORS       = { controle_continu: '#3b82f6', examen: '#f59e0b', projet: '#10b981' };
 
-    /* ═══ AUTH ════════════════════════════════════════════════════ */
     (function checkAuth() {
         const raw = localStorage.getItem('smartcampus_user');
         if (!raw) return redirect();
         try { currentUser = JSON.parse(raw); } catch(e) { return redirect(); }
         if (!currentUser || currentUser.role !== 'enseignant') return redirect();
-        const fullName = `${currentUser.prenom} ${currentUser.nom}`;
-        document.getElementById('userNameDisplay').textContent = fullName;
-        document.getElementById('userInitials').textContent =
-            (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
+        document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom}`;
+        document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
     })();
     function redirect() { window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; }
 
-    /* ═══ UI HELPERS ══════════════════════════════════════════════ */
     let toastTimer;
     function showToast(msg, type = 'default') {
         const t = document.getElementById('toast');
@@ -664,199 +293,111 @@
         return '#ef4444';
     }
 
-    /* ═══ EVENTS ══════════════════════════════════════════════════ */
-    document.getElementById('menuToggle').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-    });
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('smartcampus_user');
-        redirect();
-    });
+    document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+    document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('smartcampus_user'); redirect(); });
 
-    /* ═══ INIT ════════════════════════════════════════════════════ */
     function init() {
-        if (!idCours) {
-            // Pas de cours sélectionné → afficher la liste des cours du prof
-            renderCourseSelector();
-            return;
-        }
-
+        if (!idCours) { renderCourseSelector(); return; }
         document.getElementById('courseTitre').textContent = `📝 ${titreCours}`;
-        document.getElementById('courseInfo').textContent  = `Saisie des notes — Coefficient ${coeffCours}`;
-        document.getElementById('coeffVal').textContent    = coeffCours;
+        document.getElementById('courseInfo').textContent = `Saisie des notes — Coefficient ${coeffCours}`;
+        document.getElementById('coeffVal').textContent = coeffCours;
         document.getElementById('coeffBadge').style.display = 'flex';
 
         const BASE = 'http://localhost:8888/Smart_Campus/Code';
-
         Promise.all([
             safeFetch(`${BASE}/admin/php/get_eval_config.php?id_cours=${idCours}`),
             safeFetch(`${BASE}/admin/php/get_course_students.php?id_cours=${idCours}`)
-        ])
-        .then(([configData, studentsData]) => {
+        ]).then(([configData, studentsData]) => {
             if (!configData.success || !configData.configs?.length) {
-                document.getElementById('mainContent').innerHTML = `
-                    <div class="no-config">
-                        <div class="icon">⚙️</div>
-                        <h3>Aucune configuration d'évaluation</h3>
-                        <p>L'administrateur doit d'abord configurer les catégories de notes pour ce cours.</p>
-                    </div>`;
+                document.getElementById('mainContent').innerHTML = `<div class="no-config"><div class="icon">⚙️</div><h3>Aucune configuration d'évaluation</h3><p>L'administrateur doit d'abord configurer les catégories de notes pour ce cours.</p></div>`;
                 return;
             }
-
-            evalConfig = configData.configs.map(c => ({
-                ...c,
-                pourcentages: Array.isArray(c.pourcentages)
-                    ? c.pourcentages
-                    : (() => { try { return JSON.parse(c.pourcentages || '[]'); } catch(e) { return []; } })()
-            }));
-
-            // Normalisation des étudiants : get_course_students retourne id (pas id_inscription)
-            // On utilise ce qui est disponible
+            evalConfig = configData.configs.map(c => ({...c, pourcentages: Array.isArray(c.pourcentages) ? c.pourcentages : (() => { try { return JSON.parse(c.pourcentages || '[]'); } catch(e) { return []; } })()}));
             const rawStudents = studentsData.success ? (studentsData.data || []) : [];
-            students = rawStudents.map(s => ({
-                id_inscription : s.id_inscription ?? s.id ?? s.id_etudiant,
-                nom            : s.nom,
-                prenom         : s.prenom,
-                matricule      : s.matricule
-            }));
-
+            students = rawStudents.map(s => ({ id_inscription: s.id_inscription ?? s.id ?? s.id_etudiant, nom: s.nom, prenom: s.prenom, matricule: s.matricule }));
             renderEvalSelector();
-        })
-        .catch(err => {
-            document.getElementById('mainContent').innerHTML = `
-                <div class="no-config">
-                    <div class="icon">🔌</div>
-                    <h3>Erreur de chargement</h3>
-                    <p>${err.message}</p>
-                </div>`;
+        }).catch(err => {
+            document.getElementById('mainContent').innerHTML = `<div class="no-config"><div class="icon">🔌</div><h3>Erreur de chargement</h3><p>${err.message}</p></div>`;
         });
     }
 
-    /* ─── safe fetch (résout le "Unexpected end of JSON input") ── */
     async function safeFetch(url, options = {}) {
         const res = await fetch(url, options);
-        const text = await res.text();          // On lit TOUJOURS le texte brut
-        if (!text || !text.trim()) {
-            throw new Error(`Réponse vide du serveur (${url.split('/').pop()})`);
-        }
-        try {
-            return JSON.parse(text);
-        } catch (e) {
-            console.error('Réponse non-JSON :', text.slice(0, 300));
-            throw new Error(`Réponse invalide du serveur : ${text.slice(0, 80)}`);
-        }
+        const text = await res.text();
+        if (!text || !text.trim()) throw new Error(`Réponse vide du serveur (${url.split('/').pop()})`);
+        try { return JSON.parse(text); } catch (e) { throw new Error(`Réponse invalide du serveur : ${text.slice(0, 80)}`); }
     }
 
-    /* ═══ RENDER EVAL SELECTOR ════════════════════════════════════ */
     function renderEvalSelector() {
         let tabsHtml = '';
         evalConfig.forEach(cat => {
             for (let i = 1; i <= cat.nombre_notes; i++) {
                 const key = `${cat.categorie}_${i}`;
-                tabsHtml += `
-                    <button class="eval-tab ${cat.categorie}" id="tab_${key}"
-                        onclick="selectEval('${cat.categorie}', ${i})">
-                        ${LABELS_SHORT[cat.categorie] || cat.categorie} ${i}
-                    </button>`;
+                tabsHtml += `<button class="eval-tab ${cat.categorie}" id="tab_${key}" onclick="selectEval('${cat.categorie}', ${i})">${LABELS_SHORT[cat.categorie] || cat.categorie} ${i}</button>`;
             }
         });
-
         document.getElementById('mainContent').innerHTML = `
             <div class="eval-selector">
                 <div class="eval-selector-header">📋 Choisir une évaluation</div>
-                <div class="eval-tabs">${tabsHtml || '<span style="color:var(--text-light); font-size:13px;">Aucune évaluation configurée</span>'}</div>
+                <div class="eval-tabs">${tabsHtml || '<span style="color:var(--text-light);font-size:13px;">Aucune évaluation configurée</span>'}</div>
             </div>
             <div class="stats-bar" id="statsBar" style="display:none"></div>
-            <div id="notesSection"></div>
-        `;
+            <div id="notesSection"></div>`;
     }
 
-    /* ═══ SELECT EVAL ═════════════════════════════════════════════ */
     function selectEval(catKey, noteIndex) {
-        currentCatKey    = catKey;
-        currentNoteIndex = noteIndex;
-        const typeEval   = `${catKey}_${noteIndex}`;
-
+        currentCatKey = catKey; currentNoteIndex = noteIndex;
+        const typeEval = `${catKey}_${noteIndex}`;
         document.querySelectorAll('.eval-tab').forEach(t => t.classList.remove('active'));
         const tab = document.getElementById(`tab_${typeEval}`);
         if (tab) tab.classList.add('active');
-
         setLoading('notesSection');
         document.getElementById('statsBar').style.display = 'none';
 
-        const url = `http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_teacher.php`
-                  + `?id_cours=${idCours}&type_evaluation=${encodeURIComponent(typeEval)}`;
-
-        safeFetch(url)
+        safeFetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_teacher.php?id_cours=${idCours}&type_evaluation=${encodeURIComponent(typeEval)}`)
         .then(data => {
-            existingNotes  = {};
-            originalNotes  = {};
-            currentNomEval = '';
-            originalNomEval = '';
-
+            existingNotes = {}; originalNotes = {}; currentNomEval = ''; originalNomEval = '';
             if (data.success && Array.isArray(data.notes)) {
                 data.notes.forEach(n => {
                     const key = n.id_inscription;
-                    existingNotes[key]  = (n.note !== null && n.note !== undefined) ? n.note : '';
-                    originalNotes[key]  = existingNotes[key];
-                    if (n.nom_evaluation && !currentNomEval) {
-                        currentNomEval  = n.nom_evaluation;
-                        originalNomEval = n.nom_evaluation;
-                    }
+                    existingNotes[key] = (n.note !== null && n.note !== undefined) ? n.note : '';
+                    originalNotes[key] = existingNotes[key];
+                    if (n.nom_evaluation && !currentNomEval) { currentNomEval = n.nom_evaluation; originalNomEval = n.nom_evaluation; }
                 });
             }
             renderNotesTable(catKey, noteIndex, typeEval);
-        })
-        .catch(err => {
-            document.getElementById('notesSection').innerHTML = `
-                <div class="no-config">
-                    <div class="icon">⚠️</div>
-                    <h3>Erreur de chargement des notes</h3>
-                    <p>${err.message}</p>
-                </div>`;
+        }).catch(err => {
+            document.getElementById('notesSection').innerHTML = `<div class="no-config"><div class="icon">⚠️</div><h3>Erreur de chargement des notes</h3><p>${err.message}</p></div>`;
         });
     }
 
-    /* ═══ RENDER TABLE ════════════════════════════════════════════ */
     function renderNotesTable(catKey, noteIndex, typeEval) {
-        const cat  = evalConfig.find(c => c.categorie === catKey);
+        const cat = evalConfig.find(c => c.categorie === catKey);
         const pcts = cat ? cat.pourcentages : [];
-        const pct  = pcts[noteIndex - 1] !== undefined ? pcts[noteIndex - 1] : 0;
-        const color = COLORS[catKey] || '#8b5cf6';
-
+        const pct = pcts[noteIndex - 1] !== undefined ? pcts[noteIndex - 1] : 0;
+        const color = COLORS[catKey] || '#6366f1';
         updateStats();
 
         let rowsHtml = '';
         students.forEach(s => {
-            const val      = existingNotes[s.id_inscription] !== undefined ? existingNotes[s.id_inscription] : '';
+            const val = existingNotes[s.id_inscription] !== undefined ? existingNotes[s.id_inscription] : '';
             const hasSaved = val !== '' && val !== null;
-            const numVal   = hasSaved ? parseFloat(val) : null;
-            const barW     = numVal !== null ? Math.round((numVal / 20) * 100) : 0;
+            const numVal = hasSaved ? parseFloat(val) : null;
+            const barW = numVal !== null ? Math.round((numVal / 20) * 100) : 0;
             const barColor = numVal !== null ? noteColor(numVal) : '#e2e8f0';
-
             rowsHtml += `
             <tr>
-                <td>
-                    <div class="student-name">${s.nom} ${s.prenom}</div>
-                </td>
+                <td><div class="student-name">${s.nom} ${s.prenom}</div></td>
                 <td><span class="student-matricule">${s.matricule}</span></td>
                 <td class="note-cell">
                     <div class="note-wrapper">
-                        <input type="number" min="0" max="20" step="0.25"
-                            class="note-input ${hasSaved ? 'saved' : ''}"
-                            id="note_${s.id_inscription}"
-                            value="${val}"
-                            placeholder="—"
+                        <input type="number" min="0" max="20" step="0.25" class="note-input ${hasSaved ? 'saved' : ''}"
+                            id="note_${s.id_inscription}" value="${val}" placeholder="—"
                             oninput="onNoteInput(this, '${s.id_inscription}')">
                         <span class="max-label">/20</span>
                     </div>
                 </td>
-                <td>
-                    <div class="note-bar">
-                        <div class="note-bar-fill" id="bar_${s.id_inscription}"
-                            style="width:${barW}%; background:${barColor}"></div>
-                    </div>
-                </td>
+                <td><div class="note-bar"><div class="note-bar-fill" id="bar_${s.id_inscription}" style="width:${barW}%;background:${barColor}"></div></div></td>
             </tr>`;
         });
 
@@ -864,207 +405,160 @@
             <div class="notes-section">
                 <div class="notes-header">
                     <div class="notes-header-left">
-                        <div class="notes-title" style="border-left:3px solid ${color}; padding-left:10px;">
-                            ${LABELS[catKey] || catKey} — Note ${noteIndex}
-                        </div>
+                        <div class="notes-title" style="border-left:3px solid ${color};padding-left:10px;">${LABELS[catKey] || catKey} — Note ${noteIndex}</div>
                         <div class="notes-subtitle">Poids dans la catégorie : <strong>${pct}%</strong></div>
                     </div>
                 </div>
-
                 <div class="eval-name-row">
                     <label>🏷️ Intitulé</label>
-                    <input type="text" class="eval-name-input" id="evalNameInput"
-                        value="${currentNomEval}"
-                        placeholder="Ex : DS1, Interro flash, Projet groupe…"
-                        maxlength="100">
+                    <input type="text" class="eval-name-input" id="evalNameInput" value="${currentNomEval}" placeholder="Ex : DS1, Interro flash, Projet groupe…" maxlength="100">
                 </div>
-
                 ${students.length === 0
-                    ? `<div class="empty-eval">
-                            <div class="icon">👥</div>
-                            <h3>Aucun étudiant inscrit</h3>
-                            <p>Aucun étudiant n'est inscrit à ce cours.</p>
-                       </div>`
-                    : `<div class="table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Étudiant</th>
-                                        <th>Matricule</th>
-                                        <th style="text-align:center">Note /20</th>
-                                        <th>Niveau</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${rowsHtml}</tbody>
-                            </table>
-                        </div>
-                        <div class="btn-actions">
-                            <button class="btn btn-save" id="saveBtn" onclick="saveNotes('${typeEval}')">
-                                💾 Sauvegarder
-                            </button>
-                            <button class="btn btn-cancel" onclick="cancelNotes()">✕ Annuler</button>
-                            <span class="progress-text" id="progressText"></span>
-                        </div>`
-                }
+                    ? `<div class="empty-eval"><div class="icon">👥</div><h3>Aucun étudiant inscrit</h3><p>Aucun étudiant n'est inscrit à ce cours.</p></div>`
+                    : `<div class="table-wrapper"><table>
+                        <thead><tr><th>Étudiant</th><th>Matricule</th><th style="text-align:center">Note /20</th><th>Niveau</th></tr></thead>
+                        <tbody>${rowsHtml}</tbody>
+                       </table></div>
+                       <div class="btn-actions">
+                           <button class="btn btn-save" id="saveBtn" onclick="saveNotes('${typeEval}')">💾 Sauvegarder</button>
+                           <button class="btn btn-cancel" onclick="cancelNotes()">✕ Annuler</button>
+                           <span class="progress-text" id="progressText"></span>
+                       </div>`}
             </div>`;
-
         updateProgress();
     }
 
-    /* ═══ NOTE INPUT HANDLER ══════════════════════════════════════ */
     function onNoteInput(input, idInscription) {
         input.classList.remove('saved', 'invalid');
         const v = parseFloat(input.value);
-        if (input.value !== '' && (isNaN(v) || v < 0 || v > 20)) {
-            input.classList.add('invalid');
-        } else {
+        if (input.value !== '' && (isNaN(v) || v < 0 || v > 20)) { input.classList.add('invalid'); }
+        else {
             input.classList.add('modified');
             existingNotes[idInscription] = input.value !== '' ? v : '';
-            // Update mini bar
             const bar = document.getElementById(`bar_${idInscription}`);
-            if (bar) {
-                const w = input.value !== '' ? Math.round((v / 20) * 100) : 0;
-                bar.style.width = w + '%';
-                bar.style.background = input.value !== '' ? noteColor(v) : '#e2e8f0';
-            }
+            if (bar) { const w = input.value !== '' ? Math.round((v/20)*100) : 0; bar.style.width=w+'%'; bar.style.background=input.value!==''?noteColor(v):'#e2e8f0'; }
         }
-        updateStats();
-        updateProgress();
+        updateStats(); updateProgress();
     }
 
     function updateStats() {
-        const vals = Object.values(existingNotes)
-            .filter(v => v !== '' && v !== null && v !== undefined)
-            .map(Number)
-            .filter(n => !isNaN(n));
-
+        const vals = Object.values(existingNotes).filter(v=>v!==''&&v!==null&&v!==undefined).map(Number).filter(n=>!isNaN(n));
         const statsBar = document.getElementById('statsBar');
         if (!statsBar) return;
         statsBar.style.display = 'grid';
-
         const avg = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length) : null;
         const min = vals.length ? Math.min(...vals) : null;
         const max = vals.length ? Math.max(...vals) : null;
-
         statsBar.innerHTML = `
-            <div class="stat-card">
-                <div class="stat-label">Moyenne</div>
-                <div class="stat-val info">${avg !== null ? avg.toFixed(2)+'/20' : '—'}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Note la + basse</div>
-                <div class="stat-val warn">${min !== null ? min.toFixed(2) : '—'}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Note la + haute</div>
-                <div class="stat-val good">${max !== null ? max.toFixed(2) : '—'}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Notes saisies</div>
-                <div class="stat-val">${vals.length}<span style="font-size:13px;color:var(--text-light)">/${students.length}</span></div>
-            </div>`;
+            <div class="stat-card"><div class="stat-label">Moyenne</div><div class="stat-val info">${avg!==null?avg.toFixed(2)+'/20':'—'}</div></div>
+            <div class="stat-card"><div class="stat-label">Note la + basse</div><div class="stat-val warn">${min!==null?min.toFixed(2):'—'}</div></div>
+            <div class="stat-card"><div class="stat-label">Note la + haute</div><div class="stat-val good">${max!==null?max.toFixed(2):'—'}</div></div>
+            <div class="stat-card"><div class="stat-label">Notes saisies</div><div class="stat-val">${vals.length}<span style="font-size:13px;color:var(--text-light)">/${students.length}</span></div></div>`;
     }
 
     function updateProgress() {
         const pt = document.getElementById('progressText');
         if (!pt) return;
-        const filled = students.filter(s => {
-            const v = existingNotes[s.id_inscription];
-            return v !== '' && v !== null && v !== undefined;
-        }).length;
+        const filled = students.filter(s=>{const v=existingNotes[s.id_inscription];return v!==''&&v!==null&&v!==undefined;}).length;
         pt.textContent = `${filled} / ${students.length} notes saisies`;
     }
 
-    /* ═══ CANCEL ══════════════════════════════════════════════════ */
     function cancelNotes() {
         const nomInput = document.getElementById('evalNameInput');
         if (nomInput) nomInput.value = originalNomEval;
         students.forEach(s => {
-            const inp = document.getElementById('note_' + s.id_inscription);
+            const inp = document.getElementById('note_'+s.id_inscription);
             if (!inp) return;
             const orig = originalNotes[s.id_inscription];
-            inp.value = orig !== undefined ? orig : '';
-            inp.className = 'note-input' + (inp.value !== '' ? ' saved' : '');
-            existingNotes[s.id_inscription] = inp.value !== '' ? parseFloat(inp.value) : '';
+            inp.value = orig!==undefined?orig:'';
+            inp.className = 'note-input'+(inp.value!==''?' saved':'');
+            existingNotes[s.id_inscription] = inp.value!==''?parseFloat(inp.value):'';
             const bar = document.getElementById(`bar_${s.id_inscription}`);
-            if (bar) {
-                const w = inp.value !== '' ? Math.round((parseFloat(inp.value)/20)*100) : 0;
-                bar.style.width = w+'%';
-                bar.style.background = inp.value !== '' ? noteColor(parseFloat(inp.value)) : '#e2e8f0';
-            }
+            if (bar) { const w=inp.value!==''?Math.round((parseFloat(inp.value)/20)*100):0; bar.style.width=w+'%'; bar.style.background=inp.value!==''?noteColor(parseFloat(inp.value)):'#e2e8f0'; }
         });
-        updateStats();
-        updateProgress();
+        updateStats(); updateProgress();
         showToast('Modifications annulées', 'warning');
     }
 
-    /* ═══ SAVE ════════════════════════════════════════════════════ */
     function saveNotes(typeEval) {
         if (isSaving) return;
-
-        // Validation
         let hasInvalid = false;
         students.forEach(s => {
-            const inp = document.getElementById('note_' + s.id_inscription);
-            if (!inp || inp.value === '') return;
-            const v = parseFloat(inp.value);
-            if (isNaN(v) || v < 0 || v > 20) { hasInvalid = true; inp.classList.add('invalid'); }
+            const inp = document.getElementById('note_'+s.id_inscription);
+            if (!inp||inp.value==='') return;
+            const v=parseFloat(inp.value);
+            if (isNaN(v)||v<0||v>20) { hasInvalid=true; inp.classList.add('invalid'); }
         });
         if (hasInvalid) { showToast('⚠️ Certaines notes sont invalides (0–20)', 'error'); return; }
 
         const nomInput = document.getElementById('evalNameInput');
-        const nomEval  = nomInput ? nomInput.value.trim() : '';
-
+        const nomEval = nomInput ? nomInput.value.trim() : '';
         const notes = [];
         students.forEach(s => {
-            const inp = document.getElementById('note_' + s.id_inscription);
-            if (!inp || inp.value === '') return;
-            notes.push({
-                id_inscription  : s.id_inscription,
-                note            : parseFloat(inp.value),
-                type_evaluation : typeEval,
-                nom_evaluation  : nomEval
-            });
+            const inp = document.getElementById('note_'+s.id_inscription);
+            if (!inp||inp.value==='') return;
+            notes.push({ id_inscription: s.id_inscription, note: parseFloat(inp.value), type_evaluation: typeEval, nom_evaluation: nomEval });
         });
-
         if (!notes.length) { showToast('Aucune note à enregistrer', 'warning'); return; }
 
         isSaving = true;
         const btn = document.getElementById('saveBtn');
-        if (btn) { btn.disabled = true; btn.textContent = '⏳ Sauvegarde…'; }
+        if (btn) { btn.disabled=true; btn.textContent='⏳ Sauvegarde…'; }
 
         safeFetch('http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/save_note.php', {
-            method  : 'POST',
-            headers : { 'Content-Type': 'application/json' },
-            body    : JSON.stringify({ notes })
-        })
-        .then(data => {
+            method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({notes})
+        }).then(data => {
             if (data.success) {
-                originalNomEval = nomEval;
-                currentNomEval  = nomEval;
+                originalNomEval = nomEval; currentNomEval = nomEval;
                 students.forEach(s => {
-                    const inp = document.getElementById('note_' + s.id_inscription);
-                    if (!inp || inp.value === '') return;
-                    inp.classList.remove('modified', 'invalid');
-                    inp.classList.add('saved');
-                    const v = parseFloat(inp.value);
-                    originalNotes[s.id_inscription]  = v;
-                    existingNotes[s.id_inscription]  = v;
+                    const inp = document.getElementById('note_'+s.id_inscription);
+                    if (!inp||inp.value==='') return;
+                    inp.classList.remove('modified','invalid'); inp.classList.add('saved');
+                    const v=parseFloat(inp.value); originalNotes[s.id_inscription]=v; existingNotes[s.id_inscription]=v;
                 });
                 showToast('✅ Notes sauvegardées !', 'success');
                 updateStats();
-            } else {
-                showToast('Erreur : ' + (data.message || 'Inconnue'), 'error');
+            } else { showToast('Erreur : '+(data.message||'Inconnue'), 'error'); }
+        }).catch(err=>showToast('Erreur réseau : '+err.message, 'error'))
+        .finally(()=>{ isSaving=false; if(btn){btn.disabled=false; btn.textContent='💾 Sauvegarder';} });
+    }
+
+    function renderCourseSelector() {
+        document.getElementById('courseTitre').textContent = '📝 Saisie des Notes';
+        document.getElementById('courseInfo').textContent = 'Sélectionnez un cours pour saisir les notes';
+        document.getElementById('coeffBadge').style.display = 'none';
+        document.querySelector('.back-btn').style.display = 'none';
+        const mainContent = document.getElementById('mainContent');
+        setLoading(mainContent);
+
+        fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_teacher_courses.php?id_user=${currentUser.id_user}`)
+        .then(r=>r.json()).then(data => {
+            if (!data.success||!data.courses||data.courses.length===0) {
+                mainContent.innerHTML=`<div class="no-config"><div class="icon">📚</div><h3>Aucun cours assigné</h3><p>Vous n'avez pas encore de cours assignés.</p></div>`;
+                return;
             }
-        })
-        .catch(err => showToast('Erreur réseau : ' + err.message, 'error'))
-        .finally(() => {
-            isSaving = false;
-            if (btn) { btn.disabled = false; btn.textContent = '💾 Sauvegarder'; }
+            const subjectEmojis = ['📘','📗','📙','📕','📓','📔','🗂️','📐','🔬','🧮','🌍','⚗️'];
+            const cardsHtml = data.courses.map((c,i)=>`
+                <a class="course-selector-card" href="teacher_grades.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}&coeff=${c.coefficient}">
+                    <div class="csc-icon">${subjectEmojis[i%subjectEmojis.length]}</div>
+                    <div class="csc-body">
+                        <div class="csc-code">${c.code_cours}</div>
+                        <div class="csc-title">${c.titre}</div>
+                        <div class="csc-meta">Semestre ${c.semestre} · ${c.credits} ECTS · Coeff. ${c.coefficient}</div>
+                    </div>
+                    <div class="csc-arrow">→</div>
+                </a>`).join('');
+            mainContent.innerHTML = `
+                <div class="no-config" style="margin-bottom:20px;padding:20px 24px;text-align:left;display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:28px;">👆</div>
+                    <div><div style="font-size:15px;font-weight:700;color:var(--text);">Sélectionnez un cours</div><div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Cliquez pour accéder à la saisie des notes</div></div>
+                </div>
+                <div class="csc-grid">${cardsHtml}</div>`;
+        }).catch(()=>{
+            mainContent.innerHTML=`<div class="no-config"><div class="icon">🔌</div><h3>Erreur de chargement</h3><p>Vérifiez votre connexion.</p></div>`;
         });
     }
 
-    /* ═══ START ═══════════════════════════════════════════════════ */
     init();
 </script>
 </body>

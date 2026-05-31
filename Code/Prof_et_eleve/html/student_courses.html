@@ -67,18 +67,66 @@
         .content { flex: 1; margin-left: var(--sidebar-w); padding: 28px; transition: margin-left .3s; }
         .sidebar.collapsed ~ .content { margin-left: 0; }
 
-        .page-header { margin-bottom: 24px; }
-        .page-header h2 { font-size: 20px; font-weight: 700; }
-        .page-header p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+        /* ─── WELCOME BANNER ─────────────────────────────── */
+        .welcome-banner { background: linear-gradient(135deg, #10b981, #3b82f6); color: white; border-radius: var(--radius); padding: 28px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+        .welcome-banner h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .welcome-banner p { font-size: 14px; opacity: .85; }
+        .welcome-banner .banner-icon { font-size: 48px; opacity: .7; }
 
-        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .course-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: .2s; border: 1px solid var(--border); }
-        .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .course-title { background: var(--secondary); color: #fff; padding: 16px 20px; font-size: 15px; font-weight: 700; }
-        .course-info-block { padding: 18px; flex: 1; color: var(--text-muted); font-size: 14px; line-height: 1.7; }
-        .course-actions { padding: 16px; border-top: 1px solid var(--border); background: var(--surface-2); }
-        .btn-action { display: block; width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font-weight: 600; cursor: pointer; transition: .2s; text-align: center; font-family: inherit; font-size: 14px; }
-        .btn-action:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        /* ─── STATS ──────────────────────────────────────── */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+        .stat-card .stat-icon { font-size: 26px; margin-bottom: 8px; }
+        .stat-card .stat-val { font-size: 26px; font-weight: 700; }
+        .stat-card .stat-label { font-size: 13px; color: var(--text-muted); }
+
+        /* ─── SECTION HEADER ─────────────────────────────── */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .section-title { font-size: 17px; font-weight: 700; color: var(--text); }
+        .section-count { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+        /* ─── COURSE CARDS ───────────────────────────────── */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .course-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: .2s;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .course-card-top { padding: 20px 20px 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .course-card-icon { font-size: 32px; }
+        .course-card-body { display: flex; flex-direction: column; gap: 4px; }
+        .course-card-title { font-size: 15px; font-weight: 700; color: var(--text); }
+        .course-card-code { font-size: 12px; font-weight: 600; color: var(--primary); background: #eff6ff; border-radius: 6px; padding: 2px 8px; display: inline-block; margin-bottom: 2px; }
+        .course-card-meta { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 6px; }
+        .course-card-meta strong { color: var(--text); font-weight: 600; }
+        .course-card-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge { font-size: 12px; font-weight: 600; border-radius: 6px; padding: 3px 10px; }
+        .badge-semester { background: #f0fdf4; color: #15803d; }
+        .badge-credits { background: #faf5ff; color: #7c3aed; }
+        .badge-coeff { background: #fff7ed; color: #c2410c; }
+        .course-card-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: var(--surface-2);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .course-card-footer span { opacity: .7; font-size: 16px; }
+        .course-card:hover .course-card-footer { background: var(--primary); color: white; }
+        .course-card:hover .course-card-footer span { opacity: 1; }
 
         .empty-message { text-align: center; color: var(--text-muted); font-style: italic; padding: 60px; grid-column: 1/-1; }
 
@@ -130,7 +178,7 @@
         <a href="timetable.html">
             <span class="nav-icon">📅</span> Emploi du temps
         </a>
-        <a href="#">
+        <a href="messages.html">
             <span class="nav-icon">✉️</span> Messagerie
         </a>
         <div class="sidebar-divider"></div>
@@ -140,13 +188,42 @@
     </aside>
 
     <main class="content">
-        <div class="page-header">
-            <h2>Mes Cours Inscrits</h2>
-            <p>Sélectionnez un cours pour accéder aux documents et ressources.</p>
+
+        <div class="welcome-banner">
+            <div>
+                <h2>Mes Cours Inscrits 📚</h2>
+                <p>Sélectionnez un cours pour accéder aux documents et ressources pédagogiques.</p>
+            </div>
+            <div class="banner-icon">🎓</div>
         </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-val" id="statCours">–</div>
+                <div class="stat-label">Cours inscrits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-val" id="statEcts">–</div>
+                <div class="stat-label">Crédits ECTS</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-val" id="statSemestres">–</div>
+                <div class="stat-label">Semestres</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <div class="section-title">Toutes mes matières</div>
+            <div class="section-count" id="coursesCount">— cours</div>
+        </div>
+
         <div class="courses-grid" id="coursesContainer">
             <div class="empty-message">Chargement de vos cours...</div>
         </div>
+
     </main>
 </div>
 
@@ -171,6 +248,8 @@ const toggle = document.getElementById('coursesToggle');
 const list = document.getElementById('coursesList');
 toggle.addEventListener('click', () => { toggle.classList.toggle('open'); list.classList.toggle('open'); });
 
+const subjectEmojis = ['📘','📗','📙','📕','📓','📔','🗂️','📐','🔬','🧮','🌍','⚗️'];
+
 function loadCourses() {
     fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${user.id_user}`)
     .then(r => r.json())
@@ -186,28 +265,46 @@ function loadCourses() {
             return;
         }
 
-        data.courses.forEach(c => {
+        // Stats
+        document.getElementById('statCours').textContent = data.courses.length;
+        document.getElementById('coursesCount').textContent = data.courses.length + ' cours';
+        const totalEcts = data.courses.reduce((sum, c) => sum + (parseInt(c.credits) || 0), 0);
+        document.getElementById('statEcts').textContent = totalEcts;
+        const semestres = [...new Set(data.courses.map(c => c.semestre).filter(Boolean))];
+        document.getElementById('statSemestres').textContent = semestres.length || '–';
+
+        data.courses.forEach((c, i) => {
             const prof = c.prof_nom ? `${c.prof_prenom ?? ''} ${c.prof_nom}` : 'Non assigné';
+            const emoji = subjectEmojis[i % subjectEmojis.length];
+            const href = `course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}`;
+
             const card = document.createElement('div');
             card.className = 'course-card';
+            card.onclick = () => window.location.href = href;
             card.innerHTML = `
-                <div class="course-title">${c.code_cours} — ${c.titre}</div>
-                <div class="course-info-block">
-                    <p>👨‍🏫 Enseignant : <strong>${prof}</strong></p>
-                    <p>📅 Semestre : ${c.semestre}</p>
-                    <p>📊 Crédits ECTS : ${c.credits} | Coefficient : <strong>${c.coefficient}</strong></p>
+                <div class="course-card-top">
+                    <div class="course-card-icon">${emoji}</div>
+                    <div class="course-card-body">
+                        <span class="course-card-code">${c.code_cours}</span>
+                        <div class="course-card-title">${c.titre}</div>
+                        <div class="course-card-meta">
+                            <span>👨‍🏫 <strong>${prof}</strong></span><br>
+                            <span>📅 ${c.semestre}</span>
+                        </div>
+                    </div>
+                    <div class="course-card-badges">
+                        <span class="badge badge-credits">🎓 ${c.credits} ECTS</span>
+                        <span class="badge badge-coeff">× ${c.coefficient}</span>
+                    </div>
                 </div>
-                <div class="course-actions">
-                    <button class="btn-action"
-                        onclick="window.location.href='course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}'">
-                        📁 Accéder aux documents
-                    </button>
+                <div class="course-card-footer">
+                    📁 Accéder aux documents <span>→</span>
                 </div>`;
             container.appendChild(card);
 
             // Sidebar shortcut
             const a = document.createElement('a');
-            a.href = `course_documents_student.html?id_cours=${c.id_cours}&titre=${encodeURIComponent(c.titre)}`;
+            a.href = href;
             a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre}`;
             list.appendChild(a);
         });

@@ -111,11 +111,14 @@
         .moyenne-cours-row .moy-val { font-size: 20px; font-weight: bold; color: var(--primary); margin-left: auto; }
 
         .cat-section { margin-bottom: 12px; }
-        .cat-title { font-size: 13px; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #eee; }
+        .cat-title { font-size: 13px; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+        .cat-title-left { display: flex; align-items: center; gap: 8px; }
+        .cat-weight-badge { font-size: 11px; font-weight: 700; background: #fff7ed; color: #c2410c; border-radius: 20px; padding: 2px 9px; text-transform: none; letter-spacing: 0; }
         .notes-row { display: flex; flex-wrap: wrap; gap: 10px; }
-        .note-chip { padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; background: #ecf0f1; color: var(--secondary); cursor: default; }
+        .note-chip { padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; background: #ecf0f1; color: var(--secondary); cursor: default; display: flex; align-items: center; gap: 8px; }
         .note-chip.has-note { background: #d4efdf; color: #1a7a3a; }
         .note-chip.no-note { background: #f2f3f4; color: #aaa; font-style: italic; }
+        .note-weight-pill { font-size: 10px; font-weight: 700; background: rgba(0,0,0,.08); border-radius: 10px; padding: 1px 6px; opacity: .85; }
 
         .no-notes { text-align: center; padding: 60px; color: var(--text-muted); font-style: italic; }
 
@@ -180,7 +183,7 @@
         <a href="timetable.html">
             <span class="nav-icon">📅</span> Emploi du temps
         </a>
-        <a href="#">
+        <a href="messages.html">
             <span class="nav-icon">✉️</span> Messagerie
         </a>
         <div class="sidebar-divider"></div>
@@ -267,22 +270,31 @@ function renderCours(cours) {
     if (cours.configs.length === 0) {
         catsHtml = '<p style="color:#aaa; font-style:italic; font-size:13px;">Aucune configuration d\'évaluation définie.</p>';
     } else {
+        // Compute total weight to show percentages
+        const totalCoeff = cours.configs.reduce((sum, cfg) => sum + parseFloat(cfg.coefficient_categorie || 0), 0);
+
         cours.configs.forEach(cfg => {
             const catKey = cfg.categorie;
+            const catCoeff = parseFloat(cfg.coefficient_categorie || 0);
+            const catPct = totalCoeff > 0 ? Math.round((catCoeff / totalCoeff) * 100) : null;
+            const noteWeight = cfg.nombre_notes > 0 ? Math.round(catPct / cfg.nombre_notes) : null;
+
             let notesHtml = '';
             for (let i = 1; i <= cfg.nombre_notes; i++) {
                 const typeEval = `${catKey}_${i}`;
                 const noteObj = cours.notes.find(n => n.type_evaluation === typeEval);
                 const noteVal = noteObj ? noteObj.note : null;
                 const stats = cours.stats[typeEval] || {};
+                const weightPill = noteWeight !== null ? `<span class="note-weight-pill">${noteWeight}%</span>` : '';
                 if (noteVal !== null) {
-                    const tt = `<div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div><div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div><div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div><div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>`;
-                    notesHtml += `<span class="tooltip-wrapper"><span class="note-chip has-note">Note ${i} : ${fmt(noteVal)}/20</span><div class="tooltip-box">${tt}</div></span>`;
+                    const tt = `<div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div><div class="tt-row"><span class="tt-label">Poids</span><span class="tt-val">${noteWeight !== null ? noteWeight + '%' : '–'}</span></div><div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div><div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div><div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>`;
+                    notesHtml += `<span class="tooltip-wrapper"><span class="note-chip has-note">Note ${i} : ${fmt(noteVal)}/20 ${weightPill}</span><div class="tooltip-box">${tt}</div></span>`;
                 } else {
-                    notesHtml += `<span class="note-chip no-note">Note ${i} : --</span>`;
+                    notesHtml += `<span class="note-chip no-note">Note ${i} : -- ${weightPill}</span>`;
                 }
             }
-            catsHtml += `<div class="cat-section"><div class="cat-title">${LABELS[catKey] || catKey} (coeff ${cfg.coefficient_categorie})</div><div class="notes-row">${notesHtml}</div></div>`;
+            const pctLabel = catPct !== null ? `<span class="cat-weight-badge">⚖️ ${catPct}% de la note finale</span>` : '';
+            catsHtml += `<div class="cat-section"><div class="cat-title"><span class="cat-title-left">${LABELS[catKey] || catKey} <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0">(coeff ${cfg.coefficient_categorie})</span></span>${pctLabel}</div><div class="notes-row">${notesHtml}</div></div>`;
         });
     }
     const card = document.createElement('div');

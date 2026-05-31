@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus — Ressources du cours</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #ecfdf5;
+            --primary-mid: #d1fae5;
+            --blue: #3b82f6;
+            --blue-light: #eff6ff;
+            --secondary: #1e293b;
+            --bg: #f1f5f9;
+            --surface: #fff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --sidebar-w: 260px;
+            --header-h: 64px;
+            --footer-h: 56px;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 24px rgba(0,0,0,.1);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.5; }
+
+        /* ─── HEADER ──────────────────────────────── */
+        header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,.04); }
+        .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .menu-btn:hover { background: var(--border); }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, #3b82f6, #10b981); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .logo-name { font-size: 17px; font-weight: 700; color: var(--text); }
+        .logo-badge { font-size: 11px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); padding: 2px 8px; border-radius: 20px; }
+        .notif-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .notif-btn:hover { background: var(--border); }
+        .notif-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid white; position: absolute; top: 6px; right: 6px; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
+        .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
+
+        /* ─── LAYOUT ──────────────────────────────── */
+        .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); }
+
+        /* ─── SIDEBAR ─────────────────────────────── */
+        .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
+        .sidebar.collapsed { transform: translateX(-100%); }
+        .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; margin: 2px 8px; transition: all .15s; }
+        .sidebar a:hover { background: rgba(255,255,255,.06); color: white; }
+        .sidebar a.active { background: rgba(16,185,129,.15); color: #34d399; }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 16px; }
+        .sidebar a.danger { color: #f87171; }
+        .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
+
+        /* ─── CONTENT ─────────────────────────────── */
+        .content { flex: 1; margin-left: var(--sidebar-w); padding: 32px; transition: margin-left .3s; overflow-y: auto; }
+        .sidebar.collapsed ~ .content { margin-left: 0; }
+
+        /* ─── COURSE HERO ─────────────────────────── */
+        .course-hero {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            box-shadow: 0 4px 24px rgba(16,185,129,.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .course-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,.07);
+            border-radius: 50%;
+        }
+        .course-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; right: 100px;
+            width: 140px; height: 140px;
+            background: rgba(255,255,255,.05);
+            border-radius: 50%;
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-breadcrumb { font-size: 13px; color: rgba(255,255,255,.7); margin-bottom: 8px; }
+        .hero-breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; }
+        .hero-breadcrumb a:hover { color: white; }
+        .hero-title { font-size: 22px; font-weight: 700; color: white; margin-bottom: 6px; }
+        .hero-subtitle { font-size: 14px; color: rgba(255,255,255,.8); }
+        .hero-actions { display: flex; gap: 10px; flex-shrink: 0; position: relative; z-index: 1; flex-wrap: wrap; }
+        .hero-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 700;
+            text-decoration: none;
+            transition: all .2s;
+        }
+        .hero-btn-outline {
+            background: rgba(255,255,255,.15);
+            color: white;
+            border: 1.5px solid rgba(255,255,255,.3);
+            backdrop-filter: blur(4px);
+        }
+        .hero-btn-outline:hover { background: rgba(255,255,255,.25); border-color: rgba(255,255,255,.5); }
+        .hero-btn-solid { background: white; color: var(--primary-dark); }
+        .hero-btn-solid:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+
+        /* ─── SECTION TABS (folder nav) ───────────────*/
+        .folder-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .folder-tab {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px; font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text-muted);
+            transition: all .15s;
+            user-select: none;
+        }
+        .folder-tab:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+        .folder-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .folder-tab .tab-count { font-size: 11px; background: rgba(0,0,0,.1); padding: 1px 7px; border-radius: 20px; }
+        .folder-tab.active .tab-count { background: rgba(255,255,255,.25); }
+
+        /* ─── FOLDER SECTION ─────────────────────────── */
+        .folder-section { margin-bottom: 32px; }
+        .folder-section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-mid);
+        }
+        .folder-section-dot {
+            width: 10px; height: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--blue));
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .folder-section-name { font-size: 16px; font-weight: 700; color: var(--text); }
+        .folder-section-count { font-size: 13px; color: var(--text-muted); }
+
+        /* ─── DOCUMENT CARDS (Student) ──────────────── */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .doc-card-student {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s, box-shadow .2s;
+            border: 1px solid var(--border);
+        }
+        .doc-card-student:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .doc-card-banner {
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--blue));
+        }
+        .doc-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        .doc-card-top { display: flex; gap: 12px; align-items: flex-start; }
+        .doc-icon-wrap {
+            width: 44px; height: 44px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .doc-card-info { flex: 1; min-width: 0; }
+        .doc-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .doc-card-type { font-size: 11px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: .5px; }
+        .doc-card-divider { height: 1px; background: var(--border); }
+        .doc-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .doc-card-note {
+            background: var(--primary-light);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 6px 6px 0;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: var(--primary-dark);
+        }
+        .doc-card-note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; opacity: .7; }
+        .doc-card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+        .doc-action-btn {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 700;
+            text-decoration: none;
+            transition: all .15s;
+            cursor: pointer;
+        }
+        .doc-btn-open {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: 1.5px solid var(--primary-mid);
+        }
+        .doc-btn-open:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .doc-btn-download {
+            background: var(--blue-light);
+            color: var(--blue);
+            border: 1.5px solid #bfdbfe;
+        }
+        .doc-btn-download:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+        /* ─── EMPTY STATE ─────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 70px 40px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .empty-icon { font-size: 52px; margin-bottom: 16px; opacity: .4; }
+        .empty-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .empty-text { font-size: 14px; color: var(--text-muted); max-width: 320px; margin: 0 auto; }
+
+        /* ─── FOOTER ──────────────────────────────── */
+        footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
+
+        /* ─── ANIMATIONS ──────────────────────────── */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        .folder-section { animation: fadeUp .35s ease both; }
+        .folder-section:nth-child(1) { animation-delay: .05s; }
+        .folder-section:nth-child(2) { animation-delay: .12s; }
+        .folder-section:nth-child(3) { animation-delay: .19s; }
+        .doc-card-student { animation: fadeUp .3s ease both; }
+    </style>
+<script src="notifications.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="dashboard.html" class="logo">
+            <div class="logo-icon">🎓</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Étudiant</span>
+    </div>
+    <div class="header-right">
+        <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">E</div>
+            <span id="userNameDisplay">Étudiant</span>
+        </div>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="dashboard.html"><span class="nav-icon">🏠</span> Accueil</a>
+        <a href="student_courses.html" class="active"><span class="nav-icon">📚</span> Mes Cours</a>
+        <a href="student_grades.html"><span class="nav-icon">📊</span> Mes Notes</a>
+        <a href="timetable.html"><span class="nav-icon">📅</span> Emploi du temps</a>
+        <a href="messages.html"><span class="nav-icon">✉️</span> Messagerie</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger"><span class="nav-icon">🚪</span> Déconnexion</a>
+    </aside>
+
+    <main class="content">
+
+        <!-- Course Hero Banner -->
+        <div class="course-hero">
+            <div class="hero-content">
+                <div class="hero-breadcrumb"><a href="student_courses.html">Mes Cours</a> › <span id="heroCourseName">Chargement...</span></div>
+                <div class="hero-title" id="pageTitle">Ressources du cours</div>
+                <div class="hero-subtitle">Consultez et téléchargez tous vos documents de cours</div>
+            </div>
+            <div class="hero-actions">
+                <a class="hero-btn hero-btn-outline" href="student_courses.html">← Retour</a>
+                <a class="hero-btn hero-btn-solid" id="notesLink" href="student_grades.html">📊 Mes notes</a>
+            </div>
+        </div>
+
+        <!-- Folder tabs (populated by JS) -->
+        <div class="folder-nav" id="folderNav"></div>
+
+        <!-- Documents container -->
+        <div id="documentsContainer"></div>
+
+    </main>
+</div>
+
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+
+<script>
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr) window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+const user = JSON.parse(userStr);
+document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom;
+SmartNotifs.init(user);
+document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.removeItem('smartcampus_user');
+    window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
+});
+
+const params = new URLSearchParams(window.location.search);
+const idCours = params.get('id_cours');
+const titreCours = decodeURIComponent(params.get('titre') || 'Cours');
+document.getElementById('pageTitle').textContent = titreCours;
+document.getElementById('heroCourseName').textContent = titreCours;
+document.getElementById('notesLink').href = `student_grades.html?id_cours=${idCours}`;
+
+function getFileIcon(filename) {
+    if (!filename) return '📄';
+    const ext = filename.split('.').pop().toLowerCase();
+    const icons = { pdf: '📕', doc: '📝', docx: '📝', xls: '📊', xlsx: '📊', ppt: '📋', pptx: '📋', zip: '🗜️', rar: '🗜️', jpg: '🖼️', jpeg: '🖼️', png: '🖼️', mp4: '🎬', mp3: '🎵' };
+    return icons[ext] || '📄';
+}
+
+function getFileType(filename) {
+    if (!filename) return 'Document';
+    const ext = filename.split('.').pop().toUpperCase();
+    return ext + ' — Fichier';
+}
+
+let allDossiers = {};
+
+function buildFolderNav() {
+    const nav = document.getElementById('folderNav');
+    nav.innerHTML = '';
+    const allTab = document.createElement('div');
+    allTab.className = 'folder-tab active';
+    allTab.dataset.folder = '__all__';
+    const totalDocs = Object.values(allDossiers).reduce((s, d) => s + d.length, 0);
+    allTab.innerHTML = `📚 Tout voir <span class="tab-count">${totalDocs}</span>`;
+    allTab.addEventListener('click', () => { setActiveTab('__all__'); renderDossiers('__all__'); });
+    nav.appendChild(allTab);
+
+    for (const dossier in allDossiers) {
+        const tab = document.createElement('div');
+        tab.className = 'folder-tab';
+        tab.dataset.folder = dossier;
+        tab.innerHTML = `📁 ${dossier} <span class="tab-count">${allDossiers[dossier].length}</span>`;
+        tab.addEventListener('click', () => { setActiveTab(dossier); renderDossiers(dossier); });
+        nav.appendChild(tab);
+    }
+}
+
+function setActiveTab(folder) {
+    document.querySelectorAll('.folder-tab').forEach(t => t.classList.toggle('active', t.dataset.folder === folder));
+}
+
+function renderDossiers(filter) {
+    const container = document.getElementById('documentsContainer');
+    container.innerHTML = '';
+    const toRender = filter === '__all__' ? allDossiers : { [filter]: allDossiers[filter] };
+    for (const dossier in toRender) {
+        const docs = toRender[dossier];
+        const section = document.createElement('div');
+        section.className = 'folder-section';
+        section.innerHTML = `
+            <div class="folder-section-header">
+                <div class="folder-section-dot"></div>
+                <div class="folder-section-name">${dossier}</div>
+                <div class="folder-section-count">${docs.length} document${docs.length > 1 ? 's' : ''}</div>
+            </div>
+            <div class="docs-grid" id="grid-${dossier.replace(/[^a-z0-9]/gi,'_')}"></div>
+        `;
+        container.appendChild(section);
+        const grid = section.querySelector('.docs-grid');
+        docs.forEach((doc, i) => {
+            const card = document.createElement('div');
+            card.className = 'doc-card-student';
+            card.style.animationDelay = (i * 0.06) + 's';
+            card.innerHTML = `
+                <div class="doc-card-banner"></div>
+                <div class="doc-card-body">
+                    <div class="doc-card-top">
+                        <div class="doc-icon-wrap">${getFileIcon(doc.nom_fichier)}</div>
+                        <div class="doc-card-info">
+                            <div class="doc-card-title">${doc.titre}</div>
+                            <div class="doc-card-type">${getFileType(doc.nom_fichier)}</div>
+                        </div>
+                    </div>
+                    ${doc.description ? `<div class="doc-card-divider"></div><div class="doc-card-desc">${doc.description}</div>` : ''}
+                    ${doc.note_document ? `<div class="doc-card-note"><div class="doc-card-note-label">💡 Note du prof</div>${doc.note_document}</div>` : ''}
+                    <div class="doc-card-actions">
+                        <a class="doc-action-btn doc-btn-open" target="_blank" href="../../${doc.chemin_fichier}">👁️ Ouvrir</a>
+                        <a class="doc-action-btn doc-btn-download" href="../../${doc.chemin_fichier}" download>⬇️ Télécharger</a>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+}
+
+function loadDocuments() {
+    fetch(`../php/get_course_documents.php?id_cours=${idCours}`)
+    .then(res => res.json())
+    .then(data => {
+        const container = document.getElementById('documentsContainer');
+        if (data.documents.length === 0) {
+            document.getElementById('folderNav').innerHTML = '';
+            container.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">Aucune ressource disponible</div><div class="empty-text">Le professeur n'a pas encore ajouté de documents pour ce cours. Revenez bientôt !</div></div>`;
+            return;
+        }
+        allDossiers = {};
+        data.documents.forEach(doc => {
+            if (!allDossiers[doc.dossier]) allDossiers[doc.dossier] = [];
+            allDossiers[doc.dossier].push(doc);
+        });
+        buildFolderNav();
+        renderDossiers('__all__');
+    });
+}
+
+loadDocuments();
+</script>
+</body>
+</html>

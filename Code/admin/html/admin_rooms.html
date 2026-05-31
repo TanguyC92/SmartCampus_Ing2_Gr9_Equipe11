@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Gestion des Salles</title>
+    <style>
+        /* Mêmes styles de base que ton admin-dashboard */
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: white; padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .main-wrapper { display: flex; flex: 1; }
+        .sidebar { width: 250px; background: #2c3e50; color: white; display: flex; flex-direction: column; }
+        .sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left: 4px solid #3498db; }
+        .content { flex: 1; padding: 30px; }
+        
+        .room-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 500px; margin-bottom: 20px;}
+        .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .form-group input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .form-group button { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;}
+        
+        .item-list { list-style: none; padding: 0; margin: 0; }
+        .item-list li { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="font-weight:bold; color:#3498db; font-size:20px;">🎓 SmartCampus Administration</div>
+        <div style="font-weight:bold; color:#e67e22;">Admin</div>
+    </header>
+    <div class="main-wrapper">
+        <aside class="sidebar">
+            <nav>
+                <a href="admin-dashboard.html">Gestion des Cours</a>
+                <a href="admin_rooms.html" class="active">🏢 Gestion des Salles</a>
+                <a href="admin_notes.html">📊 Gestion des Notes</a>
+                <a href="javascript:localStorage.clear(); window.location.href='../Connexion/index.html';" style="color: #e74c3c;">Déconnexion</a>
+            </nav>
+        </aside>
+        <main class="content">
+            <h2>Gestion des Salles</h2>
+            <div class="room-card">
+                <form id="addRoomForm" class="form-group">
+                    <input type="text" id="rName" placeholder="Ex: EM210, Amphi A..." required>
+                    <button type="submit">+ Ajouter</button>
+                </form>
+                <ul class="item-list" id="roomsList">
+                    <li>Chargement des salles...</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function loadRooms() {
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('roomsList');
+                list.innerHTML = "";
+                if(data.success && data.data.length > 0) {
+                    data.data.forEach(r => {
+                        list.innerHTML += `<li><span>📍 ${r.nom}</span> <button class="btn-delete" onclick="deleteRoom(${r.id_salle})">Supprimer</button></li>`;
+                    });
+                } else {
+                    list.innerHTML = "<li style='color:#777;'>Aucune salle enregistrée.</li>";
+                }
+            });
+        }
+
+        document.getElementById('addRoomForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nom = document.getElementById('rName').value;
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ action: 'add', nom: nom })
+            }).then(res => res.json()).then(data => {
+                if(data.success) { document.getElementById('rName').value = ''; loadRooms(); }
+                else alert(data.message);
+            });
+        });
+
+        function deleteRoom(id) {
+            if(!confirm("Supprimer cette salle ?")) return;
+            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ action: 'delete', id_salle: id })
+            }).then(res => res.json()).then(data => { if(data.success) loadRooms(); });
+        }
+
+        loadRooms();
+    </script>
+</body>
+</html>

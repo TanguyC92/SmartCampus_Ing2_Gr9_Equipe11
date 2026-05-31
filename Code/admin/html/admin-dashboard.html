@@ -121,6 +121,7 @@
                 <a href="#">Accueil</a>
                 <a href="http://localhost:8888/Smart_Campus/Code/admin/html/admin-dashboard.html" class="active">Gestion des Cours</a>
                 <a href="http://localhost:8888/Smart_Campus/Code/admin/html/admin_notes.html">📊 Gestion des Notes</a>
+                <a href="admin_rooms.html">🏢 Gestion des Salles</a>
                 <a href="#" id="logoutBtn" style="color: #e74c3c; font-weight: bold;">Déconnexion</a>
             </nav>
         </aside>
@@ -181,7 +182,16 @@
                         <div class="form-group" style="flex:1"><label>De</label><input type="time" id="sHDebut" required></div>
                         <div class="form-group" style="flex:1"><label>À</label><input type="time" id="sHFin" required></div>
                     </div>
-                    <div class="form-group"><label>Salle</label><input type="text" id="sSalle" required placeholder="Ex: Amphi A"></div>
+                    
+                    <div class="form-group">
+                        <label>Salle disponible</label>
+                        <input type="text" class="search-bar" id="sSalleSearch" placeholder="Sélectionnez d'abord les horaires..." disabled autocomplete="off" style="margin-bottom: 5px;">
+                        
+                        <ul class="item-list" id="availableRoomsList" style="max-height: 120px; border: 1px solid #ccc; border-radius: 4px; display: none;"></ul>
+                        
+                        <input type="hidden" id="sSalle" required>
+                    </div>
+
                     <button type="submit" style="background:#27ae60; width:100%; padding:10px; color:white; border:none; border-radius:5px; cursor:pointer;">Ajouter au planning</button>
                 </form>
             </div>
@@ -568,6 +578,77 @@
         }
 
         loadCourses();
+
+        // --- GESTION INTELLIGENTE DES SALLES ---
+        const dCours = document.getElementById('sDateCours');
+        const hDeb = document.getElementById('sHDebut');
+        const hFin = document.getElementById('sHFin');
+        const sSearch = document.getElementById('sSalleSearch');
+        const sList = document.getElementById('availableRoomsList');
+        const sHidden = document.getElementById('sSalle');
+        let availableRoomsCache = [];
+
+        // Quand l'un des 3 champs de temps change, on cherche les salles libres !
+        function fetchAvailableRooms() {
+            if(dCours.value && hDeb.value && hFin.value) {
+                sSearch.disabled = false;
+                sSearch.placeholder = "Rechercher une salle libre...";
+                
+                fetch(`http://localhost:8888/Smart_Campus/Code/admin/php/get_available_rooms.php?date=${dCours.value}&h_debut=${hDeb.value}&h_fin=${hFin.value}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        availableRoomsCache = data.data;
+                        renderAvailableRooms(availableRoomsCache);
+                    }
+                });
+            } else {
+                sSearch.disabled = true;
+                sSearch.placeholder = "Sélectionnez d'abord les horaires...";
+                sList.style.display = "none";
+                sHidden.value = "";
+            }
+        }
+
+        dCours.addEventListener('change', fetchAvailableRooms);
+        hDeb.addEventListener('change', fetchAvailableRooms);
+        hFin.addEventListener('change', fetchAvailableRooms);
+
+        function renderAvailableRooms(roomsArray) {
+            sList.innerHTML = "";
+            if(roomsArray.length === 0) {
+                sList.innerHTML = "<li style='color:red;'>Aucune salle disponible à cet horaire.</li>";
+            } else {
+                roomsArray.forEach(room => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>📍 ${room}</span> <button type="button" style="padding:2px 8px;">Choisir</button>`;
+                    li.style.cursor = "pointer";
+                    // Quand on clique sur une salle de la liste :
+                    li.onclick = () => {
+                        sSearch.value = room; // Affiche dans le champ de recherche
+                        sHidden.value = room; // Met dans le champ caché pour l'envoi
+                        sList.style.display = "none"; // Cache la liste
+                    };
+                    sList.appendChild(li);
+                });
+            }
+        }
+
+        // Filtre de recherche dans la barre des salles
+        sSearch.addEventListener('focus', () => { if(availableRoomsCache.length > 0) sList.style.display = "block"; });
+        sSearch.addEventListener('input', function(e) {
+            sList.style.display = "block";
+            const term = e.target.value.toLowerCase();
+            const filtered = availableRoomsCache.filter(r => r.toLowerCase().includes(term));
+            renderAvailableRooms(filtered);
+        });
+        
+        // Cache la liste quand on clique ailleurs
+        document.addEventListener('click', function(e) {
+            if(e.target !== sSearch && e.target !== sList && !sList.contains(e.target)) {
+                sList.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>

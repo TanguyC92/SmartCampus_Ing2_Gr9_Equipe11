@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampus - Connexion & Inscription</title>
+    <style>
+        /* === CSS DIRECTEMENT DANS LE HTML === */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-section {
+            width: 300px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .success { color: #27ae60; }
+        .error { color: #e74c3c; }
+
+        .divider {
+            width: 2px;
+            background-color: #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Connexion</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="email@ecole.fr">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit">Se connecter</button>
+                <div id="loginMessage" class="message"></div>
+            </form>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+            <h2>Créer un compte</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regPrenom">Prénom</label>
+                    <input type="text" id="regPrenom" required>
+                </div>
+                <div class="form-group">
+                    <label for="regNom">Nom</label>
+                    <input type="text" id="regNom" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Mot de passe</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regRole">Rôle</label>
+                    <select id="regRole">
+                        <option value="etudiant">Étudiant</option>
+                        <option value="enseignant">Enseignant</option>
+                        <option value="admin">Administrateur</option>
+                    </select>
+                </div>
+                <button type="submit">S'inscrire</button>
+                <div id="regMessage" class="message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Détection automatique du chemin de base
+        var BASE = (function() {
+            var path = window.location.pathname;
+            var idx = path.lastIndexOf('/Code/');
+            if (idx !== -1) return window.location.origin + path.substring(0, idx + 6).replace(/\/$/, '');
+            var parts = path.split('/');
+            parts.splice(-2);
+            return window.location.origin + parts.join('/');
+        })();
+
+        // 1. GESTION DE LA CONNEXION
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            messageDiv.textContent = "Vérification...";
+            messageDiv.className = "message";
+
+            fetch(BASE + '/Connexion/login.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.textContent = "Connexion réussie ! Bienvenue " + data.user.prenom;
+                    messageDiv.classList.add("success");
+                    
+                    // Stocker les infos utilisateur dans le navigateur
+                    localStorage.setItem('smartcampus_user', JSON.stringify(data.user));
+                    
+                    // REDIRECTION INTELLIGENTE — dashboard pour tous les rôles
+                    if (data.user.role === 'admin') {
+                        window.location.href = BASE + "/admin/html/admin_home.html";
+                    } else if (data.user.role === 'etudiant') {
+                        window.location.href = BASE + "/Prof_et_eleve/html/dashboard.html";
+                    } else {
+                        window.location.href = BASE + "/Prof_et_eleve/html/teacher_dashboard.html";
+                    }
+                } else {
+                    messageDiv.textContent = data.message;
+                    messageDiv.classList.add("error");
+                }
+            })
+            .catch(error => {
+                messageDiv.textContent = "Erreur de connexion au serveur.";
+                messageDiv.classList.add("error");
+            });
+        });
+
+        // 2. GESTION DE L'INSCRIPTION
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const payload = {
+                prenom: document.getElementById('regPrenom').value,
+                nom: document.getElementById('regNom').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                role: document.getElementById('regRole').value
+            };
+
+            const messageDiv = document.getElementById('regMessage');
+            messageDiv.textContent = "Création en cours...";
+            messageDiv.className = "message";
+
+            fetch(BASE + '/Connexion/register.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.textContent = "Compte créé ! Vous pouvez vous connecter.";
+                    messageDiv.classList.add("success");
+                    document.getElementById('registerForm').reset(); // Vide le formulaire
+                } else {
+                    messageDiv.textContent = data.message;
+                    messageDiv.classList.add("error");
+                }
+            })
+            .catch(error => {
+                messageDiv.textContent = "Erreur de connexion au serveur.";
+                messageDiv.classList.add("error");
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -114,6 +114,37 @@
         .widget-card .w-arrow { margin-top: auto; color: var(--primary); font-size: 13px; font-weight: 600; }
         .widget-card .w-highlight { font-size: 28px; font-weight: 700; color: var(--primary); }
 
+        /* ─── TWO COL WIDGETS ─────────────────────── */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; margin-bottom: 28px; }
+        @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .card-title { font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .card-link { font-size: 12px; color: var(--primary); font-weight: 600; text-decoration: none; }
+        .card-link:hover { text-decoration: underline; }
+        .activity-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+        .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); transition: background .15s; }
+        .activity-item:hover { background: var(--surface-2); }
+        .activity-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .ai-green { background: rgba(16,185,129,.1); }
+        .ai-blue { background: rgba(59,130,246,.1); }
+        .ai-yellow { background: rgba(245,158,11,.1); }
+        .ai-purple { background: rgba(139,92,246,.1); }
+        .activity-body { flex: 1; min-width: 0; }
+        .activity-body .ab-text { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .activity-body .ab-time { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+        .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+        .empty-state .es-icon { font-size: 36px; margin-bottom: 8px; }
+        .empty-state .es-text { font-size: 13px; }
+        .msg-preview-list { display: flex; flex-direction: column; gap: 2px; }
+        .msg-preview-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: background .15s; }
+        .msg-preview-item:hover { background: var(--surface-2); }
+        .mp-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .mp-body { flex: 1; min-width: 0; }
+        .mp-name { font-size: 13px; font-weight: 600; color: var(--text); }
+        .mp-preview { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mp-badge { background: var(--danger); color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 0 5px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
         /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
@@ -235,6 +266,36 @@
             </a>
         </div>
 
+        <!-- Two-col: recent activity + messages -->
+        <div class="two-col">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>📋</span> Activité récente</div>
+                </div>
+                <ul class="activity-list" id="activityList">
+                    <li class="activity-item">
+                        <div class="activity-icon ai-green">🎓</div>
+                        <div class="activity-body">
+                            <div class="ab-text">Plateforme chargée</div>
+                            <div class="ab-time">Bienvenue sur SmartCampus</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>✉️</span> Messages récents</div>
+                    <a href="messages.html" class="card-link">Voir tout →</a>
+                </div>
+                <div class="msg-preview-list" id="msgPreviewList">
+                    <div class="empty-state">
+                        <div class="es-icon">💬</div>
+                        <div class="es-text">Chargement des messages…</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 </div>
 
@@ -348,6 +409,76 @@ fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_stude
             document.getElementById('nextCourseName').textContent = 'Erreur de chargement';
         });
 })();
+
+// ─── Messages récents ─────────────────────────────────────
+async function loadRecentMessages() {
+    const el = document.getElementById('msgPreviewList');
+    try {
+        const r = await fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/chat_api.php?action=get_unread&id_user=${user.id_user}`);
+        const data = await r.json();
+        const convs = data.data || [];
+        if (!convs.length) {
+            el.innerHTML = `<div class="empty-state"><div class="es-icon">✉️</div><div class="es-text">Aucun message non lu</div></div>`;
+            return;
+        }
+        el.innerHTML = '';
+        convs.slice(0, 5).forEach(conv => {
+            const initials = ((conv.prenom||'')[0]||'') + ((conv.nom||'')[0]||'');
+            const div = document.createElement('div');
+            div.className = 'msg-preview-item';
+            div.innerHTML = `
+                <div class="mp-avatar">${initials.toUpperCase()}</div>
+                <div class="mp-body">
+                    <div class="mp-name">${conv.prenom} ${conv.nom}</div>
+                    <div class="mp-preview">${(conv.last_message||'').slice(0,60)}</div>
+                </div>
+                ${parseInt(conv.unread_count)>0 ? `<span class="mp-badge">${conv.unread_count}</span>` : ''}
+            `;
+            div.onclick = () => { window.location.href = `messages.html?contact=${conv.id_user}`; };
+            el.appendChild(div);
+        });
+    } catch(e) {
+        el.innerHTML = `<div class="empty-state"><div class="es-icon">✉️</div><div class="es-text">Impossible de charger les messages</div></div>`;
+    }
+}
+loadRecentMessages();
+
+// ─── Activité récente ─────────────────────────────────────
+async function loadActivity() {
+    const list = document.getElementById('activityList');
+    const items = [];
+    try {
+        const r = await fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_student_courses.php?id_user=${user.id_user}`);
+        const data = await r.json();
+        const courses = (data.courses || []).slice(0, 3);
+        courses.forEach(c => items.push({ icon:'📚', cls:'ai-blue', text: `Cours : ${c.titre}`, time: `Matière inscrite` }));
+    } catch(e) {}
+    try {
+        const r = await fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${user.id_user}`);
+        const data = await r.json();
+        if (data.success && data.notes) {
+            const last = (data.notes || []).slice(-2);
+            last.forEach(n => items.push({ icon:'📊', cls:'ai-green', text: `Note : ${n.titre_eval || n.type_eval} — ${n.note}/20`, time: n.code_cours || '' }));
+        }
+    } catch(e) {}
+    if (!items.length) {
+        list.innerHTML = `<li class="activity-item"><div class="activity-icon ai-blue">📋</div><div class="activity-body"><div class="ab-text">Aucune activité récente</div><div class="ab-time">Le journal se remplit au fur et à mesure</div></div></li>`;
+        return;
+    }
+    list.innerHTML = '';
+    items.slice(0, 6).forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'activity-item';
+        li.innerHTML = `
+            <div class="activity-icon ${item.cls}">${item.icon}</div>
+            <div class="activity-body">
+                <div class="ab-text">${item.text}</div>
+                <div class="ab-time">${item.time}</div>
+            </div>`;
+        list.appendChild(li);
+    });
+}
+loadActivity();
 </script>
 </body>
 </html>

@@ -3,93 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartCampus - Gestion des Salles</title>
+    <title>SmartCampus — Gestion des Salles</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Mêmes styles de base que ton admin-dashboard */
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; display: flex; flex-direction: column; min-height: 100vh; }
-        header { background: white; padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .main-wrapper { display: flex; flex: 1; }
-        .sidebar { width: 250px; background: #2c3e50; color: white; display: flex; flex-direction: column; }
-        .sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
-        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left: 4px solid #3498db; }
-        .content { flex: 1; padding: 30px; }
-        
-        .room-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 500px; margin-bottom: 20px;}
-        .form-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .form-group input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        .form-group button { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;}
-        
-        .item-list { list-style: none; padding: 0; margin: 0; }
-        .item-list li { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        :root {
+            --primary:#3b82f6; --secondary:#1e293b; --bg:#f1f5f9; --surface:#fff; --surface-2:#f8fafc;
+            --border:#e2e8f0; --border-strong:#cbd5e1; --text:#0f172a; --text-muted:#64748b; --text-light:#94a3b8;
+            --success:#10b981; --danger:#ef4444; --admin-accent:#f59e0b; --admin-accent-2:#ef4444;
+            --admin-light:rgba(245,158,11,.1); --admin-mid:rgba(245,158,11,.2);
+            --sidebar-w:260px; --header-h:64px; --footer-h:56px; --radius:12px; --radius-sm:8px;
+            --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06); --shadow-md:0 4px 20px rgba(0,0,0,.1);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh;line-height:1.5}
+        header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--surface);border-bottom:2px solid var(--border-strong);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+        .header-left,.header-right{display:flex;align-items:center;gap:16px}
+        .menu-btn{width:36px;height:36px;border:none;background:var(--surface-2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .15s}
+        .menu-btn:hover{background:var(--border)}
+        .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+        .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
+        .logo-name{font-size:17px;font-weight:700;color:var(--text)}
+        .logo-badge{font-size:11px;font-weight:600;background:var(--admin-light);border:1px solid var(--admin-mid);color:var(--admin-accent);padding:2px 8px;border-radius:20px}
+        .notif-btn{width:36px;height:36px;border:none;background:var(--surface-2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:background .15s}
+        .notif-btn:hover{background:var(--border)}
+        .notif-dot{width:8px;height:8px;background:var(--danger);border-radius:50%;border:2px solid white;position:absolute;top:6px;right:6px}
+        .user-chip{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:24px;padding:4px 12px 4px 4px;font-size:13px;font-weight:500}
+        .user-avatar{width:28px;height:28px;background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:700}
+        .layout{display:flex;flex:1;margin-top:var(--header-h);margin-bottom:var(--footer-h)}
+        .sidebar{position:fixed;top:var(--header-h);left:0;bottom:var(--footer-h);width:var(--sidebar-w);background:var(--secondary);overflow-y:auto;transition:transform .3s ease;z-index:50}
+        .sidebar.collapsed{transform:translateX(-100%)}
+        .sidebar-section{padding:20px 16px 8px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#475569}
+        .sidebar a{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#94a3b8;text-decoration:none;font-size:14px;font-weight:500;border-radius:8px;margin:2px 8px;transition:all .15s}
+        .sidebar a:hover{background:rgba(255,255,255,.06);color:white}
+        .sidebar a.active{background:rgba(245,158,11,.15);color:#fbbf24}
+        .nav-icon{font-size:16px;width:20px;text-align:center}
+        .sidebar-divider{height:1px;background:rgba(255,255,255,.06);margin:12px 16px}
+        .sidebar a.danger{color:#f87171}
+        .sidebar a.danger:hover{background:rgba(239,68,68,.1);color:#ef4444}
+        .content{flex:1;margin-left:var(--sidebar-w);padding:28px;transition:margin-left .3s;overflow-y:auto}
+        .sidebar.collapsed~.content{margin-left:0}
+        footer{position:fixed;bottom:0;left:0;right:0;height:var(--footer-h);background:var(--surface);border-top:2px solid var(--border-strong);display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:13px;color:var(--text-muted);z-index:100}
+
+        /* Page specific */
+        .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+        .page-header h2{font-size:22px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+        .page-subtitle{font-size:14px;color:var(--text-muted);margin-top:4px}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:20px}
+        .card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+        .form-row{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+        .form-row input{flex:1;padding:10px 14px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s}
+        .form-row input:focus{border-color:var(--admin-accent);box-shadow:0 0 0 3px var(--admin-light)}
+        .btn-primary{background:linear-gradient(135deg,var(--admin-accent),var(--admin-accent-2));color:white;border:none;padding:10px 20px;border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;transition:.2s;white-space:nowrap}
+        .btn-primary:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+        .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+        .room-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);transition:.2s}
+        .room-card:hover{border-color:var(--admin-accent);box-shadow:var(--shadow-md)}
+        .room-card-left{display:flex;align-items:center;gap:14px}
+        .room-icon{width:44px;height:44px;background:var(--admin-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+        .room-name{font-size:15px;font-weight:700;color:var(--text)}
+        .room-meta{font-size:12px;color:var(--text-muted);margin-top:2px}
+        .btn-delete{background:rgba(239,68,68,.1);color:var(--danger);border:1.5px solid rgba(239,68,68,.2);padding:7px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:.2s}
+        .btn-delete:hover{background:var(--danger);color:white}
+        .empty-state{text-align:center;padding:48px 24px;color:var(--text-muted)}
+        .empty-state .es-icon{font-size:48px;margin-bottom:12px}
+        .empty-state p{font-size:14px}
+        .stat-bar{display:flex;gap:16px;margin-bottom:24px}
+        .stat-pill{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 20px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+        .stat-pill .sp-icon{font-size:20px}
+        .stat-pill .sp-val{font-size:20px;font-weight:700}
+        .stat-pill .sp-label{font-size:12px;color:var(--text-muted)}
     </style>
+    <script src="admin_notifications.js"></script>
 </head>
 <body>
-    <header>
-        <div style="font-weight:bold; color:#3498db; font-size:20px;">🎓 SmartCampus Administration</div>
-        <div style="font-weight:bold; color:#e67e22;">Admin</div>
-    </header>
-    <div class="main-wrapper">
-        <aside class="sidebar">
-            <nav>
-                <a href="admin-dashboard.html">Gestion des Cours</a>
-                <a href="admin_rooms.html" class="active">🏢 Gestion des Salles</a>
-                <a href="admin_notes.html">📊 Gestion des Notes</a>
-                <a href="javascript:localStorage.clear(); window.location.href='../Connexion/index.html';" style="color: #e74c3c;">Déconnexion</a>
-            </nav>
-        </aside>
-        <main class="content">
-            <h2>Gestion des Salles</h2>
-            <div class="room-card">
-                <form id="addRoomForm" class="form-group">
-                    <input type="text" id="rName" placeholder="Ex: EM210, Amphi A..." required>
-                    <button type="submit">+ Ajouter</button>
-                </form>
-                <ul class="item-list" id="roomsList">
-                    <li>Chargement des salles...</li>
-                </ul>
-            </div>
-        </main>
+<header>
+    <div class="header-left">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <a href="admin_home.html" class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span class="logo-name">SmartCampus</span>
+        </a>
+        <span class="logo-badge">Espace Admin</span>
     </div>
+    <div class="header-right">
+        <button class="notif-btn" title="Notifications">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+            <div class="user-avatar" id="userInitials">A</div>
+            <span id="userNameDisplay">Administrateur</span>
+        </div>
+    </div>
+</header>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Navigation</div>
+        <a href="admin_home.html"><span class="nav-icon">🏠</span> Accueil</a>
+        <a href="admin-dashboard.html"><span class="nav-icon">📚</span> Gestion des Cours</a>
+        <a href="admin_notes.html"><span class="nav-icon">📊</span> Gestion des Notes</a>
+        <a href="admin_rooms.html" class="active"><span class="nav-icon">🏢</span> Gestion des Salles</a>
+        <a href="admin_messages.html"><span class="nav-icon">✉️</span> Messagerie</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="logoutBtn" class="danger"><span class="nav-icon">🚪</span> Déconnexion</a>
+    </aside>
+    <main class="content">
+        <div class="page-header">
+            <div>
+                <h2>🏢 Gestion des Salles</h2>
+                <div class="page-subtitle">Ajouter et gérer les salles disponibles pour les cours</div>
+            </div>
+        </div>
 
-    <script>
-        function loadRooms() {
-            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php')
-            .then(res => res.json())
-            .then(data => {
-                const list = document.getElementById('roomsList');
-                list.innerHTML = "";
-                if(data.success && data.data.length > 0) {
-                    data.data.forEach(r => {
-                        list.innerHTML += `<li><span>📍 ${r.nom}</span> <button class="btn-delete" onclick="deleteRoom(${r.id_salle})">Supprimer</button></li>`;
-                    });
-                } else {
-                    list.innerHTML = "<li style='color:#777;'>Aucune salle enregistrée.</li>";
-                }
-            });
+        <div class="stat-bar">
+            <div class="stat-pill">
+                <div class="sp-icon">🏢</div>
+                <div>
+                    <div class="sp-val" id="roomCount">–</div>
+                    <div class="sp-label">Salles enregistrées</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">➕ Ajouter une salle</div>
+            <div class="form-row">
+                <input type="text" id="rName" placeholder="Nom de la salle (ex: Amphi A, B204…)" maxlength="100">
+                <button class="btn-primary" onclick="addRoom()">Ajouter</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📋 Liste des salles</div>
+            <div class="rooms-grid" id="roomsGrid">
+                <div class="empty-state"><div class="es-icon">⏳</div><p>Chargement…</p></div>
+            </div>
+        </div>
+    </main>
+</div>
+<footer>
+    <div>📧 support@smartcampus.edu</div>
+    <div>📞 +33 06 12 34 56 78</div>
+</footer>
+<script>
+const BASE = 'http://localhost:8888/Smart_Campus/Code';
+const userStr = localStorage.getItem('smartcampus_user');
+if (!userStr || JSON.parse(userStr).role !== 'admin') window.location.href = `${BASE}/Connexion/index.html`;
+const user = JSON.parse(userStr);
+document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
+document.getElementById('userInitials').textContent = (user.prenom[0]+user.nom[0]).toUpperCase();
+document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
+document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.clear(); window.location.href = `${BASE}/Connexion/index.html`; });
+if (typeof AdminNotifs !== 'undefined') AdminNotifs.init(user);
+document.querySelector('.notif-btn').addEventListener('click', e => { e.stopPropagation(); if (typeof AdminNotifs !== 'undefined') AdminNotifs.openPanel(); });
+
+function loadRooms() {
+    fetch(`${BASE}/admin/php/manage_rooms.php`)
+    .then(r => r.json())
+    .then(data => {
+        const grid = document.getElementById('roomsGrid');
+        if (!data.success || !data.data || !data.data.length) {
+            document.getElementById('roomCount').textContent = '0';
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">🏢</div><p>Aucune salle enregistrée. Ajoutez votre première salle ci-dessus.</p></div>`;
+            return;
         }
-
-        document.getElementById('addRoomForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nom = document.getElementById('rName').value;
-            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action: 'add', nom: nom })
-            }).then(res => res.json()).then(data => {
-                if(data.success) { document.getElementById('rName').value = ''; loadRooms(); }
-                else alert(data.message);
-            });
+        document.getElementById('roomCount').textContent = data.data.length;
+        grid.innerHTML = '';
+        data.data.forEach(r => {
+            const card = document.createElement('div');
+            card.className = 'room-card';
+            card.innerHTML = `
+                <div class="room-card-left">
+                    <div class="room-icon">🏢</div>
+                    <div>
+                        <div class="room-name">${r.nom}</div>
+                        <div class="room-meta">ID : ${r.id_salle}</div>
+                    </div>
+                </div>
+                <button class="btn-delete" onclick="deleteRoom(${r.id_salle})">🗑</button>
+            `;
+            grid.appendChild(card);
         });
+    }).catch(() => {
+        document.getElementById('roomsGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">⚠️</div><p>Erreur de connexion.</p></div>`;
+    });
+}
 
-        function deleteRoom(id) {
-            if(!confirm("Supprimer cette salle ?")) return;
-            fetch('http://localhost:8888/Smart_Campus/Code/admin/php/manage_rooms.php', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action: 'delete', id_salle: id })
-            }).then(res => res.json()).then(data => { if(data.success) loadRooms(); });
-        }
+function addRoom() {
+    const nom = document.getElementById('rName').value.trim();
+    if (!nom) return;
+    fetch(`${BASE}/admin/php/manage_rooms.php`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'add', nom })
+    }).then(r => r.json()).then(data => {
+        if (data.success) { document.getElementById('rName').value = ''; loadRooms(); }
+        else alert(data.message);
+    });
+}
 
-        loadRooms();
-    </script>
+function deleteRoom(id) {
+    if (!confirm('Supprimer cette salle ?')) return;
+    fetch(`${BASE}/admin/php/manage_rooms.php`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'delete', id_salle: id })
+    }).then(r => r.json()).then(data => { if (data.success) loadRooms(); });
+}
+
+loadRooms();
+</script>
 </body>
 </html>

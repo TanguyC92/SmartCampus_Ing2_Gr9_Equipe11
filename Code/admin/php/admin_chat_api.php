@@ -1,16 +1,15 @@
 <?php
-// chat_api.php
-// Contacts : tous les utilisateurs de la plateforme (étudiants, enseignants, admins)
+// admin_chat_api.php — Messagerie pour l'espace Admin
+// L'admin peut envoyer/recevoir des messages avec TOUS les utilisateurs
 ini_set('display_errors', 0);
 require_once '../../Connexion/config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ─── GET CONTACTS ──────────────────────────────────────────────
+// ─── GET CONTACTS (tous les users pour l'admin) ──────────────
 if ($method === 'GET' && ($_GET['action'] ?? '') === 'get_contacts') {
     $id_user = (int)$_GET['id_user'];
 
-    // Tous les utilisateurs sauf soi-même, avec leur rôle + stats de conversation
     $sql = "SELECT U.id_user, U.nom, U.prenom, U.role,
                 (SELECT COUNT(*) FROM MESSAGERIE M
                  WHERE M.id_expediteur = U.id_user
@@ -33,12 +32,12 @@ if ($method === 'GET' && ($_GET['action'] ?? '') === 'get_contacts') {
     echo json_encode(["success" => true, "data" => $contacts]);
 }
 
-// ─── GET MESSAGES ──────────────────────────────────────────────
+// ─── GET MESSAGES ─────────────────────────────────────────────
 elseif ($method === 'GET' && ($_GET['action'] ?? '') === 'get_messages') {
     $me    = (int)$_GET['me'];
     $other = (int)$_GET['other'];
 
-    // Marquer comme lus (date_lecture = maintenant)
+    // Marquer comme lus
     mysqli_query($conn, "UPDATE MESSAGERIE
                          SET date_lecture = CURRENT_TIMESTAMP
                          WHERE id_destinataire = $me
@@ -56,7 +55,7 @@ elseif ($method === 'GET' && ($_GET['action'] ?? '') === 'get_messages') {
     echo json_encode(["success" => true, "data" => $messages]);
 }
 
-// ─── GET UNREAD COUNT (pour les notifs) ────────────────────────
+// ─── GET UNREAD COUNT ─────────────────────────────────────────
 elseif ($method === 'GET' && ($_GET['action'] ?? '') === 'get_unread') {
     $id_user = (int)$_GET['id_user'];
 
@@ -78,7 +77,7 @@ elseif ($method === 'GET' && ($_GET['action'] ?? '') === 'get_unread') {
     echo json_encode(["success" => true, "data" => $convs]);
 }
 
-// ─── SEND MESSAGE ──────────────────────────────────────────────
+// ─── SEND MESSAGE ─────────────────────────────────────────────
 elseif ($method === 'POST') {
     $data    = json_decode(file_get_contents("php://input"));
     $me      = (int)$data->me;
@@ -93,6 +92,12 @@ elseif ($method === 'POST') {
         } else {
             echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
         }
+    } else {
+        echo json_encode(["success" => false, "message" => "Message vide"]);
     }
+}
+
+else {
+    echo json_encode(["success" => false, "message" => "Action inconnue"]);
 }
 ?>

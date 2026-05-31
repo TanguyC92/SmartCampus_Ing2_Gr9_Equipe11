@@ -118,7 +118,7 @@
         .note-chip { padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; background: #ecf0f1; color: var(--secondary); cursor: default; display: flex; align-items: center; gap: 8px; }
         .note-chip.has-note { background: #d4efdf; color: #1a7a3a; }
         .note-chip.no-note { background: #f2f3f4; color: #aaa; font-style: italic; }
-        .note-weight-pill { font-size: 10px; font-weight: 700; background: rgba(0,0,0,.08); border-radius: 10px; padding: 1px 6px; opacity: .85; }
+        .note-weight-pill { font-size: 10px; font-weight: 600; background: rgba(59,130,246,.12); color: #1d4ed8; border-radius: 10px; padding: 2px 7px; white-space: nowrap; }
 
         .no-notes { text-align: center; padding: 60px; color: var(--text-muted); font-style: italic; }
 
@@ -130,6 +130,7 @@
 
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -244,6 +245,8 @@ if (currentUser.role !== 'etudiant') { alert('Accès réservé aux étudiants.')
 document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom}`;
 document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
 
+SmartNotifs.init(currentUser);
+
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
 document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
 
@@ -276,8 +279,10 @@ function renderCours(cours) {
         cours.configs.forEach(cfg => {
             const catKey = cfg.categorie;
             const catCoeff = parseFloat(cfg.coefficient_categorie || 0);
-            const catPct = totalCoeff > 0 ? Math.round((catCoeff / totalCoeff) * 100) : null;
-            const noteWeight = cfg.nombre_notes > 0 ? Math.round(catPct / cfg.nombre_notes) : null;
+            // Poids de la catégorie dans la note finale (en %)
+            const catPct = totalCoeff > 0 ? (catCoeff / totalCoeff) * 100 : null;
+            // Pourcentages de chaque note AU SEIN de la catégorie (définis par le prof, somme ≈ 100%)
+            const pcts = Array.isArray(cfg.pourcentages) ? cfg.pourcentages : [];
 
             let notesHtml = '';
             for (let i = 1; i <= cfg.nombre_notes; i++) {
@@ -285,16 +290,37 @@ function renderCours(cours) {
                 const noteObj = cours.notes.find(n => n.type_evaluation === typeEval);
                 const noteVal = noteObj ? noteObj.note : null;
                 const stats = cours.stats[typeEval] || {};
-                const weightPill = noteWeight !== null ? `<span class="note-weight-pill">${noteWeight}%</span>` : '';
+
+                // Poids de cette note dans SA catégorie (ex: 40% du CC)
+                const notePctInCat = (pcts.length > 0 && pcts[i-1] !== undefined)
+                    ? parseFloat(pcts[i-1])
+                    : (cfg.nombre_notes > 0 ? 100 / cfg.nombre_notes : 0);
+
+                // Poids de cette note dans la note finale (ex: 40% × 33% = 13%)
+                const noteWeightFinal = catPct !== null ? (notePctInCat / 100) * catPct : null;
+
+                // La pill affiche le poids dans la catégorie (ce que l'admin a défini)
+                const weightPill = `<span class="note-weight-pill">${Math.round(notePctInCat)}% du ${LABELS[catKey] || catKey}</span>`;
+
                 if (noteVal !== null) {
-                    const tt = `<div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div><div class="tt-row"><span class="tt-label">Poids</span><span class="tt-val">${noteWeight !== null ? noteWeight + '%' : '–'}</span></div><div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div><div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div><div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>`;
+                    const tt = `
+                        <div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div>
+                        <div class="tt-row"><span class="tt-label">Poids dans la catégorie</span><span class="tt-val">${Math.round(notePctInCat)}%</span></div>
+                        <div class="tt-row"><span class="tt-label">Poids note finale</span><span class="tt-val">${noteWeightFinal !== null ? Math.round(noteWeightFinal) + '%' : '–'}</span></div>
+                        <div class="tt-row"><span class="tt-label">Moy. classe</span><span class="tt-val">${fmt(stats.moyenne_classe)}/20</span></div>
+                        <div class="tt-row"><span class="tt-label">Meilleure</span><span class="tt-val">${fmt(stats.note_max)}/20</span></div>
+                        <div class="tt-row"><span class="tt-label">Plus basse</span><span class="tt-val">${fmt(stats.note_min)}/20</span></div>`;
                     notesHtml += `<span class="tooltip-wrapper"><span class="note-chip has-note">Note ${i} : ${fmt(noteVal)}/20 ${weightPill}</span><div class="tooltip-box">${tt}</div></span>`;
                 } else {
-                    notesHtml += `<span class="note-chip no-note">Note ${i} : -- ${weightPill}</span>`;
+                    notesHtml += `<span class="note-chip no-note">Note ${i} : -- <span class="note-weight-pill">${Math.round(notePctInCat)}% du ${LABELS[catKey] || catKey}</span></span>`;
                 }
             }
-            const pctLabel = catPct !== null ? `<span class="cat-weight-badge">⚖️ ${catPct}% de la note finale</span>` : '';
-            catsHtml += `<div class="cat-section"><div class="cat-title"><span class="cat-title-left">${LABELS[catKey] || catKey} <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0">(coeff ${cfg.coefficient_categorie})</span></span>${pctLabel}</div><div class="notes-row">${notesHtml}</div></div>`;
+            // Badge catégorie : poids de la catégorie dans la note finale
+            const pctLabel = catPct !== null
+                ? `<span class="cat-weight-badge">⚖️ ${Math.round(catPct)}% de la moyenne finale</span>`
+                : '';
+            // On retire l'affichage du coeff brut, on montre le % directement
+            catsHtml += `<div class="cat-section"><div class="cat-title"><span class="cat-title-left">${LABELS[catKey] || catKey}</span>${pctLabel}</div><div class="notes-row">${notesHtml}</div></div>`;
         });
     }
     const card = document.createElement('div');

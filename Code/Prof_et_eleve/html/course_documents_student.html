@@ -258,6 +258,7 @@
         .folder-section:nth-child(3) { animation-delay: .19s; }
         .doc-card-student { animation: fadeUp .3s ease both; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -325,6 +326,7 @@ const userStr = localStorage.getItem('smartcampus_user');
 if (!userStr) window.location.href = "http://localhost:8888/Smart_Campus/Code/Connexion/index.html";
 const user = JSON.parse(userStr);
 document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom;
+SmartNotifs.init(user);
 document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
 
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));

@@ -240,6 +240,7 @@
         /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -308,6 +309,7 @@
 
     document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom + (isTeacher ? ' (Prof)' : '');
     document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+SmartNotifs.init(user);
 
     const logoIcon = document.getElementById('logoIcon');
     const roleBadge = document.getElementById('roleBadge');

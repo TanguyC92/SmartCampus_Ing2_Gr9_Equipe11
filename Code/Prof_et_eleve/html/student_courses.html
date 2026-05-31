@@ -132,6 +132,7 @@
 
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -240,6 +241,7 @@ if (user.role !== 'etudiant') { alert('Accès réservé aux étudiants.'); windo
 
 document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
 document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+SmartNotifs.init(user);
 
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
 document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });

@@ -120,8 +120,7 @@
         .chat-header { padding: 14px 20px; border-bottom: 2px solid var(--border-strong); display: flex; align-items: center; gap: 12px; background: var(--surface); }
         .chat-header-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--role-accent), var(--role-accent-2)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
         .chat-header-info h3 { font-size: 15px; font-weight: 700; color: var(--text); }
-        .chat-header-info .chat-status { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; }
-        .chat-header-info .chat-status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success); display: inline-block; }
+        .chat-header-info .chat-name { font-size: 15px; font-weight: 700; color: var(--text); }
 
         /* Chat messages area */
         .chat-history { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: var(--bg); }
@@ -168,6 +167,7 @@
         /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -219,7 +219,6 @@
                 <div class="chat-header-avatar" id="currentChatAvatar"></div>
                 <div class="chat-header-info">
                     <h3 id="currentChatName">—</h3>
-                    <div class="chat-status">En ligne</div>
                 </div>
             </div>
             <div class="chat-history" id="chatHistory"></div>
@@ -256,6 +255,8 @@
 
     document.getElementById('userNameDisplay').textContent = user.prenom + ' ' + user.nom + (isTeacher ? ' (Prof)' : '');
     document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
+
+    SmartNotifs.init(user);
 
     const logoIcon   = document.getElementById('logoIcon');
     const userAvatar = document.getElementById('userInitials');
@@ -386,8 +387,12 @@
                 const div = document.createElement('div');
                 div.className = `message ${isMe ? 'msg-sent' : 'msg-received'}`;
                 let readReceipt = '';
-                if (isMe && parseInt(msg.lu) === 1 && msg.date_lecture) {
-                    readReceipt = `<div class="msg-status">👁️ Lu à ${formatTime(msg.date_lecture)}</div>`;
+                if (isMe) {
+                    if (msg.date_lecture) {
+                        readReceipt = `<div class="msg-status">✓✓ Lu à ${formatTime(msg.date_lecture)}</div>`;
+                    } else {
+                        readReceipt = `<div class="msg-status" style="color:var(--text-light);font-weight:500">✓ Envoyé</div>`;
+                    }
                 }
                 div.innerHTML = `<div>${msg.contenu.replace(/\n/g,'<br>')}</div><div class="msg-time">${formatTime(msg.date_envoi)}</div>${readReceipt}`;
                 history.appendChild(div);
@@ -398,8 +403,7 @@
     }
 
     /* ─── SEND ──────────────────────────────────────── */
-    document.getElementById('chatForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    function sendMessage() {
         const input   = document.getElementById('messageInput');
         const contenu = input.value.trim();
         if (!contenu || !currentContactId) return;
@@ -410,12 +414,17 @@
         }).then(res=>res.json()).then(data => {
             document.getElementById('sendBtn').disabled = false;
             if (data.success) { input.value=''; updateCharCount(); loadMessages(true); loadContacts(); }
-        });
+        }).catch(() => { document.getElementById('sendBtn').disabled = false; });
+    }
+
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        sendMessage();
     });
 
     /* Enter to send, Shift+Enter for newline */
     document.getElementById('messageInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('chatForm').dispatchEvent(new Event('submit')); }
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
 
     /* Char counter & auto-resize */

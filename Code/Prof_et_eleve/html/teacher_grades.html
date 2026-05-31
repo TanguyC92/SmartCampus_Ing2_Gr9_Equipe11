@@ -188,6 +188,7 @@
         @media (max-width: 1024px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .content { margin-left: 0 !important; } .course-coeff { display: none; } }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -270,6 +271,7 @@
         if (!currentUser || currentUser.role !== 'enseignant') return redirect();
         document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom}`;
         document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
+SmartNotifs.init(currentUser);
     })();
     function redirect() { window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; }
 

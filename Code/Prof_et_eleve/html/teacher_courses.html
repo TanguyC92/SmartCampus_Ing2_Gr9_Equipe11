@@ -154,6 +154,7 @@
         /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -261,6 +262,7 @@ if (currentUser.role !== "enseignant") {
 }
 document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom} (Prof)`;
 document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
+SmartNotifs.init(currentUser);
 
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
 document.getElementById('logoutBtn').addEventListener('click', () => {

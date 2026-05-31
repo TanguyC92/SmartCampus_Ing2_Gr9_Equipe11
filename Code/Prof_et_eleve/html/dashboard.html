@@ -84,11 +84,26 @@
         .welcome-banner p { font-size: 14px; opacity: .85; }
         .welcome-banner .banner-icon { font-size: 48px; opacity: .7; }
 
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+        .stats-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; align-items: stretch; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); min-width: 160px; flex: 1; }
         .stat-card .stat-icon { font-size: 26px; margin-bottom: 8px; }
         .stat-card .stat-val { font-size: 26px; font-weight: 700; }
         .stat-card .stat-label { font-size: 13px; color: var(--text-muted); }
+        /* Next course card — horizontal layout, spans remaining width */
+        #nextCourseCard {
+            border-left: 4px solid var(--primary);
+            flex: 2; min-width: 280px;
+            display: flex; flex-direction: row; align-items: center; gap: 20px; flex-wrap: wrap;
+        }
+        #nextCourseCard .nc-icon-label { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 40px; }
+        #nextCourseCard .nc-icon-label .stat-icon { margin-bottom: 0; }
+        #nextCourseCard .nc-icon-label .nc-label { font-size: 11px; font-weight: 600; color: var(--primary); white-space: nowrap; }
+        #nextCourseCard .nc-divider { width: 1px; height: 48px; background: var(--border); flex-shrink: 0; }
+        .nc-title { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nc-pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .nc-pill { display: flex; align-items: center; gap: 5px; font-size: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
+        .nc-pill strong { color: var(--text); font-weight: 600; }
+        .nc-pill span { color: var(--text-muted); }
 
         .widgets-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         .widget-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); cursor: pointer; transition: .2s; display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: inherit; }
@@ -102,6 +117,7 @@
         /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -178,10 +194,16 @@
                 <div class="stat-val" id="statMoyenne">–/20</div>
                 <div class="stat-label">Moyenne générale</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">📅</div>
-                <div class="stat-val">–</div>
-                <div class="stat-label">Prochain cours</div>
+            <div class="stat-card" id="nextCourseCard">
+                <div class="nc-icon-label">
+                    <div class="stat-icon">📅</div>
+                    <div class="nc-label">Prochain cours</div>
+                </div>
+                <div class="nc-divider"></div>
+                <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;">
+                    <div id="nextCourseName" class="nc-title">Chargement…</div>
+                    <div id="nextCoursePills" class="nc-pills"></div>
+                </div>
             </div>
         </div>
 
@@ -234,6 +256,8 @@ document.getElementById('welcomeMsg').textContent = `Bonjour, ${user.prenom} �
 document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
 document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
 
+SmartNotifs.init(user);
+
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
 document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
 
@@ -273,6 +297,57 @@ fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_stude
             document.getElementById('avgWidget').textContent = m;
         }
     }).catch(() => {});
+
+// Load next course from timetable
+(function loadNextCourse() {
+    const today = new Date();
+    const start = today.toISOString().split('T')[0];
+    const endDate = new Date(today); endDate.setDate(endDate.getDate() + 60);
+    const end = endDate.toISOString().split('T')[0];
+    fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_timetable.php?id_user=${user.id_user}&role=etudiant&week_start=${start}&week_end=${end}`)
+        .then(r => r.json())
+        .then(data => {
+            // Le PHP retourne la clé "data" (pas "schedule")
+            const schedule = data.data || data.schedule || [];
+            const nowTs = Date.now();
+            const upcoming = schedule
+                .filter(s => {
+                    const dt = new Date(`${s.date_cours}T${s.heure_debut}`);
+                    return dt.getTime() > nowTs;
+                })
+                .sort((a, b) => new Date(`${a.date_cours}T${a.heure_debut}`) - new Date(`${b.date_cours}T${b.heure_debut}`));
+
+            const nameEl  = document.getElementById('nextCourseName');
+            const pillsEl = document.getElementById('nextCoursePills');
+
+            if (upcoming.length > 0) {
+                const next = upcoming[0];
+                const dt = new Date(`${next.date_cours}T${next.heure_debut}`);
+                const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+                const monthNames = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+                const dateStr = `${dayNames[dt.getDay()]} ${dt.getDate()} ${monthNames[dt.getMonth()]}`;
+                const hStart = (next.heure_debut || '').slice(0,5);
+                const hEnd   = (next.heure_fin   || '').slice(0,5);
+                const salle  = next.salle || next.lieu || '–';
+                const prof   = (next.prof_prenom && next.prof_nom)
+                    ? `${next.prof_prenom} ${next.prof_nom}`
+                    : (next.prof_nom || next.prof_prenom || '–');
+
+                nameEl.textContent = next.titre || '–';
+                pillsEl.innerHTML = `
+                    <div class="nc-pill">📅 <strong>${dateStr}</strong></div>
+                    <div class="nc-pill">🕐 <strong>${hStart} – ${hEnd}</strong></div>
+                    <div class="nc-pill">📍 <span>Salle</span> <strong>${salle}</strong></div>
+                    <div class="nc-pill">👤 <span>Prof.</span> <strong>${prof}</strong></div>
+                `;
+            } else {
+                nameEl.textContent = 'Aucun cours à venir';
+                pillsEl.innerHTML  = '';
+            }
+        }).catch(() => {
+            document.getElementById('nextCourseName').textContent = 'Erreur de chargement';
+        });
+})();
 </script>
 </body>
 </html>

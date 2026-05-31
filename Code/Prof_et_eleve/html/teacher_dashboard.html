@@ -133,15 +133,31 @@
         .page-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
         .page-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
 
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stats-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; align-items: stretch; }
         .stat-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 20px;
             box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+            min-width: 160px; flex: 1;
         }
         .stat-card .stat-icon { font-size: 28px; }
         .stat-card .stat-val { font-size: 28px; font-weight: 700; color: var(--text); }
         .stat-card .stat-label { font-size: 13px; color: var(--text-muted); }
+        /* Next course card — horizontal */
+        #nextCourseCard {
+            border-left: 4px solid var(--primary);
+            flex: 2; min-width: 280px;
+            flex-direction: row; align-items: center; gap: 20px; flex-wrap: wrap;
+        }
+        #nextCourseCard .nc-icon-label { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 40px; }
+        #nextCourseCard .nc-icon-label .stat-icon { font-size: 28px; }
+        #nextCourseCard .nc-icon-label .nc-label { font-size: 11px; font-weight: 600; color: var(--primary); white-space: nowrap; }
+        #nextCourseCard .nc-divider { width: 1px; height: 48px; background: var(--border); flex-shrink: 0; }
+        .nc-title { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nc-pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .nc-pill { display: flex; align-items: center; gap: 5px; font-size: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; white-space: nowrap; }
+        .nc-pill strong { color: var(--text); font-weight: 600; }
+        .nc-pill span { color: var(--text-muted); }
 
         .widgets-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .widget-card {
@@ -175,6 +191,7 @@
             padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100;
         }
     </style>
+<script src="notifications.js"></script>
 </head>
 <body>
 
@@ -237,14 +254,20 @@
                 <div class="stat-label">Cours assignés</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">👥</div>
-                <div class="stat-val" id="statEtudiants">–</div>
-                <div class="stat-label">Étudiants total</div>
+                <div class="stat-icon">🕐</div>
+                <div class="stat-val" id="statHeures">–</div>
+                <div class="stat-label">Heures cette semaine</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">📝</div>
-                <div class="stat-val" id="statNotes">–</div>
-                <div class="stat-label">Notes saisies</div>
+            <div class="stat-card" id="nextCourseCard">
+                <div class="nc-icon-label">
+                    <div class="stat-icon">📅</div>
+                    <div class="nc-label">Prochain cours</div>
+                </div>
+                <div class="nc-divider"></div>
+                <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;">
+                    <div id="nextCourseName" class="nc-title">Chargement…</div>
+                    <div id="nextCoursePills" class="nc-pills"></div>
+                </div>
             </div>
         </div>
 
@@ -298,6 +321,8 @@ document.getElementById('welcomeMsg').textContent = `Bonjour, ${currentUser.pren
 document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom} (Prof)`;
 document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
 
+SmartNotifs.init(currentUser);
+
 document.getElementById('menuToggle').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('collapsed');
 });
@@ -313,8 +338,86 @@ fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_teacher_cou
     .then(data => {
         if (data.success) {
             document.getElementById('statCours').textContent = data.courses.length;
+            // Count total students
+            // Calcul des heures de cours cette semaine
+            const now = new Date();
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+            monday.setHours(0,0,0,0);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            sunday.setHours(23,59,59,999);
+            const wStart = monday.toISOString().split('T')[0];
+            const wEnd   = sunday.toISOString().split('T')[0];
+
+            fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_timetable.php?id_user=${currentUser.id_user}&role=enseignant&week_start=${wStart}&week_end=${wEnd}`)
+                .then(r => r.json())
+                .then(tData => {
+                    const slots = tData.data || [];
+                    let totalMin = 0;
+                    slots.forEach(s => {
+                        if (s.heure_debut && s.heure_fin) {
+                            const [h1, m1] = s.heure_debut.split(':').map(Number);
+                            const [h2, m2] = s.heure_fin.split(':').map(Number);
+                            totalMin += (h2 * 60 + m2) - (h1 * 60 + m1);
+                        }
+                    });
+                    const h = Math.floor(totalMin / 60);
+                    const m = totalMin % 60;
+                    const heuresEl = document.getElementById('statHeures');
+                    if (heuresEl) heuresEl.textContent = totalMin === 0 ? '0h' : m > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${h}h`;
+                }).catch(() => {});
         }
     }).catch(() => {});
+
+// Load next course from timetable (enseignant)
+(function loadNextCourseTeacher() {
+    const today = new Date();
+    const start = today.toISOString().split('T')[0];
+    const endDate = new Date(today); endDate.setDate(endDate.getDate() + 60);
+    const end = endDate.toISOString().split('T')[0];
+    fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_timetable.php?id_user=${currentUser.id_user}&role=enseignant&week_start=${start}&week_end=${end}`)
+        .then(r => r.json())
+        .then(data => {
+            // Le PHP retourne la clé "data" (pas "schedule")
+            const schedule = data.data || data.schedule || [];
+            const nowTs = Date.now();
+            const upcoming = schedule
+                .filter(s => {
+                    const dt = new Date(`${s.date_cours}T${s.heure_debut}`);
+                    return dt.getTime() > nowTs;
+                })
+                .sort((a, b) => new Date(`${a.date_cours}T${a.heure_debut}`) - new Date(`${b.date_cours}T${b.heure_debut}`));
+
+            const nameEl   = document.getElementById('nextCourseName');
+            const pillsEl  = document.getElementById('nextCoursePills');
+
+            if (upcoming.length > 0) {
+                const next = upcoming[0];
+                const dt = new Date(`${next.date_cours}T${next.heure_debut}`);
+                const dayNames   = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+                const monthNames = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+                const dateStr  = `${dayNames[dt.getDay()]} ${dt.getDate()} ${monthNames[dt.getMonth()]}`;
+                const hStart   = (next.heure_debut || '').slice(0,5);
+                const hEnd     = (next.heure_fin   || '').slice(0,5);
+                const salle    = next.salle || next.lieu || '–';
+                const classe   = [next.niveau, next.semestre ? `Sem. ${next.semestre}` : ''].filter(Boolean).join(' · ') || '–';
+
+                nameEl.textContent = next.titre || '–';
+                pillsEl.innerHTML = `
+                    <div class="nc-pill">📅 <strong>${dateStr}</strong></div>
+                    <div class="nc-pill">🕐 <strong>${hStart} – ${hEnd}</strong></div>
+                    <div class="nc-pill">📍 <span>Salle</span> <strong>${salle}</strong></div>
+                    <div class="nc-pill">🏫 <span>Classe</span> <strong>${classe}</strong></div>
+                `;
+            } else {
+                nameEl.textContent = 'Aucun cours à venir';
+                pillsEl.innerHTML  = '';
+            }
+        }).catch(() => {
+            document.getElementById('nextCourseName').textContent = 'Erreur de chargement';
+        });
+})();
 </script>
 </body>
 </html>

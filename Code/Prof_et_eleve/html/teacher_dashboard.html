@@ -371,11 +371,12 @@
 const userStr = localStorage.getItem('smartcampus_user');
 if (!userStr) {
     window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+    throw new Error('not logged in');
 }
 const currentUser = JSON.parse(userStr);
 if (currentUser.role !== 'enseignant') {
-    alert('Accès réservé aux enseignants.');
     window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+    throw new Error('wrong role');
 }
 
 document.getElementById('welcomeMsg').textContent = `Bonjour, ${currentUser.prenom} 👋`;

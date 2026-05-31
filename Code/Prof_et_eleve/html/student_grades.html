@@ -84,7 +84,7 @@
         .breadcrumb .current { color: var(--text); font-weight: 600; }
 
         /* General avg card */
-        .general-avg-card { background: linear-gradient(135deg, #3b82f6, #10b981); color: white; border-radius: var(--radius); padding: 20px 30px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(59,130,246,.3); }
+        .general-avg-card { background: linear-gradient(135deg, #3b82f6, #10b981); color: white; border-radius: var(--radius); padding: 20px 30px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(59,130,246,.3); overflow: visible; position: relative; }
         .general-avg-card h2 { margin: 0; font-size: 18px; }
         .general-avg-card .avg-val { font-size: 42px; font-weight: bold; }
         .general-avg-card .avg-sub { font-size: 13px; opacity: .85; margin-top: 4px; }
@@ -100,13 +100,13 @@
 
         /* Cours cards */
         .cours-list { display: flex; flex-direction: column; gap: 20px; }
-        .cours-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
+        .cours-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: visible; border: 1px solid var(--border); }
         .cours-card-header { background: var(--secondary); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
         .cours-card-header .cours-title { font-weight: bold; font-size: 16px; }
         .cours-card-header .cours-coeff { font-size: 13px; opacity: .8; }
-        .cours-card-body { padding: 18px 20px; }
+        .cours-card-body { padding: 18px 20px; overflow: visible; position: relative; }
 
-        .moyenne-cours-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 10px 14px; background: #f0f7ff; border-radius: 8px; }
+        .moyenne-cours-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 10px 14px; background: #f0f7ff; border-radius: 8px; overflow: visible; position: relative; }
         .moyenne-cours-row .moy-label { font-size: 14px; color: #555; }
         .moyenne-cours-row .moy-val { font-size: 20px; font-weight: bold; color: var(--primary); margin-left: auto; }
 
@@ -127,6 +127,24 @@
         .filter-tab { padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); font-size: 13px; font-weight: 500; cursor: pointer; transition: .15s; color: var(--text-muted); }
         .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
         .filter-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Semester view tabs */
+        .sem-tabs-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 0; }
+        .sem-tab { padding: 10px 18px; border: none; background: none; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: .15s; border-radius: 6px 6px 0 0; display: flex; align-items: center; gap: 7px; }
+        .sem-tab:hover { color: var(--primary); background: rgba(59,130,246,.06); }
+        .sem-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+        .sem-tab .sem-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+        .sem-tab.active-sem .sem-badge { background: rgba(16,185,129,.15); color: var(--success); }
+        .sem-tab.archive-sem .sem-badge { background: rgba(100,116,139,.12); color: var(--text-muted); }
+
+        /* PDF button */
+        .pdf-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; background: #ef4444; color: white; border: none; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s; text-decoration: none; }
+        .pdf-btn:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,.3); }
+        .page-actions { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+
+        /* Archive info banner */
+        .archive-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #92400e; }
+        .archive-banner .arch-icon { font-size: 18px; }
 
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
@@ -201,6 +219,27 @@
             <span class="current">Mes Notes</span>
         </div>
 
+        <!-- Onglets semestres -->
+        <div class="sem-tabs-bar" id="semTabsBar">
+            <div style="font-size:13px; font-weight:600; color:var(--text-muted); padding:10px 0; white-space:nowrap;">📅 Semestre :</div>
+            <!-- injecté par JS -->
+        </div>
+
+        <!-- Bannière archive -->
+        <div class="archive-banner" id="archiveBanner" style="display:none">
+            <span class="arch-icon">📁</span>
+            <div>
+                <strong id="archiveSemName">Semestre archivé</strong> — Ces notes sont officiellement validées et archivées.
+                <span id="archiveDateCloture" style="opacity:.7; margin-left:8px;"></span>
+            </div>
+        </div>
+
+        <!-- Actions (bouton PDF) -->
+        <div class="page-actions" id="pageActions">
+            <button class="pdf-btn" id="pdfBtn" onclick="exportPDF()">📄 Télécharger le relevé PDF</button>
+        </div>
+
+        <!-- Carte moyenne générale -->
         <div id="generalAvgCard" class="general-avg-card" style="display:none">
             <div>
                 <h2>📊 Mes Notes</h2>
@@ -209,8 +248,12 @@
             <div style="text-align:right">
                 <div class="tooltip-wrapper">
                     <div class="avg-val" id="moyenneGenerale">--/20</div>
-                    <div class="tooltip-box" id="tooltipGeneral">
-                        <div class="tt-row"><span class="tt-label">Moyenne générale</span><span class="tt-val" id="tt_moy_gen">--</span></div>
+                    <div class="tooltip-box" id="tooltipGeneral" style="right:0; left:auto; transform:none; min-width:220px;">
+                        <div class="tt-row" style="border-bottom:1px solid rgba(255,255,255,.15); padding-bottom:6px; margin-bottom:6px;">
+                            <span class="tt-label" style="font-weight:600;">Ma moyenne générale</span>
+                            <span class="tt-val" id="tt_moy_gen">--</span>
+                        </div>
+                        <div id="tt_cours_breakdown"></div>
                     </div>
                 </div>
             </div>
@@ -234,13 +277,23 @@
 
 <script>
 const LABELS = { controle_continu: 'Contrôle Continu', examen: 'Examen', projet: 'Projet' };
+const BASE = (function() {
+    var path = window.location.pathname;
+    var idx = path.lastIndexOf('/Code/');
+    if (idx !== -1) return window.location.origin + path.substring(0, idx + 6).replace(/\/$/, '');
+    var parts = path.split('/');
+    parts.splice(-3);
+    return window.location.origin + parts.join('/');
+})();
 let allCours = [];
 let currentUser = null;
+let currentSemestre = null; // { id_semestre, type: 'actuel'|'archive', nom }
+let semestresArchives = [];
 
 const userStr = localStorage.getItem('smartcampus_user');
-if (!userStr) window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html';
+if (!userStr) window.location.href = `${BASE}/Connexion/index.html`;
 currentUser = JSON.parse(userStr);
-if (currentUser.role !== 'etudiant') { alert('Accès réservé aux étudiants.'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; }
+if (currentUser.role !== 'etudiant') { alert('Accès réservé aux étudiants.'); window.location.href = `${BASE}/Connexion/index.html`; }
 
 document.getElementById('userNameDisplay').textContent = `${currentUser.prenom} ${currentUser.nom}`;
 document.getElementById('userInitials').textContent = (currentUser.prenom[0] + currentUser.nom[0]).toUpperCase();
@@ -248,7 +301,7 @@ document.getElementById('userInitials').textContent = (currentUser.prenom[0] + c
 SmartNotifs.init(currentUser);
 
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
-document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = 'http://localhost:8888/Smart_Campus/Code/Connexion/index.html'; });
+document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('smartcampus_user'); window.location.href = `${BASE}/Connexion/index.html`; });
 
 // Sidebar cours dropdown
 const toggle = document.getElementById('coursesToggle');
@@ -260,6 +313,7 @@ function fmt(val) {
     return parseFloat(val).toFixed(2);
 }
 
+// ====== RENDU COURS SEMESTRE ACTUEL ======
 function renderCours(cours) {
     const moyCoursStr = cours.moyenne_cours !== null ? fmt(cours.moyenne_cours) + '/20' : '--/20';
     const statsClasseMoy = cours.stats_moyennes_cours;
@@ -273,35 +327,21 @@ function renderCours(cours) {
     if (cours.configs.length === 0) {
         catsHtml = '<p style="color:#aaa; font-style:italic; font-size:13px;">Aucune configuration d\'évaluation définie.</p>';
     } else {
-        // Compute total weight to show percentages
         const totalCoeff = cours.configs.reduce((sum, cfg) => sum + parseFloat(cfg.coefficient_categorie || 0), 0);
-
         cours.configs.forEach(cfg => {
             const catKey = cfg.categorie;
             const catCoeff = parseFloat(cfg.coefficient_categorie || 0);
-            // Poids de la catégorie dans la note finale (en %)
             const catPct = totalCoeff > 0 ? (catCoeff / totalCoeff) * 100 : null;
-            // Pourcentages de chaque note AU SEIN de la catégorie (définis par le prof, somme ≈ 100%)
             const pcts = Array.isArray(cfg.pourcentages) ? cfg.pourcentages : [];
-
             let notesHtml = '';
             for (let i = 1; i <= cfg.nombre_notes; i++) {
                 const typeEval = `${catKey}_${i}`;
                 const noteObj = cours.notes.find(n => n.type_evaluation === typeEval);
                 const noteVal = noteObj ? noteObj.note : null;
                 const stats = cours.stats[typeEval] || {};
-
-                // Poids de cette note dans SA catégorie (ex: 40% du CC)
-                const notePctInCat = (pcts.length > 0 && pcts[i-1] !== undefined)
-                    ? parseFloat(pcts[i-1])
-                    : (cfg.nombre_notes > 0 ? 100 / cfg.nombre_notes : 0);
-
-                // Poids de cette note dans la note finale (ex: 40% × 33% = 13%)
+                const notePctInCat = (pcts.length > 0 && pcts[i-1] !== undefined) ? parseFloat(pcts[i-1]) : (cfg.nombre_notes > 0 ? 100 / cfg.nombre_notes : 0);
                 const noteWeightFinal = catPct !== null ? (notePctInCat / 100) * catPct : null;
-
-                // La pill affiche le poids dans la catégorie (ce que l'admin a défini)
                 const weightPill = `<span class="note-weight-pill">${Math.round(notePctInCat)}% du ${LABELS[catKey] || catKey}</span>`;
-
                 if (noteVal !== null) {
                     const tt = `
                         <div class="tt-row"><span class="tt-label">Ta note</span><span class="tt-val">${fmt(noteVal)}/20</span></div>
@@ -315,11 +355,7 @@ function renderCours(cours) {
                     notesHtml += `<span class="note-chip no-note">Note ${i} : -- <span class="note-weight-pill">${Math.round(notePctInCat)}% du ${LABELS[catKey] || catKey}</span></span>`;
                 }
             }
-            // Badge catégorie : poids de la catégorie dans la note finale
-            const pctLabel = catPct !== null
-                ? `<span class="cat-weight-badge">⚖️ ${Math.round(catPct)}% de la moyenne finale</span>`
-                : '';
-            // On retire l'affichage du coeff brut, on montre le % directement
+            const pctLabel = catPct !== null ? `<span class="cat-weight-badge">⚖️ ${Math.round(catPct)}% de la moyenne finale</span>` : '';
             catsHtml += `<div class="cat-section"><div class="cat-title"><span class="cat-title-left">${LABELS[catKey] || catKey}</span>${pctLabel}</div><div class="notes-row">${notesHtml}</div></div>`;
         });
     }
@@ -344,60 +380,205 @@ function renderCours(cours) {
     return card;
 }
 
+// ====== RENDU COURS ARCHIVÉS ======
+function renderCoursArchive(c) {
+    const moyCoursStr = c.moyenne_cours !== null ? fmt(c.moyenne_cours) + '/20' : '--/20';
+    let notesHtml = '';
+    if (c.notes && c.notes.length > 0) {
+        c.notes.forEach(n => {
+            const parts = n.type_evaluation.split('_');
+            const num = parts.pop();
+            const key = parts.join('_');
+            const label = `${LABELS[key] || key} n°${num}`;
+            notesHtml += `<span class="note-chip has-note">${label} : ${fmt(n.note)}/20</span>`;
+        });
+    } else {
+        notesHtml = '<span style="color:#aaa; font-style:italic; font-size:13px;">Aucune note</span>';
+    }
+    const card = document.createElement('div');
+    card.className = 'cours-card';
+    card.dataset.id = c.id_cours;
+    card.innerHTML = `
+        <div class="cours-card-header">
+            <div class="cours-title">${c.code_cours} — ${c.titre_cours}</div>
+            <div class="cours-coeff">Coeff. : ${c.coefficient_cours}</div>
+        </div>
+        <div class="cours-card-body">
+            <div class="moyenne-cours-row">
+                <span class="moy-label">📈 Moyenne dans cette matière</span>
+                <span class="moy-val">${moyCoursStr}</span>
+            </div>
+            <div class="cat-section"><div class="notes-row">${notesHtml}</div></div>
+        </div>`;
+    return card;
+}
+
 function filterBy(idCours) {
     const list = document.getElementById('coursList');
     list.innerHTML = '';
     const toShow = idCours === 'all' ? allCours : allCours.filter(c => String(c.id_cours) === String(idCours));
     if (toShow.length === 0) { list.innerHTML = '<div class="no-notes">Aucune note pour cette matière.</div>'; return; }
-    toShow.forEach(c => list.appendChild(renderCours(c)));
-
-    // Update filter tabs
+    const isArchive = currentSemestre && currentSemestre.type === 'archive';
+    toShow.forEach(c => list.appendChild(isArchive ? renderCoursArchive(c) : renderCours(c)));
     document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.id === idCours));
 }
 
-function loadNotes() {
-    fetch(`http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/get_notes_student.php?id_user=${currentUser.id_user}`)
-    .then(r => r.json())
-    .then(data => {
-        if (!data.success) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Erreur lors du chargement.</div>'; return; }
+// ====== BARRE DE FILTRES PAR MATIÈRE ======
+function buildFilterBar(cours, titleField) {
+    const filterBar = document.getElementById('filterBar');
+    filterBar.style.display = 'flex';
+    filterBar.innerHTML = '<span style="font-size:13px; font-weight:600; color:var(--text-muted)">Filtrer :</span>';
+    const allTab = document.createElement('button');
+    allTab.className = 'filter-tab active'; allTab.dataset.id = 'all'; allTab.textContent = 'Toutes les matières';
+    allTab.addEventListener('click', () => { document.getElementById('courseSelector').value = 'all'; filterBy('all'); });
+    filterBar.appendChild(allTab);
+    cours.forEach(c => {
+        const tab = document.createElement('button');
+        tab.className = 'filter-tab'; tab.dataset.id = c.id_cours; tab.textContent = c[titleField] || c.titre;
+        tab.addEventListener('click', () => { document.getElementById('courseSelector').value = c.id_cours; filterBy(c.id_cours); });
+        filterBar.appendChild(tab);
+    });
+}
 
-        const moyGen = data.moyenne_generale;
-        if (moyGen !== null) {
-            document.getElementById('generalAvgCard').style.display = 'flex';
-            document.getElementById('moyenneGenerale').textContent = fmt(moyGen) + '/20';
-            document.getElementById('tt_moy_gen').textContent = fmt(moyGen) + '/20';
+// ====== AFFICHER UN SEMESTRE ======
+function showSemestre(semestre) {
+    currentSemestre = semestre;
+    document.querySelectorAll('.sem-tab').forEach(t => t.classList.toggle('active', t.dataset.id === String(semestre.id)));
+
+    const archiveBanner = document.getElementById('archiveBanner');
+    const avgCard = document.getElementById('generalAvgCard');
+    const filterBar = document.getElementById('filterBar');
+    const list = document.getElementById('coursList');
+
+    if (semestre.type === 'actuel') {
+        archiveBanner.style.display = 'none';
+        list.innerHTML = '<div class="no-notes">Chargement...</div>';
+        filterBar.style.display = 'none';
+        loadNotesActuelles();
+    } else {
+        // Semestre archivé
+        const sem = semestresArchives.find(s => s.id_semestre === semestre.id);
+        if (!sem) return;
+
+        archiveBanner.style.display = 'flex';
+        document.getElementById('archiveSemName').textContent = sem.nom;
+        if (sem.date_cloture) {
+            const d = new Date(sem.date_cloture);
+            document.getElementById('archiveDateCloture').textContent = `Clôturé le ${d.toLocaleDateString('fr-FR')}`;
         }
 
-        allCours = data.cours;
+        // Remap cours for unified display
+        allCours = (sem.cours || []).map(c => ({ ...c, titre: c.titre_cours }));
 
-        if (allCours.length === 0) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Vous n\'êtes inscrit à aucun cours.</div>'; return; }
+        // Moyenne générale
+        if (sem.moyenne_generale !== null) {
+            avgCard.style.display = 'flex';
+            document.getElementById('moyenneGenerale').textContent = fmt(sem.moyenne_generale) + '/20';
+            document.getElementById('tt_moy_gen').textContent = fmt(sem.moyenne_generale) + '/20';
+            document.getElementById('avgSubtitle').textContent = `Moyenne officielle — ${sem.nom}`;
+            // Breakdown par cours
+            const breakdown = document.getElementById('tt_cours_breakdown');
+            breakdown.innerHTML = allCours.map(c => {
+                const moy = c.moyenne_cours !== null ? fmt(c.moyenne_cours) + '/20' : '--';
+                return `<div class="tt-row"><span class="tt-label" style="max-width:130px;overflow:hidden;text-overflow:ellipsis;">${c.titre_cours || c.titre}</span><span class="tt-val">${moy}</span></div>`;
+            }).join('');
+        } else {
+            avgCard.style.display = 'none';
+        }
 
-        // Populate header course selector
+        // Selector
         const sel = document.getElementById('courseSelector');
         sel.innerHTML = '<option value="all">Toutes les matières</option>';
-        allCours.forEach(c => { const opt = document.createElement('option'); opt.value = c.id_cours; opt.textContent = `${c.code_cours} — ${c.titre}`; sel.appendChild(opt); });
-        sel.addEventListener('change', () => filterBy(sel.value));
+        allCours.forEach(c => { const opt = document.createElement('option'); opt.value = c.id_cours; opt.textContent = `${c.code_cours} — ${c.titre_cours}`; sel.appendChild(opt); });
+        sel.onchange = () => filterBy(sel.value);
 
-        // Build filter tabs
-        const filterBar = document.getElementById('filterBar');
-        filterBar.style.display = 'flex';
-        filterBar.innerHTML = '<span style="font-size:13px; font-weight:600; color:var(--text-muted)">Filtrer :</span>';
-        const allTab = document.createElement('button');
-        allTab.className = 'filter-tab active'; allTab.dataset.id = 'all'; allTab.textContent = 'Toutes les matières';
-        allTab.addEventListener('click', () => { sel.value = 'all'; filterBy('all'); });
-        filterBar.appendChild(allTab);
-        allCours.forEach(c => {
-            const tab = document.createElement('button');
-            tab.className = 'filter-tab'; tab.dataset.id = c.id_cours; tab.textContent = c.titre;
-            tab.addEventListener('click', () => { sel.value = c.id_cours; filterBy(c.id_cours); });
-            filterBar.appendChild(tab);
-        });
+        buildFilterBar(allCours, 'titre_cours');
+
+        list.innerHTML = '';
+        allCours.forEach(c => list.appendChild(renderCoursArchive(c)));
 
         // Sidebar shortcuts
         sideList.innerHTML = '';
         allCours.forEach(c => {
-            const a = document.createElement('a');
-            a.href = '#'; a.dataset.id = c.id_cours;
+            const a = document.createElement('a'); a.href = '#'; a.dataset.id = c.id_cours;
+            a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre_cours}`;
+            a.addEventListener('click', e => { e.preventDefault(); filterBy(c.id_cours); sel.value = c.id_cours; window.scrollTo(0, 0); });
+            sideList.appendChild(a);
+        });
+    }
+}
+
+// ====== ONGLETS SEMESTRES ======
+function buildSemTabs(archives) {
+    const bar = document.getElementById('semTabsBar');
+    // Garder le label fixe
+    bar.innerHTML = '<div style="font-size:13px; font-weight:600; color:var(--text-muted); padding:10px 0; white-space:nowrap;">📅 Semestre :</div>';
+
+    // Onglet semestre actif
+    const tabActuel = document.createElement('button');
+    tabActuel.className = 'sem-tab active-sem active';
+    tabActuel.dataset.id = 'actuel';
+    tabActuel.innerHTML = `<span>📗 Semestre en cours</span><span class="sem-badge" style="background:rgba(16,185,129,.15);color:var(--success);">Actif</span>`;
+    tabActuel.addEventListener('click', () => showSemestre({ id: 'actuel', type: 'actuel' }));
+    bar.appendChild(tabActuel);
+
+    // Onglets archivés
+    archives.forEach(sem => {
+        const tab = document.createElement('button');
+        tab.className = 'sem-tab archive-sem';
+        tab.dataset.id = String(sem.id_semestre);
+        tab.innerHTML = `<span>📁 ${sem.nom}</span><span class="sem-badge" style="background:rgba(100,116,139,.12);color:var(--text-muted);">Archivé</span>`;
+        tab.addEventListener('click', () => showSemestre({ id: sem.id_semestre, type: 'archive', nom: sem.nom }));
+        bar.appendChild(tab);
+    });
+
+    // Si pas d'archives, cacher les onglets
+    if (archives.length === 0) bar.style.display = 'none';
+}
+
+// ====== CHARGEMENT NOTES ACTUELLES ======
+function loadNotesActuelles() {
+    fetch(`${BASE}/Prof_et_eleve/php/get_notes_student.php?id_user=${currentUser.id_user}`)
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Erreur lors du chargement.</div>'; return; }
+        const archiveBanner = document.getElementById('archiveBanner');
+        archiveBanner.style.display = 'none';
+
+        const moyGen = data.moyenne_generale;
+        const avgCard = document.getElementById('generalAvgCard');
+        if (moyGen !== null) {
+            avgCard.style.display = 'flex';
+            document.getElementById('moyenneGenerale').textContent = fmt(moyGen) + '/20';
+            document.getElementById('tt_moy_gen').textContent = fmt(moyGen) + '/20';
+            document.getElementById('avgSubtitle').textContent = 'Moyenne pondérée — Semestre en cours';
+            // Breakdown par cours (sera rempli après allCours = data.cours)
+            setTimeout(() => {
+                const breakdown = document.getElementById('tt_cours_breakdown');
+                if (breakdown && data.cours) {
+                    breakdown.innerHTML = data.cours.map(c => {
+                        const moy = c.moyenne_cours !== null ? fmt(c.moyenne_cours) + '/20' : '--';
+                        return `<div class="tt-row"><span class="tt-label" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;">${c.titre || c.code_cours}</span><span class="tt-val">${moy}</span></div>`;
+                    }).join('');
+                }
+            }, 0);
+        } else {
+            avgCard.style.display = 'none';
+        }
+
+        allCours = data.cours;
+        if (allCours.length === 0) { document.getElementById('coursList').innerHTML = '<div class="no-notes">Vous n\'êtes inscrit à aucun cours ce semestre.</div>'; return; }
+
+        const sel = document.getElementById('courseSelector');
+        sel.innerHTML = '<option value="all">Toutes les matières</option>';
+        allCours.forEach(c => { const opt = document.createElement('option'); opt.value = c.id_cours; opt.textContent = `${c.code_cours} — ${c.titre}`; sel.appendChild(opt); });
+        sel.onchange = () => filterBy(sel.value);
+
+        buildFilterBar(allCours, 'titre');
+
+        sideList.innerHTML = '';
+        allCours.forEach(c => {
+            const a = document.createElement('a'); a.href = '#'; a.dataset.id = c.id_cours;
             a.innerHTML = `<span class="nav-icon">📖</span> ${c.titre}`;
             a.addEventListener('click', e => { e.preventDefault(); filterBy(c.id_cours); sel.value = c.id_cours; window.scrollTo(0, 0); });
             sideList.appendChild(a);
@@ -407,21 +588,47 @@ function loadNotes() {
     });
 }
 
-// Pre-select a course if coming from URL param
-const urlParams = new URLSearchParams(window.location.search);
-const preselect = urlParams.get('id_cours');
+// ====== EXPORT PDF ======
+function exportPDF() {
+    let url = `${BASE}/Prof_et_eleve/php/export_releve_pdf.php?id_user=${currentUser.id_user}`;
+    if (currentSemestre && currentSemestre.type === 'archive') {
+        url += `&type=archive&id_semestre=${currentSemestre.id}`;
+    } else {
+        url += `&type=actuel`;
+    }
+    window.open(url, '_blank');
+}
 
-loadNotes().then ? loadNotes() : loadNotes();
+// ====== INIT ======
+async function init() {
+    // Charger les archives
+    try {
+        const res = await fetch(`${BASE}/Prof_et_eleve/php/get_notes_archives.php?id_user=${currentUser.id_user}`);
+        const data = await res.json();
+        if (data.success) {
+            semestresArchives = data.semestres || [];
+        }
+    } catch(e) { semestresArchives = []; }
 
-// After load, if preselect
-document.addEventListener('DOMContentLoaded', () => {
+    // Construire les onglets
+    buildSemTabs(semestresArchives);
+
+    // Charger les notes actuelles par défaut
+    currentSemestre = { id: 'actuel', type: 'actuel' };
+    loadNotesActuelles();
+
+    // Préselection URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const preselect = urlParams.get('id_cours');
     if (preselect) {
         setTimeout(() => {
             document.getElementById('courseSelector').value = preselect;
             filterBy(preselect);
-        }, 800);
+        }, 900);
     }
-});
+}
+
+init();
 </script>
 </body>
 </html>

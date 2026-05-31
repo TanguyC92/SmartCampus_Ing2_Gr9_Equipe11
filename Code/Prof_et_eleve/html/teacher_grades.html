@@ -306,6 +306,29 @@ SmartNotifs.init(currentUser);
         document.getElementById('coeffBadge').style.display = 'flex';
 
         const BASE = 'http://localhost:8888/Smart_Campus/Code';
+
+        // Vérifier le statut du semestre lié au cours
+        fetch(`${BASE}/admin/php/manage_semestres.php?action=list`)
+        .then(r => r.json()).then(d => {
+            if (d.success && d.semestres) {
+                // Récupérer les infos du cours pour connaître son id_semestre
+                fetch(`${BASE}/admin/php/get_courses.php`)
+                .then(r => r.json()).then(cd => {
+                    const cours = (cd.courses || []).find(c => String(c.id_cours) === String(idCours));
+                    if (cours && cours.id_semestre) {
+                        const sem = d.semestres.find(s => String(s.id_semestre) === String(cours.id_semestre));
+                        if (sem && sem.statut === 'cloture') {
+                            const banner = document.createElement('div');
+                            banner.style.cssText = 'background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:#854d0e;';
+                            banner.innerHTML = `<span style="font-size:18px;">📁</span><div><strong>Semestre clôturé (${sem.nom})</strong> — Vous modifiez des notes d'un semestre archivé. Les modifications seront enregistrées mais n'affecteront pas les archives déjà générées.</div>`;
+                            const main = document.getElementById('mainContent');
+                            main.parentNode.insertBefore(banner, main);
+                        }
+                    }
+                }).catch(() => {});
+            }
+        }).catch(() => {});
+
         Promise.all([
             safeFetch(`${BASE}/admin/php/get_eval_config.php?id_cours=${idCours}`),
             safeFetch(`${BASE}/admin/php/get_course_students.php?id_cours=${idCours}`)

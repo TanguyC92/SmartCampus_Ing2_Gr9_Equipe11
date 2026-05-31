@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="X_eYHYUKrsMNObStht74">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="640" width="1080" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="580" width="210" x="270" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="LOGO" vertex="1">
+          <mxGeometry height="60" width="80" x="270" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Nom du site&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="130" x="350" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="640" width="110" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Messagerie&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="60" x="185" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MENU" vertex="1">
+          <mxGeometry height="60" width="110" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="p_fjJUSvdwnrhbVePGCE-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Déconnexion" vertex="1">
+          <mxGeometry height="30" width="60" x="185" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Retour&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="60" x="185" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Conversations&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="100" x="300" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Rechercher une personne" vertex="1">
+          <mxGeometry height="30" width="150" x="280" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Personne 1" vertex="1">
+          <mxGeometry height="40" width="210" x="270" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Personne 2" vertex="1">
+          <mxGeometry height="40" width="210" x="270" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Personne 3" vertex="1">
+          <mxGeometry height="40" width="210" x="270" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Personne 4" vertex="1">
+          <mxGeometry height="40" width="210" x="270" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Conversation personne 1" vertex="1">
+          <mxGeometry height="60" width="760" x="480" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="760" x="480" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Tapez un nouveau message ...&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="250" x="500" y="695" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Envoyer" vertex="1">
+          <mxGeometry height="60" width="120" x="1120" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Bonjour Monsieur" vertex="1">
+          <mxGeometry height="30" width="100" x="490" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="29/05/2026" vertex="1">
+          <mxGeometry height="30" width="80" x="520" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="6KMQHp5Kjs2YUxAxpC4R-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="18H51" vertex="1">
+          <mxGeometry height="30" width="60" x="580" y="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

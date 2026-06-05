@@ -349,8 +349,9 @@ SmartNotifs.init(currentUser);
     async function safeFetch(url, options = {}) {
         const res = await fetch(url, options);
         const text = await res.text();
+        console.log('[safeFetch]', url.split('/').pop(), '→', JSON.stringify(text.slice(0, 200)));
         if (!text || !text.trim()) throw new Error(`Réponse vide du serveur (${url.split('/').pop()})`);
-        try { return JSON.parse(text); } catch (e) { throw new Error(`Réponse invalide du serveur : ${text.slice(0, 80)}`); }
+        try { return JSON.parse(text); } catch (e) { throw new Error(`Réponse invalide : ${text.slice(0, 80)}`); }
     }
 
     function renderEvalSelector() {
@@ -508,44 +509,82 @@ SmartNotifs.init(currentUser);
     function saveNotes(typeEval) {
         if (isSaving) return;
         let hasInvalid = false;
+        
         students.forEach(s => {
             const inp = document.getElementById('note_'+s.id_inscription);
-            if (!inp||inp.value==='') return;
-            const v=parseFloat(inp.value);
-            if (isNaN(v)||v<0||v>20) { hasInvalid=true; inp.classList.add('invalid'); }
+            if (!inp || inp.value === '') return;
+            const v = parseFloat(inp.value);
+            if (isNaN(v) || v < 0 || v > 20) { 
+                hasInvalid = true; 
+                inp.classList.add('invalid'); 
+            }
         });
-        if (hasInvalid) { showToast('⚠️ Certaines notes sont invalides (0–20)', 'error'); return; }
+        
+        if (hasInvalid) { 
+            showToast('⚠️ Certaines notes sont invalides (0–20)', 'error'); 
+            return; 
+        }
 
         const nomInput = document.getElementById('evalNameInput');
         const nomEval = nomInput ? nomInput.value.trim() : '';
         const notes = [];
+        
         students.forEach(s => {
             const inp = document.getElementById('note_'+s.id_inscription);
-            if (!inp||inp.value==='') return;
-            notes.push({ id_inscription: s.id_inscription, note: parseFloat(inp.value), type_evaluation: typeEval, nom_evaluation: nomEval });
+            // Si l'input est vide, on n'envoie rien ou on peut décider d'envoyer null selon ton choix
+            if (!inp || inp.value === '') return;
+            
+            notes.push({ 
+                id_inscription: s.id_inscription, 
+                note: parseFloat(inp.value), 
+                type_evaluation: typeEval, 
+                nom_evaluation: nomEval 
+            });
         });
-        if (!notes.length) { showToast('Aucune note à enregistrer', 'warning'); return; }
+
+        // --- ZONE DE DEBUG CONSOLE ---
+        console.log('[DEBUG HTML] Tableau des notes généré avant envoi :', notes);
+        
+        if (!notes.length) { 
+            showToast('Aucune note à enregistrer', 'warning'); 
+            return; 
+        }
 
         isSaving = true;
         const btn = document.getElementById('saveBtn');
-        if (btn) { btn.disabled=true; btn.textContent='⏳ Sauvegarde…'; }
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ Sauvegarde…'; }
 
+        // Envoi au serveur
         safeFetch('http://localhost:8888/Smart_Campus/Code/Prof_et_eleve/php/save_note.php', {
-            method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({notes})
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ notes })
         }).then(data => {
+            console.log('[DEBUG HTML] Réponse reçue du serveur :', data);
             if (data.success) {
-                originalNomEval = nomEval; currentNomEval = nomEval;
+                originalNomEval = nomEval; 
+                currentNomEval = nomEval;
                 students.forEach(s => {
                     const inp = document.getElementById('note_'+s.id_inscription);
-                    if (!inp||inp.value==='') return;
-                    inp.classList.remove('modified','invalid'); inp.classList.add('saved');
-                    const v=parseFloat(inp.value); originalNotes[s.id_inscription]=v; existingNotes[s.id_inscription]=v;
+                    if (!inp || inp.value === '') return;
+                    inp.classList.remove('modified', 'invalid'); 
+                    inp.classList.add('saved');
+                    const v = parseFloat(inp.value); 
+                    originalNotes[s.id_inscription] = v; 
+                    existingNotes[s.id_inscription] = v;
                 });
                 showToast('✅ Notes sauvegardées !', 'success');
                 updateStats();
-            } else { showToast('Erreur : '+(data.message||'Inconnue'), 'error'); }
-        }).catch(err=>showToast('Erreur réseau : '+err.message, 'error'))
-        .finally(()=>{ isSaving=false; if(btn){btn.disabled=false; btn.textContent='💾 Sauvegarder';} });
+            } else { 
+                showToast('Erreur : ' + (data.message || 'Inconnue'), 'error'); 
+            }
+        }).catch(err => {
+            console.error('[DEBUG HTML] Erreur attrapée par safeFetch :', err);
+            showToast('Erreur réseau : ' + err.message, 'error');
+        }).finally(() => { 
+            isSaving = false; 
+            if (btn) { btn.disabled = false; btn.textContent = '💾 Sauvegarder'; } 
+        });
     }
 
     function renderCourseSelector() {

@@ -13,7 +13,6 @@ const AdminNotifs = (() => {
   let _cache   = [];
   let _seenSet = new Set();
 
-  /* ─── API helpers ─────────────────────────────────────────── */
 
   async function _apiGet(params) {
     const url = API + '?' + new URLSearchParams(params);
@@ -30,7 +29,6 @@ const AdminNotifs = (() => {
     return r.json();
   }
 
-  /* ─── Chargement BDD ────────────────────────────────────────── */
 
   async function _loadFromDB() {
     try {
@@ -43,8 +41,6 @@ const AdminNotifs = (() => {
   }
 
   function _isSeen(dedupId) { return _seenSet.has(dedupId); }
-
-  /* ─── Ajout ─────────────────────────────────────────────────── */
 
   async function add(type, titre, corps, data = {}) {
     const dedupId = data.dedupId || null;
@@ -61,7 +57,6 @@ const AdminNotifs = (() => {
     } catch (e) {}
   }
 
-  /* ─── Suppression ─────────────────────────────────────────── */
 
   async function _remove(id_notification) {
     try {
@@ -83,7 +78,6 @@ const AdminNotifs = (() => {
 
   function countUnread() { return _cache.filter(n => !n.lue).length; }
 
-  /* ─── Badge ─────────────────────────────────────────────────── */
 
   function _updateBadge() {
     const count = countUnread();
@@ -113,7 +107,6 @@ const AdminNotifs = (() => {
     });
   }
 
-  /* ─── Auto-clear selon la page ──────────────────────────────── */
 
   const ADMIN_PAGE_CLEARS = {
     'admin_messages.html': ['message_admin'],
@@ -133,7 +126,6 @@ const AdminNotifs = (() => {
     }
   }
 
-  /* ─── Panel UI ────────────────────────────────────────────── */
 
   const ADMIN_NOTIF_URLS = {
     message_admin: 'admin_messages.html',
@@ -251,7 +243,6 @@ const AdminNotifs = (() => {
     return d.toLocaleDateString('fr-FR');
   }
 
-  /* ─── Vérification des messages (toutes les 2 min) ─────────── */
 
   async function _checkMessages(user) {
     try {
@@ -281,7 +272,6 @@ const AdminNotifs = (() => {
     } catch (e) {}
   }
 
-  /* ─── Init ─────────────────────────────────────────────────── */
 
   async function init(user) {
     _userId = user.id_user;
@@ -290,12 +280,10 @@ const AdminNotifs = (() => {
     await _autoClearCurrentPage();
     _updateBadge();
 
-    // Brancher le bouton notif
     document.querySelectorAll('.notif-btn').forEach(btn => {
       btn.addEventListener('click', e => { e.stopPropagation(); openPanel(); });
     });
 
-    // Premier check rapide, puis toutes les 2 min
     setTimeout(() => _checkMessages(user), 1500);
     setInterval(() => _checkMessages(user), 2 * 60 * 1000);
   }

@@ -37,7 +37,6 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; line-height: 1.5; }
 
-        /* ─── HEADER ──────────────────────────────── */
         header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--surface); border-bottom: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.07); flex-shrink: 0; }
         .header-left, .header-right { display: flex; align-items: center; gap: 16px; }
         .menu-btn { width: 36px; height: 36px; border: none; background: var(--surface-2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background .15s; }
@@ -52,10 +51,8 @@
         .user-chip { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 24px; padding: 4px 12px 4px 4px; font-size: 13px; font-weight: 500; }
         .user-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: 700; }
 
-        /* ─── LAYOUT ──────────────────────────────── */
         .layout { display: flex; flex: 1; margin-top: var(--header-h); margin-bottom: var(--footer-h); overflow: hidden; }
 
-        /* ─── SIDEBAR ─────────────────────────────── */
         .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--footer-h); width: var(--sidebar-w); background: var(--secondary); overflow-y: auto; transition: transform .3s ease; z-index: 50; }
         .sidebar.collapsed { transform: translateX(-100%); }
         .sidebar-section { padding: 20px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #475569; }
@@ -67,11 +64,9 @@
         .sidebar a.danger { color: #f87171; }
         .sidebar a.danger:hover { background: rgba(239,68,68,.1); color: #ef4444; }
 
-        /* ─── CONTENT ─────────────────────────────── */
         .content { flex: 1; margin-left: var(--sidebar-w); display: flex; background: var(--surface); overflow: hidden; transition: margin-left .3s; }
         .sidebar.collapsed ~ .content { margin-left: 0; }
 
-        /* ─── CONTACTS PANE ───────────────────────── */
         .contacts-pane { width: 300px; border-right: 2px solid var(--border-strong); display: flex; flex-direction: column; background: var(--surface-2); flex-shrink: 0; }
         .contacts-header { padding: 18px 20px 14px; border-bottom: 2px solid var(--border-strong); background: var(--surface); }
         .contacts-header-title { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -93,7 +88,6 @@
         .role-etudiant { background: rgba(16,185,129,.1); color: #10b981; }
         .unread-badge { background: var(--danger); color: white; border-radius: 50%; min-width: 20px; height: 20px; padding: 0 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        /* ─── CHAT PANE ───────────────────────────── */
         .chat-pane { flex: 1; display: flex; flex-direction: column; background: var(--surface); }
         .chat-header { padding: 14px 20px; border-bottom: 2px solid var(--border-strong); display: flex; align-items: center; gap: 12px; background: var(--surface); }
         .chat-header-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-2)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
@@ -113,7 +107,6 @@
         .date-separator::before, .date-separator::after { content: ''; flex: 1; height: 1px; background: var(--border-strong); }
         .date-separator span { font-size: 11px; font-weight: 600; color: var(--text-muted); white-space: nowrap; padding: 2px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; }
 
-        /* ─── INPUT AREA ──────────────────────────── */
         .chat-input-area { padding: 14px 16px; border-top: 2px solid var(--border-strong); display: flex; gap: 10px; align-items: flex-end; background: var(--surface); }
         .chat-input-wrapper { flex: 1; border: 1.5px solid var(--border-strong); border-radius: 12px; background: var(--surface-2); transition: border-color .2s, box-shadow .2s; display: flex; align-items: flex-end; gap: 8px; padding: 10px 14px; }
         .chat-input-wrapper:focus-within { border-color: var(--admin-accent); box-shadow: 0 0 0 3px var(--admin-light); }
@@ -123,13 +116,11 @@
         .btn-send:hover { transform: scale(1.05); box-shadow: 0 4px 12px var(--admin-mid); }
         .btn-send:disabled { background: var(--border); cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* State panels */
         .state-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; background: var(--bg); color: var(--text-muted); text-align: center; padding: 40px; }
         .state-panel-icon { font-size: 52px; margin-bottom: 16px; }
         .state-panel h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
         .state-panel p { font-size: 14px; max-width: 280px; }
 
-        /* ─── FOOTER ──────────────────────────────── */
         footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: var(--surface); border-top: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 13px; color: var(--text-muted); z-index: 100; }
     </style>
     <script src="admin_notifications.js"></script>
@@ -167,7 +158,6 @@
     </aside>
 
     <main class="content">
-        <!-- Contacts pane -->
         <div class="contacts-pane">
             <div class="contacts-header">
                 <div class="contacts-header-title">
@@ -181,7 +171,6 @@
             </ul>
         </div>
 
-        <!-- Chat pane -->
         <div class="chat-pane" id="chatPane" style="display:none">
             <div class="chat-header">
                 <div class="chat-header-avatar" id="currentChatAvatar"></div>
@@ -200,7 +189,6 @@
             </form>
         </div>
 
-        <!-- Empty state -->
         <div class="state-panel" id="emptyPane">
             <div class="state-panel-icon">💬</div>
             <h2>Messagerie Admin</h2>
@@ -217,7 +205,6 @@
 <script>
 const BASE = 'http://localhost:8888/Smart_Campus/Code';
 
-// ─── Auth ─────────────────────────────────────────────────────
 const user = JSON.parse(localStorage.getItem('smartcampus_user'));
 if (!user) window.location.href = `${BASE}/Connexion/index.html`;
 if (user.role !== 'admin') {
@@ -228,22 +215,18 @@ if (user.role !== 'admin') {
 document.getElementById('userNameDisplay').textContent = `${user.prenom} ${user.nom}`;
 document.getElementById('userInitials').textContent = (user.prenom[0] + user.nom[0]).toUpperCase();
 
-// Init notifs
 if (typeof AdminNotifs !== 'undefined') AdminNotifs.init(user);
 document.querySelector('.notif-btn').addEventListener('click', e => { e.stopPropagation(); if (typeof AdminNotifs !== 'undefined') AdminNotifs.openPanel(); });
 
 document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('collapsed'));
 document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.clear(); window.location.href = `${BASE}/Connexion/index.html`; });
 
-// ─── State ────────────────────────────────────────────────────
 let contactsCache = [];
 let currentContactId = null;
 let currentContactRole = '';
 
-// ─── Load contacts (ALL users for admin) ──────────────────────
 async function loadContacts() {
     try {
-        // admin_chat_api retourne tous les users avec unread_count inclus
         const r = await fetch(`${BASE}/admin/php/admin_chat_api.php?action=get_contacts&id_user=${user.id_user}`);
         const data = await r.json();
         if (!data.success) return;
@@ -294,7 +277,6 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     ));
 });
 
-// ─── Open chat ────────────────────────────────────────────────
 function openChat(targetId, targetName, targetInitials, targetRole) {
     currentContactId = targetId;
     currentContactRole = targetRole;
@@ -307,13 +289,11 @@ function openChat(targetId, targetName, targetInitials, targetRole) {
     loadContacts();
     loadMessages(true);
 
-    // Check URL param and open if set
     const url = new URL(window.location);
     url.searchParams.set('contact', targetId);
     window.history.replaceState({}, '', url);
 }
 
-// ─── Messages ─────────────────────────────────────────────────
 function formatTime(d) { const dt = new Date(d); return dt.getHours().toString().padStart(2,'0') + ':' + dt.getMinutes().toString().padStart(2,'0'); }
 function formatDate(d) {
     const dt = new Date(d), today = new Date(), yest = new Date(today);
@@ -361,7 +341,6 @@ async function loadMessages(forceScroll = false) {
     } catch(e) {}
 }
 
-// ─── Send ─────────────────────────────────────────────────────
 function sendMessage() {
     const input = document.getElementById('messageInput');
     const contenu = input.value.trim();
@@ -389,14 +368,11 @@ function updateCharCount() {
 }
 document.getElementById('messageInput').addEventListener('input', updateCharCount);
 
-// ─── Poll & init ──────────────────────────────────────────────
 setInterval(() => { loadContacts(); if (currentContactId) loadMessages(false); }, 3000);
 loadContacts();
 
-// Auto-open contact from URL param
 const urlContact = new URLSearchParams(window.location.search).get('contact');
 if (urlContact) {
-    // Wait for contacts to load then open
     setTimeout(async () => {
         const c = contactsCache.find(c => c.id_user == urlContact);
         if (c) openChat(c.id_user, `${c.prenom} ${c.nom}`, ((c.prenom[0]||'')+(c.nom[0]||'')).toUpperCase(), c.role);

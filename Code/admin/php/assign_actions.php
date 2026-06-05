@@ -89,6 +89,19 @@ if ($action === 'assign_teacher') {
     } else {
         echo json_encode(["success" => false, "message" => "Erreur SQL : " . mysqli_error($conn)]);
     }
+} 
+// Retirer un enseignant du cours
+elseif ($action === 'unassign_teacher') {
+        $id_cours = (int)$data->id_cours;
+        
+        // On remet la colonne id_enseignant à NULL
+        $sql = "UPDATE COURS SET id_enseignant = NULL WHERE id_cours = $id_cours";
+        
+        if (mysqli_query($conn, $sql)) {
+            echo json_encode(["success" => true, "message" => "L'enseignant a été retiré du cours."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Erreur : " . mysqli_error($conn)]);
+        }
 } else {
     echo json_encode(["success" => false, "message" => "Action inconnue."]);
 }
